@@ -1,24 +1,9 @@
-import os
-from dotenv import load_dotenv, find_dotenv
+# One-off to populate the person master dataset table, assumed to be empty.
 
-load_dotenv(find_dotenv())
-connection_string = "oracle://%s:\"%s\"@%s" % (
-  os.environ.get("DB_USER"),
-  os.environ.get("DB_PASS"),
-  os.environ.get("DB_SERVICE_NAME"),
-)
+import db
+session = db.get_session()
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from models import Base, Person
-
-engine = create_engine(connection_string)
-Session = sessionmaker()
-Session.configure(bind=engine)
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
-
-session = Session()
+from models import Person
 
 import csv
 import sys
