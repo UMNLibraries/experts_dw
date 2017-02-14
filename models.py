@@ -7,7 +7,7 @@ Base = declarative_base()
 class Person(Base):
   __tablename__ = 'person'
   emplid = Column(String(11), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp())
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
   def __repr__(self):
     return 'emplid: {}, timestamp: {}'.format(self.emplid, self.timestamp)
