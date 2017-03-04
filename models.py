@@ -32,9 +32,9 @@ class MdsPersonScivalId(Base):
 
 class MdsPersonInternetId(Base):
   __tablename__ = 'mds_person_internet_id'
-  internet_id = Column(String(15), nullable=False)
-  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  internet_id = Column(String(15), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
@@ -42,9 +42,9 @@ class MdsPersonInternetId(Base):
 
 class MdsPersonFirstName(Base):
   __tablename__ = 'mds_person_first_name'
-  first_name = Column(String(30), nullable=False)
-  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  first_name = Column(String(30), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
@@ -52,9 +52,9 @@ class MdsPersonFirstName(Base):
 
 class MdsPersonMiddleName(Base):
   __tablename__ = 'mds_person_middle_name'
-  middle_name = Column(String(30), nullable=False)
-  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  middle_name = Column(String(30), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
@@ -62,9 +62,9 @@ class MdsPersonMiddleName(Base):
 
 class MdsPersonLastName(Base):
   __tablename__ = 'mds_person_last_name'
-  last_name = Column(String(30), nullable=False)
-  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  last_name = Column(String(30), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
@@ -72,9 +72,9 @@ class MdsPersonLastName(Base):
 
 class MdsPersonNameSuffix(Base):
   __tablename__ = 'mds_person_name_suffix'
-  name_suffix = Column(String(15), nullable=False)
-  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  name_suffix = Column(String(15), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
@@ -82,9 +82,9 @@ class MdsPersonNameSuffix(Base):
 
 class MdsPersonInstEmailAddr(Base):
   __tablename__ = 'mds_person_inst_email_addr'
-  inst_email_addr = Column(String(15), nullable=False)
-  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  inst_email_addr = Column(String(15), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
@@ -92,9 +92,9 @@ class MdsPersonInstEmailAddr(Base):
 
 class MdsPersonTenureFlag(Base):
   __tablename__ = 'mds_person_tenure_flag'
-  tenure_flag = Column(String(1), nullable=False)
-  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  tenure_flag = Column(String(1), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
@@ -102,9 +102,9 @@ class MdsPersonTenureFlag(Base):
 
 class MdsPersonTenureTrackFlag(Base):
   __tablename__ = 'mds_person_tenure_track_flag'
-  tenure_track_flag = Column(String(1), nullable=False)
-  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  tenure_track_flag = Column(String(1), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
@@ -112,9 +112,9 @@ class MdsPersonTenureTrackFlag(Base):
 
 class MdsPersonPrimaryEmplRcdno(Base):
   __tablename__ = 'mds_person_primary_empl_rcdno'
-  primary_empl_rcdno = Column(Integer(38), nullable=False)
-  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  primary_empl_rcdno = Column(Integer, nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
