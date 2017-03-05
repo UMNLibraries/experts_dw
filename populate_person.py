@@ -3,7 +3,7 @@
 import db
 session = db.get_session()
 
-from models import Person
+from models import MdsPerson
 
 import csv
 import sys
@@ -11,7 +11,7 @@ filename = sys.argv[1]
 with open(filename) as csvfile:
   reader = csv.reader(csvfile)
   for row in reader:
-    person = Person(emplid=row[1])
+    person = MdsPerson(emplid=row[1])
     session.add(person)
 
 session.commit()

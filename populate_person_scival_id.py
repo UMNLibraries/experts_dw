@@ -3,7 +3,7 @@
 import db
 session = db.get_session()
 
-from models import PersonScivalId
+from models import MdsPersonScivalId
 
 import csv
 import sys
@@ -14,7 +14,7 @@ with open(filename) as csvfile:
     # The first element is a SciVal ID only if it differs from the second element, which is always an emplid:
     if row[0] == row[1]:
       continue
-    person_scival_id = PersonScivalId(scival_id=int(row[0]), emplid=row[1])
+    person_scival_id = MdsPersonScivalId(scival_id=int(row[0]), emplid=row[1])
     session.add(person_scival_id)
 
 session.commit()
