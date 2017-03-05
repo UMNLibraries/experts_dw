@@ -39,7 +39,7 @@ def get_url():
   return "oracle://%s:\"%s\"@%s" % (
     os.environ.get("DB_USER"),
     os.environ.get("DB_PASS"),
-    os.environ.get("DB_SERVICE_NAME"),
+    os.environ.get("HOTEL_DB_SERVICE_NAME"),
   )
 
 def run_migrations_offline():

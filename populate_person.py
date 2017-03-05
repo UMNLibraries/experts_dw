@@ -1,7 +1,7 @@
 # One-off to populate the person master dataset table, assumed to be empty.
 
 import db
-session = db.get_session()
+session = db.session('hotel')
 
 from models import MdsPerson
 

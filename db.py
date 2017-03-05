@@ -1,21 +1,22 @@
 import os
 from dotenv import load_dotenv, find_dotenv
-
-load_dotenv(find_dotenv())
-connection_string = "oracle://%s:\"%s\"@%s" % (
-  os.environ.get("DB_USER"),
-  os.environ.get("DB_PASS"),
-  os.environ.get("DB_SERVICE_NAME"),
-)
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine(connection_string)
-Session = sessionmaker()
-Session.configure(bind=engine)
+load_dotenv(find_dotenv())
 
-session = Session()
+def engine(db_name):
+  # db_name must be the generic part of the service name,
+  # without the (tst|prd).oit suffix, e.g. 'dwe' or 'hotel'.
+  return create_engine(
+    "oracle://%s:\"%s\"@%s" % (
+      os.environ.get('DB_USER'),
+      os.environ.get('DB_PASS'),
+      os.environ.get(db_name.upper() + '_DB_SERVICE_NAME'),
+    )
+  )
 
-def get_session():
-  return session
+def session(db_name):
+  Session = sessionmaker()
+  Session.configure(bind=engine(db_name))
+  return Session()
