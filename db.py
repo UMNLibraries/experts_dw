@@ -10,7 +10,6 @@ connection_string = "oracle://%s:\"%s\"@%s" % (
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base
 
 engine = create_engine(connection_string)
 Session = sessionmaker()
