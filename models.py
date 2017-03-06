@@ -90,15 +90,15 @@ class MdsPersonNameSuffix(Base):
   def __repr__(self):
     return 'name_suffix: {}, emplid: {}, timestamp: {}'.format(self.name_suffix, self.emplid, self.timestamp)
 
-class MdsPersonInstEmailAddr(Base):
-  __tablename__ = 'mds_person_inst_email_addr'
-  inst_email_addr = Column(String(15), nullable=False, primary_key=True)
+class MdsPersonInstlEmailAddr(Base):
+  __tablename__ = 'mds_person_instl_email_addr'
+  instl_email_addr = Column(String(15), nullable=False, primary_key=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'inst_email_addr: {}, emplid: {}, timestamp: {}'.format(self.inst_email_addr, self.emplid, self.timestamp)
+    return 'instl_email_addr: {}, emplid: {}, timestamp: {}'.format(self.inst_email_addr, self.emplid, self.timestamp)
 
 class MdsPersonTenureFlag(Base):
   __tablename__ = 'mds_person_tenure_flag'
