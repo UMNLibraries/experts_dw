@@ -40,6 +40,16 @@ class MdsPersonInternetId(Base):
   def __repr__(self):
     return 'internet_id: {}, emplid: {}, timestamp: {}'.format(self.internet_id, self.emplid, self.timestamp)
 
+class MdsPersonPreferredName(Base):
+  __tablename__ = 'mds_person_preferred_name'
+  preferred_name = Column(String(50), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
+  mds_person = relationship('MdsPerson')
+
+  def __repr__(self):
+    return 'preferred_name: {}, emplid: {}, timestamp: {}'.format(self.preferred_name, self.emplid, self.timestamp)
+
 class MdsPersonFirstName(Base):
   __tablename__ = 'mds_person_first_name'
   first_name = Column(String(30), nullable=False, primary_key=True)
