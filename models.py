@@ -125,7 +125,7 @@ class MdsPersonTenureTrackFlag(Base):
 
 class MdsPersonPrimaryEmplRcdno(Base):
   __tablename__ = 'mds_person_primary_empl_rcdno'
-  primary_empl_rcdno = Column(Integer, nullable=False, primary_key=True)
+  primary_empl_rcdno = Column(Integer, nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
