@@ -2,6 +2,9 @@ from sqlalchemy import Column, DateTime, String, Integer, func, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+# Would like to name constraints, but Oracle limits names to 30 characters!
+#import common
+#Base = declarative_base(metadata=common.metadata)
 Base = declarative_base()
 
 class MdsPerson(Base):
@@ -32,7 +35,7 @@ class MdsPersonScivalId(Base):
 
 class MdsPersonInternetId(Base):
   __tablename__ = 'mds_person_internet_id'
-  internet_id = Column(String(15), nullable=False, primary_key=True)
+  internet_id = Column(String(15), nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
@@ -42,7 +45,7 @@ class MdsPersonInternetId(Base):
 
 class MdsPersonPreferredName(Base):
   __tablename__ = 'mds_person_preferred_name'
-  preferred_name = Column(String(50), nullable=False, primary_key=True)
+  preferred_name = Column(String(50), nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
@@ -52,7 +55,7 @@ class MdsPersonPreferredName(Base):
 
 class MdsPersonFirstName(Base):
   __tablename__ = 'mds_person_first_name'
-  first_name = Column(String(30), nullable=False, primary_key=True)
+  first_name = Column(String(30), nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
@@ -62,7 +65,7 @@ class MdsPersonFirstName(Base):
 
 class MdsPersonMiddleName(Base):
   __tablename__ = 'mds_person_middle_name'
-  middle_name = Column(String(30), nullable=False, primary_key=True)
+  middle_name = Column(String(30), nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
@@ -72,7 +75,7 @@ class MdsPersonMiddleName(Base):
 
 class MdsPersonLastName(Base):
   __tablename__ = 'mds_person_last_name'
-  last_name = Column(String(30), nullable=False, primary_key=True)
+  last_name = Column(String(30), nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
@@ -82,7 +85,7 @@ class MdsPersonLastName(Base):
 
 class MdsPersonNameSuffix(Base):
   __tablename__ = 'mds_person_name_suffix'
-  name_suffix = Column(String(15), nullable=False, primary_key=True)
+  name_suffix = Column(String(15), nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
@@ -92,7 +95,7 @@ class MdsPersonNameSuffix(Base):
 
 class MdsPersonInstlEmailAddr(Base):
   __tablename__ = 'mds_person_instl_email_addr'
-  instl_email_addr = Column(String(15), nullable=False, primary_key=True)
+  instl_email_addr = Column(String(70), nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
@@ -102,7 +105,7 @@ class MdsPersonInstlEmailAddr(Base):
 
 class MdsPersonTenureFlag(Base):
   __tablename__ = 'mds_person_tenure_flag'
-  tenure_flag = Column(String(1), nullable=False, primary_key=True)
+  tenure_flag = Column(String(1), nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
@@ -112,7 +115,7 @@ class MdsPersonTenureFlag(Base):
 
 class MdsPersonTenureTrackFlag(Base):
   __tablename__ = 'mds_person_tenure_track_flag'
-  tenure_track_flag = Column(String(1), nullable=False, primary_key=True)
+  tenure_track_flag = Column(String(1), nullable=True)
   emplid = Column(ForeignKey('mds_person.emplid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson')
