@@ -17,19 +17,18 @@ depends_on = None
 
 
 def upgrade():
-#    op.drop_table('mds_person_internet_id')
-#    op.drop_table('mds_person_middle_name')
-#    op.drop_table('mds_person_last_name')
-#    op.drop_table('mds_person_first_name')
-#    op.drop_table('mds_person_name_suffix')
-#    op.drop_table('mds_person_preferred_name')
-#    op.drop_table('mds_person_instl_email_addr')
-#    op.drop_table('mds_person_tenure_track_flag')
-#    op.drop_table('mds_person_tenure_flag')
+    op.drop_table('mds_person_internet_id')
+    op.drop_table('mds_person_middle_name')
+    op.drop_table('mds_person_last_name')
+    op.drop_table('mds_person_first_name')
+    op.drop_table('mds_person_name_suffix')
+    op.drop_table('mds_person_preferred_name')
+    op.drop_table('mds_person_instl_email_addr')
+    op.drop_table('mds_person_tenure_track_flag')
+    op.drop_table('mds_person_tenure_flag')
     op.drop_table('mds_person_primary_empl_rcdno')
-#    op.drop_table('mds_person_scival_id')
+    op.drop_table('mds_person_scival_id')
     op.drop_table('mds_person')
-
 
 def downgrade():
     op.create_table('mds_person',
