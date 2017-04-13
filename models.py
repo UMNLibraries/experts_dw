@@ -28,11 +28,12 @@ class MdsPerson(Base):
 class MdsPersonEmplid(Base):
   __tablename__ = 'mds_person_emplid'
   emplid = Column(String(11), primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'emplid: {}, timestamp: {}'.format(self.emplid, self.timestamp)
+      return 'emplid: {}, uuid: {}, timestamp: {}'.format(self.emplid, self.uuid, self.timestamp)
 
 # The Scival ID was automatically-generated for Elsevier's predecessor-to-Pure
 # product, SciVal. After moving to Pure we started using UMN's EmplID for new
