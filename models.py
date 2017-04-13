@@ -19,16 +19,16 @@ Base = declarative_base()
 
 class MdsPerson(Base):
   __tablename__ = 'mds_person'
-  emplid = Column(String(11), primary_key=True)
-  uuid = Column(String(36), nullable=False)
+  uuid = Column(String(36), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
   def __repr__(self):
-    return 'emplid: {}, timestamp: {}'.format(self.emplid, self.timestamp)
+    return 'uuid: {}, timestamp: {}'.format(self.uuid, self.timestamp)
 
 class MdsPersonEmplid(Base):
   __tablename__ = 'mds_person_emplid'
   emplid = Column(String(11), primary_key=True)
+  uuid = Column(String(36))
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
   def __repr__(self):
