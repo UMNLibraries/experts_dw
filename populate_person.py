@@ -13,9 +13,9 @@ with open(filename) as csvfile:
   reader = csv.reader(csvfile)
   for row in reader:
     emplid = row[1]
-    person_uuid = uuid.uuid4()
+    person_uuid = str(uuid.uuid4())
     person = MdsPerson(uuid=person_uuid)
-    person_emplid = 
+    person_emplid = (
       session.query(MdsPersonEmplid)
       .filter(MdsPersonEmplid.emplid == emplid)
       .one_or_none()
