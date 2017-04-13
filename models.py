@@ -7,8 +7,26 @@ from sqlalchemy.orm import relationship
 #Base = declarative_base(metadata=common.metadata)
 Base = declarative_base()
 
+#class DeptOrgMap(Base):
+#  __tablename__ = 'dept_org_map'
+#  deptid = Column(String(8), primary_key=True)
+#  orgid = Column(String(18), nullable=False)
+#
+#  def __repr__(self):
+#    return 'deptid: {}, orgid: {}'.format(self.deptid, self.orgid)
+
+## Master Dataset tables. Names all start with 'mds_'.
+
 class MdsPerson(Base):
   __tablename__ = 'mds_person'
+  emplid = Column(String(11), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'emplid: {}, timestamp: {}'.format(self.emplid, self.timestamp)
+
+class MdsPersonEmplid(Base):
+  __tablename__ = 'mds_person_emplid'
   emplid = Column(String(11), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
