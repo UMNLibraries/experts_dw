@@ -20,6 +20,7 @@ Base = declarative_base()
 class MdsPerson(Base):
   __tablename__ = 'mds_person'
   emplid = Column(String(11), primary_key=True)
+  uuid = Column(String(36))
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
   def __repr__(self):
