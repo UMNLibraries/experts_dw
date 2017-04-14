@@ -45,9 +45,7 @@ class MdsPersonScivalId(Base):
   scival_id = Column(Integer, primary_key=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
-  #uuid = Column(String(36))
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
-  mds_person_emplid = relationship('MdsPersonEmplid')
   mds_person = relationship('MdsPerson')
 
   def __repr__(self):
@@ -60,108 +58,108 @@ class MdsPersonInternetId(Base):
   __tablename__ = 'mds_person_internet_id'
   internet_id = Column(String(15), nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'internet_id: {}, emplid: {}, timestamp: {}'.format(self.internet_id, self.emplid, self.timestamp)
+    return 'internet_id: {}, uuid: {}, timestamp: {}'.format(self.internet_id, self.uuid, self.timestamp)
 
 class MdsPersonPreferredName(Base):
   __tablename__ = 'mds_person_preferred_name'
   preferred_name = Column(String(50), nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'preferred_name: {}, emplid: {}, timestamp: {}'.format(self.preferred_name, self.emplid, self.timestamp)
+    return 'first_name: {}, uuid: {}, timestamp: {}'.format(self.first_name, self.uuid, self.timestamp)
 
 class MdsPersonFirstName(Base):
   __tablename__ = 'mds_person_first_name'
   first_name = Column(String(30), nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'first_name: {}, emplid: {}, timestamp: {}'.format(self.first_name, self.emplid, self.timestamp)
+    return 'first_name: {}, uuid: {}, timestamp: {}'.format(self.first_name, self.uuid, self.timestamp)
 
 class MdsPersonMiddleName(Base):
   __tablename__ = 'mds_person_middle_name'
   middle_name = Column(String(30), nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'middle_name: {}, emplid: {}, timestamp: {}'.format(self.middle_name, self.emplid, self.timestamp)
+    return 'middle_name: {}, uuid: {}, timestamp: {}'.format(self.middle_name, self.uuid, self.timestamp)
 
 class MdsPersonLastName(Base):
   __tablename__ = 'mds_person_last_name'
   last_name = Column(String(30), nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'last_name: {}, emplid: {}, timestamp: {}'.format(self.last_name, self.emplid, self.timestamp)
+    return 'last_name: {}, uuid: {}, timestamp: {}'.format(self.last_name, self.uuid, self.timestamp)
 
 class MdsPersonNameSuffix(Base):
   __tablename__ = 'mds_person_name_suffix'
   name_suffix = Column(String(15), nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'name_suffix: {}, emplid: {}, timestamp: {}'.format(self.name_suffix, self.emplid, self.timestamp)
+    return 'name_suffix: {}, uuid: {}, timestamp: {}'.format(self.name_suffix, self.uuid, self.timestamp)
 
 class MdsPersonInstlEmailAddr(Base):
   __tablename__ = 'mds_person_instl_email_addr'
   instl_email_addr = Column(String(70), nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'instl_email_addr: {}, emplid: {}, timestamp: {}'.format(self.inst_email_addr, self.emplid, self.timestamp)
+    return 'instl_email_addr: {}, uuid: {}, timestamp: {}'.format(self.inst_email_addr, self.uuid, self.timestamp)
 
 class MdsPersonTenureFlag(Base):
   __tablename__ = 'mds_person_tenure_flag'
   tenure_flag = Column(String(1), nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'tenure_flag: {}, emplid: {}, timestamp: {}'.format(self.tenure_flag, self.emplid, self.timestamp)
+    return 'tenure_flag: {}, uuid: {}, timestamp: {}'.format(self.tenure_flag, self.uuid, self.timestamp)
 
 class MdsPersonTenureTrackFlag(Base):
   __tablename__ = 'mds_person_tenure_track_flag'
   tenure_track_flag = Column(String(1), nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'tenure_track_flag: {}, emplid: {}, timestamp: {}'.format(self.tenure_track_flag, self.emplid, self.timestamp)
+    return 'tenure_track_flag: {}, uuid: {}, timestamp: {}'.format(self.tenure_track_flag, self.uuid, self.timestamp)
 
 class MdsPersonPrimaryEmplRcdno(Base):
   __tablename__ = 'mds_person_primary_empl_rcdno'
   primary_empl_rcdno = Column(Integer, nullable=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(String(36))
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
-  mds_person_emplid = relationship('MdsPersonEmplid')
+  mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'primary_empl_rcdno: {}, emplid: {}, timestamp: {}'.format(self.primary_empl_rcdno, self.emplid, self.timestamp)
+    return 'primary_empl_rcdno: {}, uuid: {}, timestamp: {}'.format(self.primary_empl_rcdno, self.uuid, self.timestamp)
