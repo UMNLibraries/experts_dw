@@ -44,11 +44,14 @@ class MdsPersonScivalId(Base):
   __tablename__ = 'mds_person_scival_id'
   scival_id = Column(Integer, primary_key=True)
   emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
+  #uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
+  uuid = Column(String(36))
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
   mds_person_emplid = relationship('MdsPersonEmplid')
+  #mds_person = relationship('MdsPerson')
 
   def __repr__(self):
-    return 'scival_id: {}, emplid: {}, timestamp: {}'.format(self.scival_id, self.emplid, self.timestamp)
+    return 'scival_id: {}, uuid: {}, timestamp: {}'.format(self.scival_id, self.uuid, self.timestamp)
 
 # The following group of tables all track data from ps_dwhr_demo_addr, which does
 # not have an effective date (effdt) column.
