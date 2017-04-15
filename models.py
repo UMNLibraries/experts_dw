@@ -86,11 +86,11 @@ class MdsPersonFirstName(Base):
 class MdsPersonMiddleName(Base):
   __tablename__ = 'mds_person_middle_name'
   middle_name = Column(String(30), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
-  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
+  #emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
+  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
-  mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
+  #mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
 
   def __repr__(self):
     return 'middle_name: {}, uuid: {}, timestamp: {}'.format(self.middle_name, self.uuid, self.timestamp)
@@ -108,11 +108,9 @@ class MdsPersonLastName(Base):
 class MdsPersonNameSuffix(Base):
   __tablename__ = 'mds_person_name_suffix'
   name_suffix = Column(String(15), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
-  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
+  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
-  mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
 
   def __repr__(self):
     return 'name_suffix: {}, uuid: {}, timestamp: {}'.format(self.name_suffix, self.uuid, self.timestamp)
