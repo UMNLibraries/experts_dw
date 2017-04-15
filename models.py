@@ -66,14 +66,12 @@ class MdsPersonInternetId(Base):
 class MdsPersonPreferredName(Base):
   __tablename__ = 'mds_person_preferred_name'
   preferred_name = Column(String(50), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
-  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
+  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
-  mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
 
   def __repr__(self):
-    return 'first_name: {}, uuid: {}, timestamp: {}'.format(self.first_name, self.uuid, self.timestamp)
+    return 'preferred_name: {}, uuid: {}, timestamp: {}'.format(self.preferred_name, self.uuid, self.timestamp)
 
 class MdsPersonFirstName(Base):
   __tablename__ = 'mds_person_first_name'
