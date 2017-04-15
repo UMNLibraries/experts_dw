@@ -42,9 +42,9 @@ class MdsPersonEmplid(Base):
 
 class MdsPersonScivalId(Base):
   __tablename__ = 'mds_person_scival_id'
-  scival_id = Column(Integer, primary_key=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  scival_id = Column(Integer, nullable=True)
+  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
 
   def __repr__(self):
