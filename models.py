@@ -128,11 +128,9 @@ class MdsPersonInstlEmailAddr(Base):
 class MdsPersonTenureFlag(Base):
   __tablename__ = 'mds_person_tenure_flag'
   tenure_flag = Column(String(1), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
-  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
+  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
-  mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
 
   def __repr__(self):
     return 'tenure_flag: {}, uuid: {}, timestamp: {}'.format(self.tenure_flag, self.uuid, self.timestamp)
