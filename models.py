@@ -56,8 +56,8 @@ class MdsPersonScivalId(Base):
 class MdsPersonInternetId(Base):
   __tablename__ = 'mds_person_internet_id'
   internet_id = Column(String(15), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
+  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
+  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False, primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
   mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
@@ -68,7 +68,7 @@ class MdsPersonInternetId(Base):
 class MdsPersonPreferredName(Base):
   __tablename__ = 'mds_person_preferred_name'
   preferred_name = Column(String(50), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
@@ -80,11 +80,9 @@ class MdsPersonPreferredName(Base):
 class MdsPersonFirstName(Base):
   __tablename__ = 'mds_person_first_name'
   first_name = Column(String(30), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
-  mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
 
   def __repr__(self):
     return 'first_name: {}, uuid: {}, timestamp: {}'.format(self.first_name, self.uuid, self.timestamp)
@@ -92,7 +90,7 @@ class MdsPersonFirstName(Base):
 class MdsPersonMiddleName(Base):
   __tablename__ = 'mds_person_middle_name'
   middle_name = Column(String(30), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
@@ -104,7 +102,7 @@ class MdsPersonMiddleName(Base):
 class MdsPersonLastName(Base):
   __tablename__ = 'mds_person_last_name'
   last_name = Column(String(30), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
@@ -116,7 +114,7 @@ class MdsPersonLastName(Base):
 class MdsPersonNameSuffix(Base):
   __tablename__ = 'mds_person_name_suffix'
   name_suffix = Column(String(15), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
@@ -128,7 +126,7 @@ class MdsPersonNameSuffix(Base):
 class MdsPersonInstlEmailAddr(Base):
   __tablename__ = 'mds_person_instl_email_addr'
   instl_email_addr = Column(String(70), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
@@ -140,7 +138,7 @@ class MdsPersonInstlEmailAddr(Base):
 class MdsPersonTenureFlag(Base):
   __tablename__ = 'mds_person_tenure_flag'
   tenure_flag = Column(String(1), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
@@ -152,7 +150,7 @@ class MdsPersonTenureFlag(Base):
 class MdsPersonTenureTrackFlag(Base):
   __tablename__ = 'mds_person_tenure_track_flag'
   tenure_track_flag = Column(String(1), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
@@ -164,7 +162,7 @@ class MdsPersonTenureTrackFlag(Base):
 class MdsPersonPrimaryEmplRcdno(Base):
   __tablename__ = 'mds_person_primary_empl_rcdno'
   primary_empl_rcdno = Column(Integer, nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False, primary_key=True)
+  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
