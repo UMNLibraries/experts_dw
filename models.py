@@ -76,8 +76,8 @@ class MdsPersonPreferredName(Base):
 class MdsPersonFirstName(Base):
   __tablename__ = 'mds_person_first_name'
   first_name = Column(String(30), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
+  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
 
   def __repr__(self):
