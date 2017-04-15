@@ -56,11 +56,9 @@ class MdsPersonScivalId(Base):
 class MdsPersonInternetId(Base):
   __tablename__ = 'mds_person_internet_id'
   internet_id = Column(String(15), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
-  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False, primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
+  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
-  mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
 
   def __repr__(self):
     return 'internet_id: {}, uuid: {}, timestamp: {}'.format(self.internet_id, self.uuid, self.timestamp)
