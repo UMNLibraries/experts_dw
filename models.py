@@ -118,11 +118,9 @@ class MdsPersonNameSuffix(Base):
 class MdsPersonInstlEmailAddr(Base):
   __tablename__ = 'mds_person_instl_email_addr'
   instl_email_addr = Column(String(70), nullable=True)
-  emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
-  uuid = Column(ForeignKey('mds_person.uuid'), nullable=False)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False, primary_key=True)
+  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
-  mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
 
   def __repr__(self):
     return 'instl_email_addr: {}, uuid: {}, timestamp: {}'.format(self.inst_email_addr, self.uuid, self.timestamp)
