@@ -2,3 +2,4 @@ alembic==0.8.10
 cx_Oracle==5.2.1
 python-dotenv==0.6.3
 SQLAlchemy==1.1.5
+sqlalchemy_mptt==0.2.1

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, DateTime, String, Integer, func, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy_mptt.mixins import BaseNestedSets
 
 # Would like to name constraints, but Oracle limits names to 30 characters!
 #import common
@@ -14,6 +15,15 @@ Base = declarative_base()
 #
 #  def __repr__(self):
 #    return 'deptid: {}, orgid: {}'.format(self.deptid, self.orgid)
+
+class PureOrgTree(Base, BaseNestedSets):
+  __tablename__ = 'pure_org_tree'
+  id = Column(String(50), primary_key=True)
+  type = Column(String(25))
+  name_en = Column(String(255))
+
+  def __repr__(self):
+    return 'id: {}, type: {}, name_en: {}'.format(self.id, self.type, self.name_en)
 
 ## Master Dataset tables. Names all start with 'mds_'.
 
@@ -33,7 +43,7 @@ class MdsPersonEmplid(Base):
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
 
   def __repr__(self):
-      return 'emplid: {}, uuid: {}, timestamp: {}'.format(self.emplid, self.uuid, self.timestamp)
+    return 'emplid: {}, uuid: {}, timestamp: {}'.format(self.emplid, self.uuid, self.timestamp)
 
 # The Scival ID was automatically-generated for Elsevier's predecessor-to-Pure
 # product, SciVal. After moving to Pure we started using UMN's EmplID for new
