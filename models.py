@@ -16,8 +16,8 @@ Base = declarative_base()
 #  def __repr__(self):
 #    return 'deptid: {}, orgid: {}'.format(self.deptid, self.orgid)
 
-class PureOrgTree(Base, BaseNestedSets):
-  __tablename__ = 'pure_org_tree'
+class PureOrg(Base, BaseNestedSets):
+  __tablename__ = 'pure_org'
   id = Column(String(50), primary_key=True)
   type = Column(String(25))
   name_en = Column(String(255))
