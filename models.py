@@ -26,6 +26,16 @@ class PureOrg(Base, BaseNestedSets):
   def __repr__(self):
     return 'id: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_id, self.type, self.name_en)
 
+class UmnDeptPureOrgMap(Base):
+  __tablename__ = 'umn_dept_pure_org_map'
+  umn_id = Column(Integer, primary_key=True)
+  umn_name = Column(String(255), nullable=True)
+  pure_id = Column(ForeignKey('pure_org.id'), nullable=False)
+  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+
+  def __repr__(self):
+    return 'umn_id: {}, umn_name: {}, pure_id: {}'.format(self.umn_id, self.umn_name, self.pure_id)
+
 ## Master Dataset tables. Names all start with 'mds_'.
 
 class MdsPerson(Base):
