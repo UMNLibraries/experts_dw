@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy_mptt import mptt_sessionmaker
+
 
 load_dotenv(find_dotenv())
 
@@ -17,6 +19,13 @@ def engine(db_name):
   )
 
 def session(db_name):
-  Session = sessionmaker()
-  Session.configure(bind=engine(db_name))
+  # Original:
+  #Session = sessionmaker()
+  # mptt docs:
+  #Session = mptt_sessionmaker(sessionmaker(bind=engine))
+  # This didn't work:
+  #Session = mptt_sessionmaker(sessionmaker())
+
+  #Session.configure(bind=engine(db_name))
+  Session = mptt_sessionmaker(sessionmaker(bind=engine(db_name)))
   return Session()

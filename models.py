@@ -18,12 +18,13 @@ Base = declarative_base()
 
 class PureOrg(Base, BaseNestedSets):
   __tablename__ = 'pure_org'
-  id = Column(String(50), primary_key=True)
+  id = Column(Integer, primary_key=True)
+  pure_id = Column(String(50), unique=True, nullable=False)
   type = Column(String(25))
   name_en = Column(String(255))
 
   def __repr__(self):
-    return 'id: {}, type: {}, name_en: {}'.format(self.id, self.type, self.name_en)
+    return 'id: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_id, self.type, self.name_en)
 
 ## Master Dataset tables. Names all start with 'mds_'.
 
@@ -40,7 +41,7 @@ class MdsPersonEmplid(Base):
   emplid = Column(String(11), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'emplid: {}, uuid: {}, timestamp: {}'.format(self.emplid, self.uuid, self.timestamp)
@@ -55,7 +56,7 @@ class MdsPersonScivalId(Base):
   scival_id = Column(Integer, nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'scival_id: {}, uuid: {}, timestamp: {}'.format(self.scival_id, self.uuid, self.timestamp)
@@ -68,7 +69,7 @@ class MdsPersonInternetId(Base):
   internet_id = Column(String(15), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'internet_id: {}, uuid: {}, timestamp: {}'.format(self.internet_id, self.uuid, self.timestamp)
@@ -78,7 +79,7 @@ class MdsPersonPreferredName(Base):
   preferred_name = Column(String(50), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'preferred_name: {}, uuid: {}, timestamp: {}'.format(self.preferred_name, self.uuid, self.timestamp)
@@ -88,7 +89,7 @@ class MdsPersonFirstName(Base):
   first_name = Column(String(30), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'first_name: {}, uuid: {}, timestamp: {}'.format(self.first_name, self.uuid, self.timestamp)
@@ -96,11 +97,9 @@ class MdsPersonFirstName(Base):
 class MdsPersonMiddleName(Base):
   __tablename__ = 'mds_person_middle_name'
   middle_name = Column(String(30), nullable=True)
-  #emplid = Column(ForeignKey('mds_person_emplid.emplid'), nullable=False)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
-  #mds_person_emplid = relationship('MdsPersonEmplid', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'middle_name: {}, uuid: {}, timestamp: {}'.format(self.middle_name, self.uuid, self.timestamp)
@@ -110,7 +109,7 @@ class MdsPersonLastName(Base):
   last_name = Column(String(30), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'last_name: {}, uuid: {}, timestamp: {}'.format(self.last_name, self.uuid, self.timestamp)
@@ -120,7 +119,7 @@ class MdsPersonNameSuffix(Base):
   name_suffix = Column(String(15), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'name_suffix: {}, uuid: {}, timestamp: {}'.format(self.name_suffix, self.uuid, self.timestamp)
@@ -130,7 +129,7 @@ class MdsPersonInstlEmailAddr(Base):
   instl_email_addr = Column(String(70), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'instl_email_addr: {}, uuid: {}, timestamp: {}'.format(self.inst_email_addr, self.uuid, self.timestamp)
@@ -140,7 +139,7 @@ class MdsPersonTenureFlag(Base):
   tenure_flag = Column(String(1), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'tenure_flag: {}, uuid: {}, timestamp: {}'.format(self.tenure_flag, self.uuid, self.timestamp)
@@ -150,7 +149,7 @@ class MdsPersonTenureTrackFlag(Base):
   tenure_track_flag = Column(String(1), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'tenure_track_flag: {}, uuid: {}, timestamp: {}'.format(self.tenure_track_flag, self.uuid, self.timestamp)
@@ -160,7 +159,7 @@ class MdsPersonPrimaryEmplRcdno(Base):
   primary_empl_rcdno = Column(Integer, nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan")
+  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'primary_empl_rcdno: {}, uuid: {}, timestamp: {}'.format(self.primary_empl_rcdno, self.uuid, self.timestamp)
