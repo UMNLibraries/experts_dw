@@ -8,6 +8,33 @@ from sqlalchemy_mptt.mixins import BaseNestedSets
 #Base = declarative_base(metadata=common.metadata)
 Base = declarative_base()
 
+class Person(Base):
+  __tablename__ = 'person'
+  uuid = Column(String(36), primary_key=True)
+  pure_uuid = Column(String(36), nullable=True)
+
+  # May be emplid or old scival_id. Seems emplids may contain more
+  # characters than scival ids, so using the emplid length:
+  pure_id = Column(String(11), nullable=True)
+
+  orcid = Column(String(20), nullable=True)
+
+  # This scopus ID may be unnecessarily long. Also, some sources claim
+  # that a person may (incorrectly, I think) have more than one scopus ID:
+  scopus_id = Column(String(35), nullable=True)
+
+  # Apparently there can be multiples of these, from different sources.
+  # We use only the one from Scopus for now:
+  hindex = Column(Integer, nullable=True)
+
+  emplid = Column(String(11), nullable=True)
+  internet_id = Column(String(15), nullable=True)
+  first_name = Column(String(100), nullable=True)
+  last_name = Column(String(100), nullable=True)
+
+  def __repr__(self):
+    return 'uuid: {}'.format(self.uuid)
+
 class PureOrg(Base, BaseNestedSets):
   __tablename__ = 'pure_org'
   id = Column(Integer, primary_key=True)
@@ -78,7 +105,7 @@ class MdsPersonInternetId(Base):
 
 class MdsPersonPreferredName(Base):
   __tablename__ = 'mds_person_preferred_name'
-  preferred_name = Column(String(50), nullable=True)
+  preferred_name = Column(String(255), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
@@ -88,7 +115,7 @@ class MdsPersonPreferredName(Base):
 
 class MdsPersonFirstName(Base):
   __tablename__ = 'mds_person_first_name'
-  first_name = Column(String(30), nullable=True)
+  first_name = Column(String(100), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
@@ -98,7 +125,7 @@ class MdsPersonFirstName(Base):
 
 class MdsPersonMiddleName(Base):
   __tablename__ = 'mds_person_middle_name'
-  middle_name = Column(String(30), nullable=True)
+  middle_name = Column(String(100), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
@@ -108,7 +135,7 @@ class MdsPersonMiddleName(Base):
 
 class MdsPersonLastName(Base):
   __tablename__ = 'mds_person_last_name'
-  last_name = Column(String(30), nullable=True)
+  last_name = Column(String(100), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
@@ -118,7 +145,7 @@ class MdsPersonLastName(Base):
 
 class MdsPersonNameSuffix(Base):
   __tablename__ = 'mds_person_name_suffix'
-  name_suffix = Column(String(15), nullable=True)
+  name_suffix = Column(String(30), nullable=True)
   uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
   mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
