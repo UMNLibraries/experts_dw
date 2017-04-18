@@ -3,7 +3,6 @@
 import db
 session = db.session('hotel')
 
-from dwe_models import PsDwhrDemoAddr
 import models
 from models import MdsPersonEmplid
 
