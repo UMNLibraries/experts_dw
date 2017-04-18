@@ -8,14 +8,6 @@ from sqlalchemy_mptt.mixins import BaseNestedSets
 #Base = declarative_base(metadata=common.metadata)
 Base = declarative_base()
 
-#class DeptOrgMap(Base):
-#  __tablename__ = 'dept_org_map'
-#  deptid = Column(String(8), primary_key=True)
-#  orgid = Column(String(18), nullable=False)
-#
-#  def __repr__(self):
-#    return 'deptid: {}, orgid: {}'.format(self.deptid, self.orgid)
-
 class PureOrg(Base, BaseNestedSets):
   __tablename__ = 'pure_org'
   id = Column(Integer, primary_key=True)
@@ -28,13 +20,13 @@ class PureOrg(Base, BaseNestedSets):
 
 class UmnDeptPureOrgMap(Base):
   __tablename__ = 'umn_dept_pure_org_map'
-  umn_id = Column(Integer, primary_key=True)
-  umn_name = Column(String(255), nullable=True)
-  pure_id = Column(ForeignKey('pure_org.id'), nullable=False)
+  umn_dept_id = Column(Integer, primary_key=True)
+  umn_dept_name = Column(String(255), nullable=True)
+  pure_org_id = Column(ForeignKey('pure_org.pure_id'), nullable=False)
   pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
-    return 'umn_id: {}, umn_name: {}, pure_id: {}'.format(self.umn_id, self.umn_name, self.pure_id)
+    return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_id)
 
 ## Master Dataset tables. Names all start with 'mds_'.
 
