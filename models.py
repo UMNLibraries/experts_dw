@@ -11,12 +11,14 @@ Base = declarative_base()
 class Person(Base):
   __tablename__ = 'person'
   uuid = Column(String(36), primary_key=True)
-  pure_uuid = Column(String(36), nullable=True)
+  pure_uuid = Column(String(36), nullable=True, index=True)
 
   # May be emplid or old scival_id. Seems emplids may contain more
   # characters than scival ids, so using the emplid length:
-  pure_id = Column(String(11), nullable=True)
+  pure_id = Column(String(11), nullable=True, index=True)
 
+  # Not sure where to get this. Pure API research outputs? Scopus?
+  # It's not in the Pure API person data.
   orcid = Column(String(20), nullable=True)
 
   # This scopus ID may be unnecessarily long. Also, some sources claim
@@ -27,7 +29,7 @@ class Person(Base):
   # We use only the one from Scopus for now:
   hindex = Column(Integer, nullable=True)
 
-  emplid = Column(String(11), nullable=True)
+  emplid = Column(String(11), nullable=True, index=True)
   internet_id = Column(String(15), nullable=True)
   first_name = Column(String(100), nullable=True)
   last_name = Column(String(100), nullable=True)
@@ -44,6 +46,20 @@ class PureOrg(Base, BaseNestedSets):
 
   def __repr__(self):
     return 'id: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_id, self.type, self.name_en)
+
+class UmnPersonPureOrgMap(Base):
+  __tablename__ = 'umn_person_pure_org_map'
+  person_uuid = Column(ForeignKey('person.uuid'), nullable=False)
+  emplid = Column(String(11), primary_key=True)
+  pure_org_id = Column(ForeignKey('pure_org.pure_id'), primary_key=True)
+  job_description = Column(String(255), nullable=True)
+  employed_as = Column(String(50), nullable=True) # Academic (anything else?)
+  staff_type = Column(String(11), nullable=True) # (non)?academic
+  start_date = Column(DateTime, nullable=True)
+  end_date = Column(DateTime, nullable=True)
+  primary = Column(String(1), nullable=True) # (Y|N)
+  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+  person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
 
 class UmnDeptPureOrgMap(Base):
   __tablename__ = 'umn_dept_pure_org_map'
