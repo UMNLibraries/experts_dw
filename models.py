@@ -49,10 +49,14 @@ class PureOrg(Base, BaseNestedSets):
 
 class UmnPersonPureOrgMap(Base):
   __tablename__ = 'umn_person_pure_org_map'
-  person_uuid = Column(ForeignKey('person.uuid'), nullable=False)
-  emplid = Column(String(11), primary_key=True)
+  person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
+  emplid = Column(String(11))
   pure_org_id = Column(ForeignKey('pure_org.pure_id'), primary_key=True)
-  job_description = Column(String(255), nullable=True)
+
+  # We should probably include a job code in the PK instead of this, but we
+  # don't have those yet:
+  job_description = Column(String(255), nullable=True, primary_key=True)
+
   employed_as = Column(String(50), nullable=True) # Academic (anything else?)
   staff_type = Column(String(11), nullable=True) # (non)?academic
   start_date = Column(DateTime, nullable=True)
