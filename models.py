@@ -50,7 +50,8 @@ class PureOrg(Base, BaseNestedSets):
 class UmnPersonPureOrgMap(Base):
   __tablename__ = 'umn_person_pure_org_map'
   person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
-  emplid = Column(String(11))
+  emplid = Column(String(11), nullable=False)
+  pure_person_id = Column(String(11), nullable=False)
   pure_org_id = Column(ForeignKey('pure_org.pure_id'), primary_key=True)
 
   # We should probably include a job code in the PK instead of this, but we
@@ -59,7 +60,11 @@ class UmnPersonPureOrgMap(Base):
 
   employed_as = Column(String(50), nullable=True) # Academic (anything else?)
   staff_type = Column(String(11), nullable=True) # (non)?academic
-  start_date = Column(DateTime, nullable=True)
+
+  # Seems wrong that we should have to add this to the PK, but it's the only
+  # way I can get the data to load the first time, at least:
+  start_date = Column(DateTime, default=func.current_timestamp(), primary_key=True)
+
   end_date = Column(DateTime, nullable=True)
   primary = Column(String(1), nullable=True) # (Y|N)
   pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
