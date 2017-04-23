@@ -18,6 +18,7 @@ with open(filename) as csvfile:
     employed_as = row[4]
     staff_type = row[5]
     start_date = row[7]
+    end_date = row[8]
     primary = 'Y' if row[13] == 'Yes' else None
 
     person = (
@@ -53,6 +54,8 @@ with open(filename) as csvfile:
     )
     if not (start_date == None or start_date == ''):
       person_org_map.start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+    if not (end_date == None or end_date == ''):
+      person_org_map.end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
 
     session.add(person_org_map)
 
