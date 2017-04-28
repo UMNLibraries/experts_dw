@@ -8,6 +8,37 @@ from sqlalchemy_mptt.mixins import BaseNestedSets
 #Base = declarative_base(metadata=common.metadata)
 Base = declarative_base()
 
+class ResearchOutput(Base):
+  __tablename__ = 'research_output'
+  uuid = Column(String(36), primary_key=True)
+  pure_uuid = Column(String(36), nullable=True)
+
+  # The Pure API does not provide scopus ID to us. Can we change that?
+  scopus_id = Column(String(35), nullable=True)
+
+  pmid = Column(String(50), nullable=True)
+  doi = Column(String(150), nullable=True)
+
+  # See CSL spec for a list of types.
+  type = Column(String(50), nullable=True)
+  
+  title = Column(String(2000), nullable=False)
+  container_title = Column(String(2000), nullable=True)
+
+  # Publication date: we call it "issued" to conform with CSL.
+  issued = Column(DateTime, nullable=False)
+  # Precision in days: 366 (year), 31 (month), 1 (day), etc. 
+  # Maybe 0 could represent a timestamp?
+  issued_precision = Column(Integer, nullable=False)
+
+  volume = Column(String(25), nullable=True)
+  issue = Column(String(25), nullable=True)
+  pages = Column(String(50), nullable=True)
+
+  # Total number of citations of the output. We call it a "totatl" because Pure
+  # also provides citation counts per year, which we may decide to use later.
+  citation_total = Column(Integer, nullable=True)
+
 class Person(Base):
   __tablename__ = 'person'
   uuid = Column(String(36), primary_key=True)
