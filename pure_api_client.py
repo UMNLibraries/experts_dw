@@ -21,7 +21,7 @@ def get_all(family, params={}):
   r = get(family, {"window.size": 1, "namespaces":"remove"})
   xml = et.fromstring(r.text)
   record_count = int(xml.find("count").text)
-  window_size = int(params['window.size']) if 'window.size' in params else 100
+  window_size = int(params['window.size']) if 'window.size' in params else 20
   window_count = int(math.ceil(float(record_count) / window_size))
 
   for window in range(0, window_count):
