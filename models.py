@@ -21,9 +21,6 @@ class ResearchOutput(Base):
 
   # See CSL spec for a list of types.
   type = Column(String(50), nullable=True)
-  
-  title = Column(String(2000), nullable=False)
-  container_title = Column(String(2000), nullable=True)
 
   # Publication date: we call it "issued" to conform with CSL.
   issued = Column(DateTime, nullable=False)
@@ -31,6 +28,9 @@ class ResearchOutput(Base):
   # Maybe 0 could represent a timestamp?
   issued_precision = Column(Integer, nullable=False)
 
+  title = Column(String(2000), nullable=False)
+  container_title = Column(String(2000), nullable=True)
+  issn = Column(String(9), nullable=True)
   volume = Column(String(25), nullable=True)
   issue = Column(String(25), nullable=True)
   pages = Column(String(50), nullable=True)
