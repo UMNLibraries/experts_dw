@@ -28,6 +28,7 @@ def publication(record):
     'type': 'article-journal',
     'title': record.find('./title').text,
     'container_title': record.find('./journal/title/string').text,
+    'persons': [],
   }
 
   scopus_id_elem = record.find("./external/secondarySource[@source='Scopus']")
@@ -75,5 +76,36 @@ def publication(record):
     issued_precision = 1
   publication['issued'] = '-'.join([year, month, day])
   publication['issued_precision'] = issued_precision
+  print(publication)
+
+  person_ordinal = 0
+  for pure_person in record.findall('./persons/personAssociation'):
+    person = {
+      'first_name': pure_person.find('./name/firstName').text,
+      'last_name': pure_person.find('./name/lastName').text,
+      'ordinal': person_ordinal,
+      'person_role': pure_person.find('./personRole/term/localizedString').text.lower(),
+    }
+
+    internal_person_elem = pure_person.find('./person')
+    external_person_elem = pure_person.find('./externalPerson')
+    if internal_person_elem is not None:
+      person['emplid'] = internal_person_elem.find('./employeeId').text
+      person_elem = internal_person_elem
+    else:
+      person['emplid'] = None
+      person_elem = external_person_elem
+
+    person['pure_uuid'] = person_elem.attrib['uuid']
+
+    hindex_elem = person_elem.find('./hIndex')
+    person['hindex'] = hindex_elem.attrib['hIndexTotal'] if hindex_elem is not None else None
+
+    scopus_id_elem = person_elem.find("./external/secondarySource[@source='Scopus']")
+    publication['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
+
+    print('  ' + str(person))
+    publication['persons'].append(person)
+    person_ordinal = person_ordinal + 1
 
   return publication
