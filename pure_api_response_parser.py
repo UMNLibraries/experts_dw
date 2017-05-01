@@ -102,7 +102,7 @@ def publication(record):
     person['hindex'] = hindex_elem.attrib['hIndexTotal'] if hindex_elem is not None else None
 
     scopus_id_elem = person_elem.find("./external/secondarySource[@source='Scopus']")
-    publication['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
+    person['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
 
     print('  ' + str(person))
     publication['persons'].append(person)
