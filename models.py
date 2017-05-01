@@ -43,18 +43,23 @@ class ResearchOutputPersonMap(Base):
   __tablename__ = 'research_output_person_map'
   research_output_uuid = Column(ForeignKey('research_output.uuid'), nullable=False, primary_key=True)
   person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
-  emplid = Column(String(11), nullable=True)
+  emplid = Column(String(11), nullable=True, index=True)
+
   # Ordinal refers to the person's position in the Pure author list.
   # TODO: Is this the same as the publication author list?
   person_ordinal = Column(Integer, nullable=False)
+
   # Person's name as it appears in the Pure author list. 
-  # TODO: Will this always be true? Is this the same as the publication author list?
-  person_name = Column(String(255), nullable=False)
+  first_name = Column(String(100), nullable=True)
+  last_name = Column(String(100), nullable=True)
+
   # TODO: Should the role really be nullable?
   person_role = Column(String(255), nullable=True)
+
   # (Y|N): Y if the person is included in the Pure database.
   # TODO: Does this also correspond to a person being UMN-internal?
   person_pure_internal = Column(String(1), nullable=True) 
+
   research_output = relationship('ResearchOutput', cascade="all, delete-orphan", single_parent=True)
   person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
 
