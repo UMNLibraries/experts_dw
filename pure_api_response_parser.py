@@ -82,8 +82,11 @@ def publication(record):
   person_ordinal = 0
   for pure_person in record.findall('./persons/personAssociation'):
     person = {
+      # Defaults for UMN-external persons:
       'emplid': None,
       'internet_id': None,
+      'person_pure_internal': 'N',
+
       'first_name': pure_person.find('./name/firstName').text,
       'last_name': pure_person.find('./name/lastName').text,
       'ordinal': person_ordinal,
@@ -93,6 +96,7 @@ def publication(record):
     internal_person_elem = pure_person.find('./person')
     external_person_elem = pure_person.find('./externalPerson')
     if internal_person_elem is not None:
+      person['person_pure_internal'] = 'Y'
       person['emplid'] = internal_person_elem.find('./employeeId').text
       for link_id_elem in internal_person_elem.findall('./linkIdentifiers/linkIdentifier/linkIdentifier'):
         if re.match('umn:', link_id_elem.text):
