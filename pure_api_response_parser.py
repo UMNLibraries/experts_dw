@@ -86,6 +86,7 @@ def publication(record):
       'emplid': None,
       'internet_id': None,
       'person_pure_internal': 'N',
+      'hindex': None,
 
       'first_name': pure_person.find('./name/firstName').text,
       'last_name': pure_person.find('./name/lastName').text,
@@ -98,6 +99,11 @@ def publication(record):
     if internal_person_elem is not None:
       person['person_pure_internal'] = 'Y'
       person['emplid'] = internal_person_elem.find('./employeeId').text
+
+      # TODO: Will we always have an hindex for internal persons?
+      hindex_elem = internal_person_elem.find('./hIndex')
+      person['hindex'] = hindex_elem.attrib['hIndexTotal'] if hindex_elem is not None else None
+
       for link_id_elem in internal_person_elem.findall('./linkIdentifiers/linkIdentifier/linkIdentifier'):
         if re.match('umn:', link_id_elem.text):
           # Pure prefixes internet IDs with 'umn:', which we remove:
@@ -109,9 +115,6 @@ def publication(record):
       person_elem = external_person_elem
 
     person['pure_uuid'] = person_elem.attrib['uuid']
-
-    hindex_elem = person_elem.find('./hIndex')
-    person['hindex'] = hindex_elem.attrib['hIndexTotal'] if hindex_elem is not None else None
 
     scopus_id_elem = person_elem.find("./external/secondarySource[@source='Scopus']")
     person['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
