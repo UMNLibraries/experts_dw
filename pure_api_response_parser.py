@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as et
+import re
 
 def records(xml):
   root = et.fromstring(xml)
@@ -81,6 +82,8 @@ def publication(record):
   person_ordinal = 0
   for pure_person in record.findall('./persons/personAssociation'):
     person = {
+      'emplid': None,
+      'internet_id': None,
       'first_name': pure_person.find('./name/firstName').text,
       'last_name': pure_person.find('./name/lastName').text,
       'ordinal': person_ordinal,
@@ -91,9 +94,14 @@ def publication(record):
     external_person_elem = pure_person.find('./externalPerson')
     if internal_person_elem is not None:
       person['emplid'] = internal_person_elem.find('./employeeId').text
+      for link_id_elem in internal_person_elem.findall('./linkIdentifiers/linkIdentifier/linkIdentifier'):
+        if re.match('umn:', link_id_elem.text):
+          # Pure prefixes internet IDs with 'umn:', which we remove:
+          person['internet_id'] = link_id_elem.text[4:]
+          # Should be only one internet ID:
+          break
       person_elem = internal_person_elem
     else:
-      person['emplid'] = None
       person_elem = external_person_elem
 
     person['pure_uuid'] = person_elem.attrib['uuid']
