@@ -50,14 +50,17 @@ class ResearchOutputPersonMap(Base):
   person_ordinal = Column(Integer, nullable=False)
 
   # Person's name as it appears in the Pure author list. 
+  # TODO: Does this reflect the person's name at the time of publication,
+  # such that it may be different than the current name?
   first_name = Column(String(100), nullable=True)
   last_name = Column(String(100), nullable=True)
 
   # TODO: Should the role really be nullable?
   person_role = Column(String(255), nullable=True)
 
-  # (Y|N): Y if the person is included in the Pure database.
-  # TODO: Does this also correspond to a person being UMN-internal?
+  # (Y|N): Y if the person is included in our UMN Pure database,
+  # i.e. true only if the person is/was UMN-affiliated AND we
+  # have loaded that person's info into Pure.
   person_pure_internal = Column(String(1), nullable=True) 
 
   research_output = relationship('ResearchOutput', cascade="all, delete-orphan", single_parent=True)
@@ -91,6 +94,22 @@ class Person(Base):
 
   def __repr__(self):
     return 'uuid: {}'.format(self.uuid)
+
+# The hierarchy of Pure UMN-internal organisations.
+# Not all Pure organisations are UMN-internal.
+# External orgs are not included here.
+class PureInternalOrg(Base, BaseNestedSets):
+  __tablename__ = 'pure_internal_org'
+  id = Column(Integer, primary_key=True)
+  pure_uuid = Column(String(36), nullable=False, unique=True)
+
+  # De-normalization columns--not really required:
+  pure_id = Column(String(50), nullable=True, index=True)
+  type = Column(String(25))
+  name_en = Column(String(255))
+
+  def __repr__(self):
+    return 'id: {}, pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_uuid, self.pure_id, self.type, self.name_en)
 
 class PureOrg(Base, BaseNestedSets):
   __tablename__ = 'pure_org'
