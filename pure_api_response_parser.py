@@ -21,6 +21,11 @@ def person(record):
 
   return person
 
+def organisation(record):
+  org = {
+    'pure_uuid': record.attrib['uuid'],
+  }
+
 # Right now, this handles only ContributionToJournalType records.
 def publication(record):
   publication = {  

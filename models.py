@@ -112,15 +112,15 @@ class PureInternalOrg(Base, BaseNestedSets):
   #  return 'id: {}, pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_uuid, self.pure_id, self.type, self.name_en)
     return 'id: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_id, self.type, self.name_en)
 
-#class PureOrg(Base, BaseNestedSets):
-#  __tablename__ = 'pure_org'
-#  id = Column(Integer, primary_key=True)
-#  pure_id = Column(String(50), unique=True, nullable=False)
-#  type = Column(String(25))
-#  name_en = Column(String(255))
-#
-#  def __repr__(self):
-#    return 'id: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_id, self.type, self.name_en)
+class PureOrg(Base):
+  __tablename__ = 'pure_org'
+  pure_uuid = Column(String(36), primary_key=True)
+  pure_id = Column(String(50), nullable=True)
+  type = Column(String(25))
+  name_en = Column(String(255))
+
+  def __repr__(self):
+    return 'pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.pure_uuid, self.pure_id, self.type, self.name_en)
 
 # TODO: Do we need this table? Maybe a generic PersonOrg table can replace it.
 class UmnPersonPureOrgMap(Base):
