@@ -101,7 +101,7 @@ class Person(Base):
 class PureInternalOrg(Base, BaseNestedSets):
   __tablename__ = 'pure_internal_org'
   id = Column(Integer, primary_key=True)
-  #pure_uuid = Column(String(36), nullable=False, unique=True)
+  pure_uuid = Column(String(36), nullable=True)
 
   # De-normalization columns--not really required:
   pure_id = Column(String(50), nullable=True, index=True)
@@ -112,22 +112,24 @@ class PureInternalOrg(Base, BaseNestedSets):
   #  return 'id: {}, pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_uuid, self.pure_id, self.type, self.name_en)
     return 'id: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_id, self.type, self.name_en)
 
-class PureOrg(Base, BaseNestedSets):
-  __tablename__ = 'pure_org'
-  id = Column(Integer, primary_key=True)
-  pure_id = Column(String(50), unique=True, nullable=False)
-  type = Column(String(25))
-  name_en = Column(String(255))
+#class PureOrg(Base, BaseNestedSets):
+#  __tablename__ = 'pure_org'
+#  id = Column(Integer, primary_key=True)
+#  pure_id = Column(String(50), unique=True, nullable=False)
+#  type = Column(String(25))
+#  name_en = Column(String(255))
+#
+#  def __repr__(self):
+#    return 'id: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_id, self.type, self.name_en)
 
-  def __repr__(self):
-    return 'id: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_id, self.type, self.name_en)
-
+# TODO: Do we need this table? Maybe a generic PersonOrg table can replace it.
 class UmnPersonPureOrgMap(Base):
   __tablename__ = 'umn_person_pure_org_map'
   person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
   emplid = Column(String(11), nullable=False)
   pure_person_id = Column(String(11), nullable=False)
-  pure_org_id = Column(ForeignKey('pure_org.pure_id'), primary_key=True)
+  #pure_org_id = Column(ForeignKey('pure_org.pure_id'), primary_key=True)
+  pure_org_id = Column(String(50), primary_key=True)
 
   # We should probably include a job code in the PK instead of this, but we
   # don't have those yet:
@@ -142,15 +144,16 @@ class UmnPersonPureOrgMap(Base):
 
   end_date = Column(DateTime, nullable=True)
   primary = Column(String(1), nullable=True) # (Y|N): Primary affiliation flag.
-  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+  #pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
   person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
 
 class UmnDeptPureOrgMap(Base):
   __tablename__ = 'umn_dept_pure_org_map'
   umn_dept_id = Column(Integer, primary_key=True)
   umn_dept_name = Column(String(255), nullable=True)
-  pure_org_id = Column(ForeignKey('pure_org.pure_id'), nullable=False)
-  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+  #pure_org_id = Column(ForeignKey('pure_org.pure_id'), nullable=False)
+  pure_org_id = Column(String(50), nullable=True)
+  #pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_id)
