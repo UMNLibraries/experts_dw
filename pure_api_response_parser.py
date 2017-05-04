@@ -24,6 +24,8 @@ def person(record):
 def organisation(record):
   org = {
     'pure_uuid': record.attrib['uuid'],
+    'parent_pure_uuid': None,
+    'parent_pure_id': None,
     'type': record.find("./typeClassification/term/localizedString[@locale='en_US']").text.lower(),
   }
 
