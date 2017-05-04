@@ -31,6 +31,8 @@ for response in client.get_all('organisation', params):
     )
     session.add(pure_org)
 
+    # Careful if re-using these nested if blocks. The logic is
+    # not quite right--misses some cases.
     if org['pure_id'] is not None:
       pure_internal_org = (
         session.query(PureInternalOrg)
