@@ -24,7 +24,13 @@ def person(record):
 def organisation(record):
   org = {
     'pure_uuid': record.attrib['uuid'],
+    'name_en': record.find("./name/localizedString[@locale='en_US']").text,
   }
+
+  pure_id_elem = record.find("./external/secondarySource[@source='synchronisedOrganisation']")
+  org['pure_id'] = pure_id_elem.attrib['source_id'] if pure_id_elem is not None else None
+
+  return org
 
 # Right now, this handles only ContributionToJournalType records.
 def publication(record):
