@@ -116,8 +116,14 @@ class PureOrg(Base):
   __tablename__ = 'pure_org'
   pure_uuid = Column(String(36), primary_key=True)
   pure_id = Column(String(50), nullable=True)
-  type = Column(String(25))
-  name_en = Column(String(255))
+  parent_pure_uuid = Column(String(36), nullable=True)
+  parent_pure_id = Column(String(50), nullable=True)
+  # (Y|N): Y if the org is UMN-internal:
+  pure_internal = Column(String(1), nullable=False) 
+  type = Column(String(25), nullable=True)
+  name_en = Column(String(255), nullable=False)
+  name_variant_en = Column(String(255), nullable=True)
+  url = Column(String(255), nullable=True)
 
   def __repr__(self):
     return 'pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.pure_uuid, self.pure_id, self.type, self.name_en)
