@@ -24,11 +24,31 @@ def person(record):
 def organisation(record):
   org = {
     'pure_uuid': record.attrib['uuid'],
-    'name_en': record.find("./name/localizedString[@locale='en_US']").text,
+    'type': record.find("./typeClassification/term/localizedString[@locale='en_US']").text.lower(),
   }
 
+  # Hard-coded for now. Will need to change once we start importing external orgs.
+  org['pure_internal'] = 'Y'
+
+  # These fields will exist only for internal orgs:
   pure_id_elem = record.find("./external/secondarySource[@source='synchronisedOrganisation']")
   org['pure_id'] = pure_id_elem.attrib['source_id'] if pure_id_elem is not None else None
+
+  name_en_elem = record.find("./name/localizedString[@locale='en_US']")
+  org['name_en'] = name_en_elem.text if name_en_elem is not None else None
+
+  name_variant_elem = record.find("./nameVariant/classificationDefinedFieldExtension/value/localizedString[@locale='en_US']")
+  org['name_variant_en'] = name_variant_elem.text if name_variant_elem is not None else None
+
+  url_elem = record.find("./webAddresses/classificationDefinedFieldExtension/value/localizedString[@locale='en_US']")
+  org['url'] = url_elem.text if url_elem is not None else None
+
+  parent_org_elem = record.find('./organisations/organisation')
+  if parent_org_elem is not None:
+    org['parent_pure_uuid'] = parent_org_elem.attrib['uuid']
+    parent_pure_id_elem = parent_org_elem.find("./external/secondarySource[@source='synchronisedOrganisation']")
+    org['parent_pure_id'] = parent_pure_id_elem.attrib['source_id'] if parent_pure_id_elem is not None else None
+
 
   return org
 
