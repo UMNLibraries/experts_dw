@@ -101,16 +101,16 @@ class Person(Base):
 class PureInternalOrg(Base, BaseNestedSets):
   __tablename__ = 'pure_internal_org'
   id = Column(Integer, primary_key=True)
-  pure_uuid = Column(String(36), nullable=True)
+  pure_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
 
   # De-normalization columns--not really required:
   pure_id = Column(String(50), nullable=True, index=True)
-  type = Column(String(25))
   name_en = Column(String(255))
 
+  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+
   def __repr__(self):
-  #  return 'id: {}, pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_uuid, self.pure_id, self.type, self.name_en)
-    return 'id: {}, pure_id: {}, type: {}, name_en: {}'.format(self.id, self.pure_id, self.type, self.name_en)
+    return 'id: {}, parent_id: {}, lft: {}, rgt: {}, pure_uuid: {}, name_en: {}'.format(self.id, self.parent_id, self.lft, self.rgt, self.pure_uuid, self.name_en)
 
 class PureOrg(Base):
   __tablename__ = 'pure_org'
