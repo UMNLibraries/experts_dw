@@ -92,6 +92,11 @@ class Person(Base):
   first_name = Column(String(100), nullable=True)
   last_name = Column(String(100), nullable=True)
 
+  # (Y|N): Y if the person is UMN-internal *and* we have added
+  # That person's data to the Pure database. Therefore, some
+  # UMN employees may be classified as external in Pure.
+  pure_internal = Column(String(1), nullable=False) 
+
   def __repr__(self):
     return 'uuid: {}'.format(self.uuid)
 
