@@ -153,8 +153,8 @@ class UmnPersonPureOrgMap(Base):
   #pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
   person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
 
-class UmnDeptPureOrgMap(Base):
-  __tablename__ = 'umn_dept_pure_org_map'
+class UmnDeptPureOrg(Base):
+  __tablename__ = 'umn_dept_pure_org'
   umn_dept_id = Column(Integer, primary_key=True)
   umn_dept_name = Column(String(255), nullable=True)
   #pure_org_id = Column(ForeignKey('pure_org.pure_id'), nullable=False)
