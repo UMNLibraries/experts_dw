@@ -129,13 +129,15 @@ class PureOrg(Base):
     return 'pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.pure_uuid, self.pure_id, self.type, self.name_en)
 
 # TODO: Do we need this table? Maybe a generic PersonOrg table can replace it.
-class UmnPersonPureOrgMap(Base):
-  __tablename__ = 'umn_person_pure_org_map'
+class UmnPersonPureOrg(Base):
+  __tablename__ = 'umn_person_pure_org'
   person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
+  pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
+
+  # De-normalization columns--not really required.
   emplid = Column(String(11), nullable=False)
   pure_person_id = Column(String(11), nullable=False)
-  #pure_org_id = Column(ForeignKey('pure_org.pure_id'), primary_key=True)
-  pure_org_id = Column(String(50), primary_key=True)
+  pure_org_id = Column(String(50), nullable=True)
 
   # We should probably include a job code in the PK instead of this, but we
   # don't have those yet:
@@ -150,7 +152,7 @@ class UmnPersonPureOrgMap(Base):
 
   end_date = Column(DateTime, nullable=True)
   primary = Column(String(1), nullable=True) # (Y|N): Primary affiliation flag.
-  #pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
   person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
 
 class UmnDeptPureOrg(Base):
