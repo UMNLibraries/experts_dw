@@ -157,12 +157,15 @@ class UmnDeptPureOrg(Base):
   __tablename__ = 'umn_dept_pure_org'
   umn_dept_id = Column(Integer, primary_key=True)
   umn_dept_name = Column(String(255), nullable=True)
-  #pure_org_id = Column(ForeignKey('pure_org.pure_id'), nullable=False)
+  pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
+
+  # De-normalization column--not really required.
   pure_org_id = Column(String(50), nullable=True)
-  #pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+
+  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
-    return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_id)
+    return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_uuid: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_uuid, self.pure_org_id)
 
 ## Master Dataset tables. Names all start with 'mds_'.
 
