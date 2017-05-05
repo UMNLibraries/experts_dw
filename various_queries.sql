@@ -1,7 +1,10 @@
+-- Do I need to commit these?
 grant select on person to oit_expert_rd_all;
+grant select on umn_dept_pure_org to oit_expert_rd_all;
 grant select on pure_org to oit_expert_rd_all;
 grant select on pure_internal_org to oit_expert_rd_all;
 grant select on research_output to oit_expert_rd_all;
+
 select * from pure_internal_org where lft >= 505 and rgt <= 520;
 select * from pure_internal_org where "level" > 3;
 select count(*) from pure_org;
