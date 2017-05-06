@@ -8,8 +8,12 @@ from sqlalchemy_mptt.mixins import BaseNestedSets
 #Base = declarative_base(metadata=common.metadata)
 Base = declarative_base()
 
-class ResearchOutput(Base):
-  __tablename__ = 'research_output'
+# Would like to use a longer name, like "research_output", but
+# Oracle's stupid 30-character limit for names makes that difficult.
+# pub is short for publication, even though not all research
+# outputs are publications.
+class Pub(Base):
+  __tablename__ = 'pub'
   uuid = Column(String(36), primary_key=True)
   pure_uuid = Column(String(36), nullable=True)
 
@@ -35,15 +39,15 @@ class ResearchOutput(Base):
   issue = Column(String(25), nullable=True)
   pages = Column(String(50), nullable=True)
 
-  # Total number of citations of the output. We call it a "totatl" because Pure
+  # Total number of citations of the output. We call it a "total" because Pure
   # also provides citation counts per year, which we may decide to use later.
   citation_total = Column(Integer, nullable=True)
 
-class ResearchOutputPersonMap(Base):
-  __tablename__ = 'research_output_person_map'
-  research_output_uuid = Column(ForeignKey('research_output.uuid'), nullable=False, primary_key=True)
+class PubPerson(Base):
+  __tablename__ = 'pub_person'
+  pub_uuid = Column(ForeignKey('pub.uuid'), nullable=False, primary_key=True)
   person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
-  emplid = Column(String(11), nullable=True, index=True)
+  emplid = Column(String(11), nullable=True)
 
   # Ordinal refers to the person's position in the Pure author list.
   # TODO: Is this the same as the publication author list?
@@ -61,9 +65,11 @@ class ResearchOutputPersonMap(Base):
   # (Y|N): Y if the person is included in our UMN Pure database,
   # i.e. true only if the person is/was UMN-affiliated AND we
   # have loaded that person's info into Pure.
+  # TODO: Does this reflect the person's current internal/external
+  # status, or the status at the time of publication?
   person_pure_internal = Column(String(1), nullable=True) 
 
-  research_output = relationship('ResearchOutput', cascade="all, delete-orphan", single_parent=True)
+  pub = relationship('Pub', cascade="all, delete-orphan", single_parent=True)
   person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
 
 class Person(Base):
