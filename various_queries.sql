@@ -1,6 +1,7 @@
 -- Do I need to commit these?
 grant select on person to oit_expert_rd_all;
 grant select on umn_dept_pure_org to oit_expert_rd_all;
+grant select on umn_person_pure_org to oit_expert_rd_all;
 grant select on pure_org to oit_expert_rd_all;
 grant select on pure_internal_org to oit_expert_rd_all;
 grant select on research_output to oit_expert_rd_all;
