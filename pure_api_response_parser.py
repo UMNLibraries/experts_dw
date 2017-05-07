@@ -5,21 +5,58 @@ def records(xml):
   root = et.fromstring(xml)
   return root.findall('result/content')
 
-def person(record):
-  person = {  
-    'pure_uuid': record.attrib['uuid'],
-    'first_name': record.find('./name/firstName').text,
-    'last_name': record.find('./name/lastName').text,
-    'emplid': record.find('./employeeId').text,
+def person(person_elem):
+  person = {
+    'pure_uuid': person_elem.attrib['uuid'],
+    'first_name': person_elem.find('./name/firstName').text,
+    'last_name': person_elem.find('./name/lastName').text,
+
+    # We default to internal. Parent elements will have context to set it otherwise.
+    'pure_internal': 'Y',
+
+    # Defaults for UMN-external persons:
+    'emplid': None,
+    'internet_id': None,
+    'hindex': None,
+    'scopus_id': None,
   }
 
-  hindex_elem = record.find('./hIndex')
+  emplid_elem = person_elem.find('./employeeId')
+  person['emplid'] = emplid_elem.text if emplid_elem is not None else None
+
+  for link_id_elem in person_elem.findall('./linkIdentifiers/linkIdentifier/linkIdentifier'):
+    if re.match('umn:', link_id_elem.text):
+      # Pure prefixes internet IDs with 'umn:', which we remove:
+      person['internet_id'] = link_id_elem.text[4:]
+      # Should be only one internet ID:
+      break
+
+  # TODO: Will we always have an hindex for internal persons?
+  hindex_elem = person_elem.find('./hIndex')
   person['hindex'] = hindex_elem.attrib['hIndexTotal'] if hindex_elem is not None else None
 
-  scopus_id_elem = record.find("./external/secondarySource[@source='Scopus']")
+  scopus_id_elem = person_elem.find("./external/secondarySource[@source='Scopus']")
   person['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
 
   return person
+
+def person_association(person_assoc_elem):
+  person_assoc = {
+    'first_name': person_assoc_elem.find('./name/firstName').text,
+    'last_name': person_assoc_elem.find('./name/lastName').text,
+    'person_role': person_assoc_elem.find('./personRole/term/localizedString').text.lower(),
+    # This will be set by the calling code (e.g. publication()):
+    'ordinal': None,
+  }
+  internal_person_elem = person_assoc_elem.find('./person')
+  external_person_elem = person_assoc_elem.find('./externalPerson')
+  if internal_person_elem is not None:
+    person_assoc['person'] = person(internal_person_elem)
+  else:
+    person_assoc['person'] = person(external_person_elem)
+    person_assoc['person']['pure_internal'] = 'N'
+  
+  return person_assoc
 
 def organisation(record):
   org = {
@@ -62,7 +99,7 @@ def publication(record):
     'type': 'article-journal',
     'title': record.find('./title').text,
     'container_title': record.find('./journal/title/string').text,
-    'persons': [],
+    'person_associations': [],
   }
 
   scopus_id_elem = record.find("./external/secondarySource[@source='Scopus']")
@@ -113,47 +150,11 @@ def publication(record):
   print(publication)
 
   person_ordinal = 0
-  for pure_person in record.findall('./persons/personAssociation'):
-    person = {
-      # Defaults for UMN-external persons:
-      'emplid': None,
-      'internet_id': None,
-      'person_pure_internal': 'N',
-      'hindex': None,
-
-      'first_name': pure_person.find('./name/firstName').text,
-      'last_name': pure_person.find('./name/lastName').text,
-      'ordinal': person_ordinal,
-      'person_role': pure_person.find('./personRole/term/localizedString').text.lower(),
-    }
-
-    internal_person_elem = pure_person.find('./person')
-    external_person_elem = pure_person.find('./externalPerson')
-    if internal_person_elem is not None:
-      person['person_pure_internal'] = 'Y'
-      person['emplid'] = internal_person_elem.find('./employeeId').text
-
-      # TODO: Will we always have an hindex for internal persons?
-      hindex_elem = internal_person_elem.find('./hIndex')
-      person['hindex'] = hindex_elem.attrib['hIndexTotal'] if hindex_elem is not None else None
-
-      for link_id_elem in internal_person_elem.findall('./linkIdentifiers/linkIdentifier/linkIdentifier'):
-        if re.match('umn:', link_id_elem.text):
-          # Pure prefixes internet IDs with 'umn:', which we remove:
-          person['internet_id'] = link_id_elem.text[4:]
-          # Should be only one internet ID:
-          break
-      person_elem = internal_person_elem
-    else:
-      person_elem = external_person_elem
-
-    person['pure_uuid'] = person_elem.attrib['uuid']
-
-    scopus_id_elem = person_elem.find("./external/secondarySource[@source='Scopus']")
-    person['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
-
-    print('  ' + str(person))
-    publication['persons'].append(person)
+  for person_assoc_elem in record.findall('./persons/personAssociation'):
+    person_assoc = person_association(person_assoc_elem)
+    person_assoc['ordinal'] = person_ordinal
+    print('  ' + str(person_assoc))
+    publication['person_associations'].append(person_assoc)
     person_ordinal = person_ordinal + 1
 
   return publication
