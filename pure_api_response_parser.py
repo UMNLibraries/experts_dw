@@ -232,25 +232,20 @@ def publication(pub_elem):
     issued_precision = 1
   publication['issued'] = '-'.join([year, month, day])
   publication['issued_precision'] = issued_precision
-  print(publication)
 
   person_ordinal = 0
   for person_assoc_elem in pub_elem.findall('./persons/personAssociation'):
     person_assoc = person_association(person_assoc_elem)
     person_assoc['ordinal'] = person_ordinal
-    print('  ' + str(person_assoc))
     publication['person_associations'].append(person_assoc)
     person_ordinal = person_ordinal + 1
 
   for assoc_org_elem in pub_elem.findall('./organisations/association'): 
     publication['organisation_associations'].append(associated_organisation(assoc_org_elem))
-  print('  organisation_associations: ' + str(publication['organisation_associations']))
 
   for external_org_elem in pub_elem.findall('./associatedExternalOrganisations/externalOrganisation'):
     publication['associated_external_organisations'].append(external_organisation(external_org_elem))
-  print('  associated_external_organisations: ' + str(publication['associated_external_organisations']))
 
   publication['owner_organisation'] = organisation(pub_elem.find('./owner'))
-  print('  owner_organisation: ' + str(publication['owner_organisation']))
 
   return publication
