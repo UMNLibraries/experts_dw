@@ -37,6 +37,14 @@ def organisation(record):
 
   return org
 
+def external_organisation(external_org_elem):
+  return {
+    'pure_uuid': external_org_elem.attrib['uuid'],
+    # Pure doesn't specify that this will be in English, so maybe a bad assumption:
+    'name_en': external_org_elem.find('./name').text,
+    'type': external_org_elem.find("./typeClassification/term/localizedString[@locale='en_US']").text.lower(),
+  }
+
 def organisation_association(org_assoc_elem):
   org_assoc = {}         
 
@@ -167,54 +175,56 @@ def person_association(person_assoc_elem):
   return person_assoc
 
 # Right now, this handles only ContributionToJournalType records.
-def publication(record):
+def publication(pub_elem):
   publication = {  
-    'pure_uuid': record.attrib['uuid'],
+    'pure_uuid': pub_elem.attrib['uuid'],
     # Hard-coded for now:
     'type': 'article-journal',
-    'title': record.find('./title').text,
-    'container_title': record.find('./journal/title/string').text,
+    'title': pub_elem.find('./title').text,
+    'container_title': pub_elem.find('./journal/title/string').text,
     'person_associations': [],
+    'organisation_associations': [],
+    'associated_external_organisations': [],
   }
 
-  scopus_id_elem = record.find("./external/secondarySource[@source='Scopus']")
+  scopus_id_elem = pub_elem.find("./external/secondarySource[@source='Scopus']")
   publication['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
 
-  pmid_elem = record.find("./external/secondarySource[@source='PubMed']")
+  pmid_elem = pub_elem.find("./external/secondarySource[@source='PubMed']")
   publication['pmid'] = pmid_elem.attrib['source_id'] if pmid_elem is not None else None
 
-  # Seems there may be more than one of these in the Pure record, but we just use the 
+  # Seems there may be more than one of these in the Pure pub_elem, but we just use the 
   # first one for now.
-  doi_elem = record.find('./dois/doi/doi')
+  doi_elem = pub_elem.find('./dois/doi/doi')
   publication['doi'] = doi_elem.text if doi_elem is not None else None
 
-  issn_elem = record.find('./journal/issn/string')
+  issn_elem = pub_elem.find('./journal/issn/string')
   publication['issn'] = issn_elem.text if issn_elem is not None else None
 
-  volume_elem = record.find('./volume')
+  volume_elem = pub_elem.find('./volume')
   publication['volume'] = volume_elem.text if volume_elem is not None else None
 
-  issue_elem = record.find('./journalNumber')
+  issue_elem = pub_elem.find('./journalNumber')
   publication['issue'] = issue_elem.text if issue_elem is not None else None
 
-  pages_elem = record.find('./pages')
+  pages_elem = pub_elem.find('./pages')
   publication['pages'] = pages_elem.text if pages_elem is not None else None
 
-  # TODO: So far, lots of records are missing this data. Is it missing from all of them?
-  citation_total_elem = record.find('./citations/citationTotal')
+  # TODO: So far, lots of pub_elems are missing this data. Is it missing from all of them?
+  citation_total_elem = pub_elem.find('./citations/citationTotal')
   publication['citation_total'] = int(citation_total_elem.text) if citation_total_elem is not None else None
 
-  year = record.find('./publicationDate/year').text
+  year = pub_elem.find('./publicationDate/year').text
   issued_precision = 366
   month = '01'
   day = '01'
-  month_elem = record.find('./publicationDate/month')
+  month_elem = pub_elem.find('./publicationDate/month')
   if (month_elem is not None):
     month = month_elem.text
     if len(month) == 1:
       month = '0' + month
     issued_precision = 31
-  day_elem = record.find('./publicationDate/day')
+  day_elem = pub_elem.find('./publicationDate/day')
   if (day_elem is not None):
     day = day_elem.text
     if len(day) == 1:
@@ -225,11 +235,22 @@ def publication(record):
   print(publication)
 
   person_ordinal = 0
-  for person_assoc_elem in record.findall('./persons/personAssociation'):
+  for person_assoc_elem in pub_elem.findall('./persons/personAssociation'):
     person_assoc = person_association(person_assoc_elem)
     person_assoc['ordinal'] = person_ordinal
     print('  ' + str(person_assoc))
     publication['person_associations'].append(person_assoc)
     person_ordinal = person_ordinal + 1
+
+  for assoc_org_elem in pub_elem.findall('./organisations/association'): 
+    publication['organisation_associations'].append(associated_organisation(assoc_org_elem))
+  print('  organisation_associations: ' + str(publication['organisation_associations']))
+
+  for external_org_elem in pub_elem.findall('./associatedExternalOrganisations/externalOrganisation'):
+    publication['associated_external_organisations'].append(external_organisation(external_org_elem))
+  print('  associated_external_organisations: ' + str(publication['associated_external_organisations']))
+
+  publication['owner_organisation'] = organisation(pub_elem.find('./owner'))
+  print('  owner_organisation: ' + str(publication['owner_organisation']))
 
   return publication
