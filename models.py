@@ -16,6 +16,7 @@ class Pub(Base):
   __tablename__ = 'pub'
   uuid = Column(String(36), primary_key=True)
   pure_uuid = Column(String(36), nullable=True)
+  owner_pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
 
   # The Pure API does not provide scopus ID to us. Can we change that?
   scopus_id = Column(String(35), nullable=True)
@@ -71,6 +72,19 @@ class PubPerson(Base):
 
   pub = relationship('Pub', cascade="all, delete-orphan", single_parent=True)
   person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
+
+class PubPersonPureOrg(Base):
+  __tablename__ = 'pub_person_pure_org'
+  pub_uuid = Column(ForeignKey('pub.uuid'), nullable=False, primary_key=True)
+  person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
+  pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
+
+  pub = relationship('Pub', cascade="all, delete-orphan", single_parent=True)
+  person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
+  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+
+  def __repr__(self):
+    return 'pub_uuid: {}, person_uuid: {}, pure_org_uuid: {}'.format(self.pub_uuid, self.person_uuid, self.pure_org_uuid)
 
 class Person(Base):
   __tablename__ = 'person'
@@ -139,7 +153,19 @@ class PureOrg(Base):
   def __repr__(self):
     return 'pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.pure_uuid, self.pure_id, self.type, self.name_en)
 
-# TODO: Do we need this table? Maybe a generic PersonOrg table can replace it.
+class PersonPureOrg(Base):
+  __tablename__ = 'person_pure_org'
+  person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
+  pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
+
+  person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
+  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+
+  def __repr__(self):
+    return 'person_uuid: {}, pure_org_uuid: {}'.format(self.pub_uuid, self.person_uuid, self.pure_org_uuid)
+
+# We need this table, in addition to person_pure_org, because we get far more data
+# for UMN-internal persons, some of which we use to ensure row uniqueness.
 class UmnPersonPureOrg(Base):
   __tablename__ = 'umn_person_pure_org'
   person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
