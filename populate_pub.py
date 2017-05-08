@@ -1,6 +1,6 @@
 import pure_api_client as client
 import pure_api_response_parser as parser
-from models import ResearchOutput, Person, ResearchOutputPersonMap
+from models import Pub, Person, PubPerson
 
 import db
 session = db.session('hotel')
@@ -15,7 +15,7 @@ for response in client.get_all('publication', params):
     type = record.attrib['type']
     if type != 'stab:ContributionToJournalType':
       continue
-    pure_research_output = parser.publication(record)
+    pure_pub = parser.publication(record)
     #print(pure_research_output)
   break
 #    db_person = (
