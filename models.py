@@ -15,7 +15,7 @@ Base = declarative_base()
 class Pub(Base):
   __tablename__ = 'pub'
   uuid = Column(String(36), primary_key=True)
-  pure_uuid = Column(String(36), nullable=True)
+  pure_uuid = Column(String(36), nullable=False, unique=True, index=True)
   owner_pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
 
   # The Pure API does not provide scopus ID to us. Can we change that?
