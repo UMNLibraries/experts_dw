@@ -5,59 +5,6 @@ def records(xml):
   root = et.fromstring(xml)
   return root.findall('result/content')
 
-def person(person_elem):
-  person = {
-    'pure_uuid': person_elem.attrib['uuid'],
-    'first_name': person_elem.find('./name/firstName').text,
-    'last_name': person_elem.find('./name/lastName').text,
-
-    # We default to internal. Parent elements will have context to set it otherwise.
-    'pure_internal': 'Y',
-
-    # Defaults for UMN-external persons:
-    'emplid': None,
-    'internet_id': None,
-    'hindex': None,
-    'scopus_id': None,
-  }
-
-  emplid_elem = person_elem.find('./employeeId')
-  person['emplid'] = emplid_elem.text if emplid_elem is not None else None
-
-  for link_id_elem in person_elem.findall('./linkIdentifiers/linkIdentifier/linkIdentifier'):
-    if re.match('umn:', link_id_elem.text):
-      # Pure prefixes internet IDs with 'umn:', which we remove:
-      person['internet_id'] = link_id_elem.text[4:]
-      # Should be only one internet ID:
-      break
-
-  # TODO: Will we always have an hindex for internal persons?
-  hindex_elem = person_elem.find('./hIndex')
-  person['hindex'] = hindex_elem.attrib['hIndexTotal'] if hindex_elem is not None else None
-
-  scopus_id_elem = person_elem.find("./external/secondarySource[@source='Scopus']")
-  person['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
-
-  return person
-
-def person_association(person_assoc_elem):
-  person_assoc = {
-    'first_name': person_assoc_elem.find('./name/firstName').text,
-    'last_name': person_assoc_elem.find('./name/lastName').text,
-    'person_role': person_assoc_elem.find('./personRole/term/localizedString').text.lower(),
-    # This will be set by the calling code (e.g. publication()):
-    'ordinal': None,
-  }
-  internal_person_elem = person_assoc_elem.find('./person')
-  external_person_elem = person_assoc_elem.find('./externalPerson')
-  if internal_person_elem is not None:
-    person_assoc['person'] = person(internal_person_elem)
-  else:
-    person_assoc['person'] = person(external_person_elem)
-    person_assoc['person']['pure_internal'] = 'N'
-  
-  return person_assoc
-
 def organisation(record):
   org = {
     'pure_uuid': record.attrib['uuid'],
@@ -88,8 +35,136 @@ def organisation(record):
     parent_pure_id_elem = parent_org_elem.find("./external/secondarySource[@source='synchronisedOrganisation']")
     org['parent_pure_id'] = parent_pure_id_elem.attrib['source_id'] if parent_pure_id_elem is not None else None
 
-
   return org
+
+def organisation_association(org_assoc_elem):
+  org_assoc = {}         
+
+  employment_type_elem = org_assoc_elem.find("./employmentType/term/localizedString[@locale='en_US']")
+  org_assoc['employment_type'] = employment_type_elem.text if employment_type_elem is not None else None
+
+  org_assoc['organisation'] = organisation(org_assoc_elem.find('./organisation'))
+
+  start_date_elem = org_assoc_elem.find('./period/startDate')
+  org_assoc['start_date'] = start_date_elem.text if start_date_elem is not None else None
+
+  end_date_elem = org_assoc_elem.find('./period/endDate')
+  org_assoc['end_date'] = end_date_elem.text if end_date_elem is not None else None
+
+  # This element seems to exist only for primary associations.
+  primary_assoc_elem = org_assoc_elem.find('./primaryAssociation')
+  org_assoc['primary_association'] = primary_assoc_elem.text if primary_assoc_elem is not None else 'false'
+
+  return org_assoc
+
+def staff_organisation_association(staff_org_assoc_elem):
+  staff_org_assoc = {}         
+
+  employment_type_elem = staff_org_assoc_elem.find("./employmentType/term/localizedString[@locale='en_US']")
+  staff_org_assoc['employment_type'] = employment_type_elem.text if employment_type_elem is not None else None
+
+  staff_org_assoc['organisation'] = organisation(staff_org_assoc_elem.find('./organisation'))
+
+  start_date_elem = staff_org_assoc_elem.find('./period/startDate')
+  staff_org_assoc['start_date'] = start_date_elem.text if start_date_elem is not None else None
+
+  end_date_elem = staff_org_assoc_elem.find('./period/endDate')
+  staff_org_assoc['end_date'] = end_date_elem.text if end_date_elem is not None else None
+
+  # This element seems to exist only for primary associations.
+  primary_assoc_elem = staff_org_assoc_elem.find('./primaryAssociation')
+  staff_org_assoc['primary_association'] = primary_assoc_elem.text if primary_assoc_elem is not None else 'false'
+
+  job_description_elem = staff_org_assoc_elem.find('./jobDescription')
+  staff_org_assoc['job_description'] = job_description_elem.text if job_description_elem is not None else None
+
+  return staff_org_assoc
+
+# Don't know why Pure has so many repeated organisation-association elements.
+# This one is a little different than the others, so had to use a different method,
+# with a different name, for it.
+def associated_organisation(assoc_org_elem):
+  assoc_org = {
+    'external': assoc_org_elem.find('./external').text,
+    'organisation': organisation(assoc_org_elem.find('./organisation')),
+  }         
+
+  hidden_elem = assoc_org_elem.find('./hidden')
+  assoc_org['hidden'] = hidden_elem.text if hidden_elem is not None else None
+
+  return assoc_org
+
+def person(person_elem):
+  person = {
+    'pure_uuid': person_elem.attrib['uuid'],
+    'first_name': person_elem.find('./name/firstName').text,
+    'last_name': person_elem.find('./name/lastName').text,
+
+    # We default to internal. Parent elements will have context to set it otherwise.
+    'pure_internal': 'Y',
+
+    # Defaults for UMN-external persons:
+    'emplid': None,
+    'internet_id': None,
+    'hindex': None,
+    'scopus_id': None,
+    'organisation_associations': [],
+    'staff_organisation_associations': [],
+  }
+
+  emplid_elem = person_elem.find('./employeeId')
+  person['emplid'] = emplid_elem.text if emplid_elem is not None else None
+
+  for link_id_elem in person_elem.findall('./linkIdentifiers/linkIdentifier/linkIdentifier'):
+    if re.match('umn:', link_id_elem.text):
+      # Pure prefixes internet IDs with 'umn:', which we remove:
+      person['internet_id'] = link_id_elem.text[4:]
+      # Should be only one internet ID:
+      break
+
+  # TODO: Will we always have an hindex for internal persons?
+  hindex_elem = person_elem.find('./hIndex')
+  person['hindex'] = hindex_elem.attrib['hIndexTotal'] if hindex_elem is not None else None
+
+  scopus_id_elem = person_elem.find("./external/secondarySource[@source='Scopus']")
+  person['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
+
+  for org_assoc_elem in person_elem.findall('./organisationAssociations/organisationAssociation'): 
+    person['organisation_associations'].append(organisation_association(org_assoc_elem))
+
+  for staff_org_assoc_elem in person_elem.findall('./staffOrganisationAssociations/staffOrganisationAssociation'): 
+    person['staff_organisation_associations'].append(staff_organisation_association(staff_org_assoc_elem))
+
+  return person
+
+def person_association(person_assoc_elem):
+  person_assoc = {
+    'first_name': person_assoc_elem.find('./name/firstName').text,
+    'last_name': person_assoc_elem.find('./name/lastName').text,
+    'person_role': person_assoc_elem.find('./personRole/term/localizedString').text.lower(),
+    # This will be set by the calling code (e.g. publication()):
+    'ordinal': None,
+    'organisation_associations': [],
+  }
+
+  external_org_elem = person_assoc_elem.find('./externalOrganisation') 
+  person_assoc['external_organisation'] = external_org_elem.text if external_org_elem is not None else None
+
+  internal_person_elem = person_assoc_elem.find('./person')
+  external_person_elem = person_assoc_elem.find('./externalPerson')
+  if internal_person_elem is not None:
+    person_assoc['person'] = person(internal_person_elem)
+  else:
+    person_assoc['person'] = person(external_person_elem)
+    person_assoc['person']['pure_internal'] = 'N'
+  
+  for assoc_org_elem in person_assoc_elem.findall('./organisations/association'): 
+    person_assoc['organisation_associations'].append(associated_organisation(assoc_org_elem))
+
+  hidden_elem = person_assoc_elem.find('./hidden')
+  person_assoc['hidden'] = hidden_elem.text if hidden_elem is not None else None
+
+  return person_assoc
 
 # Right now, this handles only ContributionToJournalType records.
 def publication(record):
