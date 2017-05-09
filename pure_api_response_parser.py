@@ -105,8 +105,6 @@ def associated_organisation(assoc_org_elem):
 def person(person_elem):
   person = {
     'pure_uuid': person_elem.attrib['uuid'],
-    'first_name': person_elem.find('./name/firstName').text,
-    'last_name': person_elem.find('./name/lastName').text,
 
     # We default to internal. Parent elements will have context to set it otherwise.
     'pure_internal': 'Y',
@@ -119,6 +117,12 @@ def person(person_elem):
     'organisation_associations': [],
     'staff_organisation_associations': [],
   }
+
+  first_name_elem = person_elem.find('./name/firstName')
+  person['first_name'] = first_name_elem.text if first_name_elem is not None else None
+
+  last_name_elem = person_elem.find('./name/lastName')
+  person['last_name'] = last_name_elem.text if last_name_elem is not None else None
 
   emplid_elem = person_elem.find('./employeeId')
   person['emplid'] = emplid_elem.text if emplid_elem is not None else None
@@ -137,6 +141,9 @@ def person(person_elem):
   scopus_id_elem = person_elem.find("./external/secondarySource[@source='Scopus']")
   person['scopus_id'] = scopus_id_elem.attrib['source_id'] if scopus_id_elem is not None else None
 
+  pure_id_elem = person_elem.find("./external/secondarySource[@source='synchronisedPerson']")
+  person['pure_id'] = pure_id_elem.attrib['source_id'] if pure_id_elem is not None else None
+
   for org_assoc_elem in person_elem.findall('./organisationAssociations/organisationAssociation'): 
     person['organisation_associations'].append(organisation_association(org_assoc_elem))
 
@@ -147,13 +154,17 @@ def person(person_elem):
 
 def person_association(person_assoc_elem):
   person_assoc = {
-    'first_name': person_assoc_elem.find('./name/firstName').text,
-    'last_name': person_assoc_elem.find('./name/lastName').text,
     'person_role': person_assoc_elem.find('./personRole/term/localizedString').text.lower(),
     # This will be set by the calling code (e.g. publication()):
     'ordinal': None,
     'organisation_associations': [],
   }
+
+  first_name_elem = person_assoc_elem.find('./name/firstName')
+  person_assoc['first_name'] = first_name_elem.text if first_name_elem is not None else None
+
+  last_name_elem = person_assoc_elem.find('./name/lastName')
+  person_assoc['last_name'] = last_name_elem.text if last_name_elem is not None else None
 
   external_org_elem = person_assoc_elem.find('./externalOrganisation') 
   person_assoc['external_organisation'] = external_org_elem.text if external_org_elem is not None else None
@@ -162,9 +173,11 @@ def person_association(person_assoc_elem):
   external_person_elem = person_assoc_elem.find('./externalPerson')
   if internal_person_elem is not None:
     person_assoc['person'] = person(internal_person_elem)
-  else:
+  elif external_person_elem is not None:
     person_assoc['person'] = person(external_person_elem)
     person_assoc['person']['pure_internal'] = 'N'
+  else:
+    print('No person found for person_association: ' + str(person_assoc))
   
   for assoc_org_elem in person_assoc_elem.findall('./organisations/association'): 
     person_assoc['organisation_associations'].append(associated_organisation(assoc_org_elem))
