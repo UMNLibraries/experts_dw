@@ -44,6 +44,8 @@ class Pub(Base):
   # also provides citation counts per year, which we may decide to use later.
   citation_total = Column(Integer, nullable=True)
 
+  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+
 class PubPerson(Base):
   __tablename__ = 'pub_person'
   pub_uuid = Column(ForeignKey('pub.uuid'), nullable=False, primary_key=True)
