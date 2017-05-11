@@ -43,6 +43,14 @@ def external_organisation(external_org_elem):
     # Pure doesn't specify that this will be in English, so maybe a bad assumption:
     'name_en': external_org_elem.find('./name').text,
     'type': external_org_elem.find("./typeClassification/term/localizedString[@locale='en_US']").text.lower(),
+    'pure_internal': 'N',
+
+    # Pure doesn't give us these fields for external orgs, so we just set them all to None:
+    'name_variant_en': None,
+    'pure_id': None,
+    'parent_pure_id': None,
+    'parent_pure_uuid': None,
+    'url': None
   }
 
 def organisation_association(org_assoc_elem):
