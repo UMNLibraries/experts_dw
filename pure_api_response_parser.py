@@ -251,7 +251,9 @@ def publication(pub_elem):
     if len(day) == 1:
       day = '0' + day
     issued_precision = 1
-  publication['issued'] = '-'.join([year, month, day])
+  publication['issued'] = {}
+  publication['issued']['date_parts'] = [int(year), int(month), int(day)]
+  publication['issued']['literal'] = '-'.join([year, month, day])
   publication['issued_precision'] = issued_precision
 
   person_ordinal = 0
