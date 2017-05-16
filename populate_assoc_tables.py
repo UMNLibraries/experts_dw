@@ -135,29 +135,29 @@ for response in client.get_all('publication', params):
         external_org_name = person_assoc['external_organisation']
         if external_org_name in external_pub_orgs:
           external_org = external_pub_orgs[external_org_name]
-          external_org_uuid = external_org['pure_uuid']
-  
-          db_person_pure_org = find_db_person_pure_org(db_person.uuid, external_org_uuid)
-          if db_person_pure_org is None:
-            db_person_pure_org = PersonPureOrg(
-              person_uuid = db_person.uuid,
-              pure_org_uuid = external_org_uuid
-            )
-            session.add(db_person_pure_org)
-  
-          # External persons will also have only one pub-org association, so may as well
-          # take add it here:
-          db_pub_person_pure_org = find_db_pub_person_pure_org(db_pub.uuid, db_person.uuid, external_org_uuid)
-          if db_pub_person_pure_org is not None:
-            # Should never happen, but just in case:
-            print('pub-person-pure_org association already exists in experts db: pub_uuid: {}, person_uuid: {}, pub_uuid: {}'.format(db_pub.uuid, db_person.uuid, db_pub.uuid))
-          else:
-            db_pub_person_pure_org = PubPersonPureOrg(
-              pub_uuid = db_pub.uuid,
-              person_uuid = db_person.uuid,
-              pure_org_uuid = external_org_uuid
-            )
-            session.add(db_pub_person_pure_org)
+          db_org = find_db_org(external_org['pure_uuid'])
+          if db_org is not None:
+            db_person_pure_org = find_db_person_pure_org(db_person.uuid, db_org.pure_uuid)
+            if db_person_pure_org is None:
+              db_person_pure_org = PersonPureOrg(
+                person_uuid = db_person.uuid,
+                pure_org_uuid = db_org.pure_uuid
+              )
+              session.add(db_person_pure_org)
+    
+            # External persons will also have only one pub-org association, so may as well
+            # take add it here:
+            db_pub_person_pure_org = find_db_pub_person_pure_org(db_pub.uuid, db_person.uuid, db_org.pure_uuid)
+            if db_pub_person_pure_org is not None:
+              # Should never happen, but just in case:
+              print('pub-person-pure_org association already exists in experts db: pub_uuid: {}, person_uuid: {}, pure_org_uuid: {}'.format(db_pub.uuid, db_person.uuid, db_org.pure_uuid))
+            else:
+              db_pub_person_pure_org = PubPersonPureOrg(
+                pub_uuid = db_pub.uuid,
+                person_uuid = db_person.uuid,
+                pure_org_uuid = db_org.pure_uuid
+              )
+              session.add(db_pub_person_pure_org)
 
         # Go to the next person_assoc, because we should have no other
         # data for an external person:
@@ -170,13 +170,19 @@ for response in client.get_all('publication', params):
         record_org = org_assoc['organisation']
         if record_org['pure_uuid'] in orgs_seen:
           continue
-        orgs_seen[record_org['pure_uuid']] = record_org
+        db_org = find_db_org(record_org['pure_uuid'])
+        if db_org is None:
+          continue
+        orgs_seen[db_org.pure_uuid] = record_org
 
       for staff_org_assoc in person_assoc['person']['staff_organisation_associations']:
         record_org = staff_org_assoc['organisation']
         if record_org['pure_uuid'] in orgs_seen:
           continue
-        orgs_seen[record_org['pure_uuid']] = record_org
+        db_org = find_db_org(record_org['pure_uuid'])
+        if db_org is None:
+          continue
+        orgs_seen[db_org.pure_uuid] = record_org
 
       for org_uuid in orgs_seen:
 
