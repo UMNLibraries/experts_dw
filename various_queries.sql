@@ -4,7 +4,9 @@ grant select on umn_dept_pure_org to oit_expert_rd_all;
 grant select on umn_person_pure_org to oit_expert_rd_all;
 grant select on pure_org to oit_expert_rd_all;
 grant select on pure_internal_org to oit_expert_rd_all;
-grant select on research_output to oit_expert_rd_all;
+grant select on pub to oit_expert_rd_all;
+grant select on pub_person to oit_expert_rd_all;
+grant select on pub_person_pure_org to oit_expert_rd_all;
 
 select * from pure_internal_org where lft >= 505 and rgt <= 520;
 select * from pure_internal_org where "level" > 3;
