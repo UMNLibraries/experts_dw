@@ -4,4 +4,4 @@ Database schema for the Experts@Minnesota Data Warehouse.
 
 ## Entity Relationship Diagram (ERD)
 
-![ERD](./schema.svg)
+![ERD](https://raw.githubusercontent.com/UMNLibraries/experts-dw-schema/master/schema.svg)
