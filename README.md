@@ -1,6 +1,29 @@
-# experts-dw-schema
+# Experts@Minnesota Database Schema
 
-Database schema for the Experts@Minnesota Data Warehouse.
+Schema for the [Experts@Minnesota](https://www.lib.umn.edu/about/experts) database.
+
+## Overview
+
+UMN Libraries created this database to complement the Elsevier product, Pure, which we have branded
+[Experts@Minnesota](https://experts.umn.edu). We did this both to provide alternative means of access
+to some of the data, as well as to maintain a vendor-independent, UMN-local copy of that data.
+
+## Access
+
+Read-only direct SQL access is available to anyone with a UMN internet ID. This database is on the OIT Oracle Hotel,
+currently only on the tst instance, with access granted via the `oit_expert_rd_all` role, managed by OIT. Role members
+can be personal internet IDs or departmental/functional accounts. For access to the role and database connection 
+information, send email to: dbrequests@umn.edu The DBAs at that address will probably tell you to go to the
+[Access Request Forms on Service Now](https://umnprd.service-now.com/nav_to.do?uri=%2Fhome.do) and fill out the
+"IT Hosted Databases" form with the information described above, so that's another way to start the process.
+
+A web services API is in development and coming soon.
+
+## Announcements & Discussion
+
+Announcements and discussion about this database and other Experts@Minnesota services happen on both the
+__Experts Data Warehouse-API__ Google Group and on the __#research-activity__ channel on
+[Tech-People UMN Slack](https://tech-people-umn.slack.com). Both are open to anyone with a UMN internet ID.
 
 ## Entity Relationship Diagram (ERD)
 
