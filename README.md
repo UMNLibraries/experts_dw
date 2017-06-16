@@ -1,6 +1,6 @@
 # Experts@Minnesota Database Schema
 
-Schema for the [Experts@Minnesota](https://www.lib.umn.edu/about/experts) database.
+Schema for the [Experts@Minnesota project](https://www.lib.umn.edu/about/experts) database.
 
 ## Overview
 
@@ -25,6 +25,30 @@ Announcements and discussion about this database and other Experts@Minnesota ser
 __Experts Data Warehouse-API__ Google Group and on the __#research-activity__ channel on
 [Tech-People UMN Slack](https://tech-people-umn.slack.com). Both are open to anyone with a UMN internet ID.
 
+## Maturity
+
+It may be charitable to assign this database an alpha level of maturity. Probably obvious that this repository
+is a bit of a mess. We want your feedback to help make it better! Our goal was to release a useful, usable
+product to users as soon as possible. We recognize that we can't give you exactly what you need or want without
+working directly with you to find out what that is. Please join the user community discussion by following
+the instructions above.
+
+## Data Model Design
+
+Of course the Pure data model heavily influenced the design of this data model, but 
+[Citation Style Language (CSL)](http://docs.citationstyles.org/en/stable/index.html) was at least as big an influence.
+Again, one goal was vendor-independence. CSL is a popular standard used by many citation managers. Another goal
+was to find a robust data model already implemented in popular web services APIs.
+[csl-data.json](https://github.com/citation-style-language/schema/blob/master/csl-data.json) was the best such model
+we could find. Our upcoming web services will adhere to it as closely as possible.
+
+### Organizational Complexity
+
+As the diagrams and documentation below should make painfully obvious, the data model is most complex
+wherever organizations are involved. We especially welcome feedback from users about these parts of the
+data model. There are likely many improvements we could make to allow for more convenient and performant 
+queries, as well as conceptual clarity and simplicity.
+ 
 ## Entity Relationship Diagram (ERD)
 
 The following diagrams are exports from [Oracle SQL Developer](http://www.oracle.com/technetwork/developer-tools/sql-developer/overview/index-097090.html).
@@ -34,6 +58,9 @@ The following diagrams are exports from [Oracle SQL Developer](http://www.oracle
 ![ERD](erd.png)
 
 ## Data Dictionary
+
+The following information, in a separate section for each table, is in the database itself, in the form of
+comments on all tables and columns. We re-produce it here for convenience.
 
 ### PERSON
 
