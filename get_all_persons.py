@@ -1,4 +1,5 @@
-import pure_api_client as client
+import env
+from pureapi import client
 
 params = { 
   'window.size': 20,
@@ -9,4 +10,5 @@ count = 0
 for response in client.get_all('person', params):
   with open('person_' + str(count) + '.xml', 'w') as file:
     print(response.text, file=file)
+  break
   count = count + 1

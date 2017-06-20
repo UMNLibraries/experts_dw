@@ -1,6 +1,6 @@
 # One-off to import the orgs (all external, it seems) associated with publication records.
-import pure_api_client as client
-import pure_api_response_parser as parser
+import env
+from pureapi import client, parser
 from models import Pub, PureOrg
 
 import db

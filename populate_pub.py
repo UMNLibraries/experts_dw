@@ -1,5 +1,5 @@
-import pure_api_client as client
-import pure_api_response_parser as parser
+import env
+from pureapi import client, parser
 from models import Pub, Person, PureOrg, PersonPureOrg
 
 import db

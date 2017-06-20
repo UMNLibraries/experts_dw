@@ -1,6 +1,6 @@
 # One-off to load persons, especially external persons, from publication records:
-import pure_api_client as client
-import pure_api_response_parser as parser
+import env
+from pureapi import client, parser
 from models import Person
 
 import db

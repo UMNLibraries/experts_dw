@@ -1,7 +1,7 @@
 # One-off to populate some tables with UMN-internal org data.
 
-import pure_api_client as client
-import pure_api_response_parser as parser
+import env
+from pureapi import client, parser
 from models import PureOrg, PureInternalOrg
 from sqlalchemy import func
 
