@@ -1,5 +1,3 @@
-# One-off to populate person-related mds tables that do not need their own special procedures.
-
 import db
 s = db.session('hotel')
 
