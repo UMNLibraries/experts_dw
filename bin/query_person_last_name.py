@@ -7,7 +7,7 @@ from models import MdsPersonLastName
 
 last_name = (
   session.query(MdsPersonLastName)
-  .filter(MdsPersonLastName.emplid == '0392048')
+  .filter(MdsPersonLastName.uuid == '001bd704-dcab-4891-bc95-337d6b046dda')
   .order_by(MdsPersonLastName.timestamp.desc())
   .one_or_none()
 )
