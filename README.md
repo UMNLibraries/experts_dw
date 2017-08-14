@@ -11,13 +11,19 @@ to some of the data, as well as to maintain a vendor-independent, UMN-local copy
 ## Access
 
 Read-only direct SQL access is available to anyone with a UMN internet ID. This database is on the OIT Oracle Hotel,
-currently only on the tst instance, with access granted via the `oit_expert_rd_all` role, managed by OIT. Role members
-can be personal internet IDs or departmental/functional accounts. For access to the role and database connection 
-information, send email to: dbrequests@umn.edu The DBAs at that address will probably tell you to go to the
+currently only on the tst instance, with access granted via the `oit_expert_rd_all` role, managed by OIT. Each role
+member must be an Oracle Hotel account, or "schema" in Oracle-speak. These accounts can be personal internet IDs or
+departmental/functional accounts. Note that personal internet IDs must use Duo two-factor authentication, so a 
+functional/departmental account will be better for non-interactive, automated access. For access to the role and
+database connection information, and to optionally create an Oracle Hotel account, send email to: dbrequests@umn.edu
+The DBAs at that address will probably tell you to go to the
 [Access Request Forms on Service Now](https://umnprd.service-now.com/nav_to.do?uri=%2Fhome.do) and fill out the
-"IT Hosted Databases" form with the information described above, so that's another way to start the process.
+"IT Hosted Databases" form with the information described above. If you already have an Oracle Hotel account you
+want to use, it may be faster to just go to that form directly.
 
-A web services API is in development and coming soon.
+Also, Elsevier has just added to Pure a new JSON-based web services API, which we are currently evaluating. We had
+originally planned to design and implement our own web services API. However, it seems the Pure JSON-based API may
+meet user needs, so we are deferring that plan for now.
 
 ## Announcements & Discussion
 
