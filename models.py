@@ -122,6 +122,15 @@ class Person(Base):
   def __repr__(self):
     return 'uuid: {}'.format(self.uuid)
 
+# Records all UMN persons in Pure, with a timestamp for the datetime added to this table.
+class UmnPerson(Base):
+  __tablename__ = 'umn_person'
+  emplid = Column(String(11), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
+
+  def __repr__(self):
+    return 'emplid: {}, timestamp: {}'.format(self.emplid, self.timestamp)
+
 # The hierarchy of Pure UMN-internal organisations.
 # Not all Pure organisations are UMN-internal.
 # External orgs are not included here.
