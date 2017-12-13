@@ -1,0 +1,10 @@
+empl_rcdno
+
+Seems that's the only problematic column, because including all others works as expected:
+select emplid, name, jobcode, jobcode_descr, job_indicator, empl_status, paygroup, deptid, deptid_descr, UM_JOBCODE_GROUP, um_college, um_college_descr, campus, um_zdeptid, um_zdeptid_descr, status_flg, record_source, job_entry_dt, position_entry_dt, calculated_start_dt from all_jobs_new 
+minus 
+select emplid, name, jobcode, jobcode_descr, job_indicator, empl_status, paygroup, deptid, deptid_descr, UM_JOBCODE_GROUP, um_college, um_college_descr, campus, um_zdeptid, um_zdeptid_descr, status_flg, record_source, job_entry_dt, position_entry_dt, calculated_start_dt from all_jobs_previous;
+
+Yes, and it's because we choose a random value for this column for the affiliates job table, because the source table has no such column, upon execution. Need to set some more predictable value. Thinking of using a constant value, e.g. '99'. But will this be problematic, because we may have more than one row for a given emplid?
+
+select emplid, count(emplid) from affiliate_jobs group by emplid;

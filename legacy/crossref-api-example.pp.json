@@ -1,0 +1,1304 @@
+{
+    "status": "ok",
+    "message-type": "work-list",
+    "message-version": "1.0.0",
+    "message": {
+        "facets": {},
+        "total-results": 25207551,
+        "items": [
+            {
+                "indexed": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            30
+                        ]
+                    ],
+                    "date-time": "2017-03-30T07:48:25Z",
+                    "timestamp": 1490860105649
+                },
+                "reference-count": 0,
+                "publisher": "Wiley-Blackwell",
+                "issue": "11",
+                "license": [
+                    {
+                        "URL": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+                        "start": {
+                            "date-parts": [
+                                [
+                                    2015,
+                                    9,
+                                    1
+                                ]
+                            ],
+                            "date-time": "2015-09-01T00:00:00Z",
+                            "timestamp": 1441065600000
+                        },
+                        "delay-in-days": 683,
+                        "content-version": "tdm"
+                    }
+                ],
+                "content-domain": {
+                    "domain": [],
+                    "crossmark-restriction": false
+                },
+                "short-container-title": [
+                    "Major Gifts Report"
+                ],
+                "published-print": {
+                    "date-parts": [
+                        [
+                            2013,
+                            11
+                        ]
+                    ]
+                },
+                "DOI": "10.1002/mgr.20011",
+                "type": "journal-article",
+                "created": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            18
+                        ]
+                    ],
+                    "date-time": "2013-10-18T18:12:51Z",
+                    "timestamp": 1382119971000
+                },
+                "page": "1-8",
+                "source": "Crossref",
+                "is-referenced-by-count": 0,
+                "title": [
+                    "Table of Contents"
+                ],
+                "prefix": "10.1002",
+                "volume": "15",
+                "member": "311",
+                "published-online": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            18
+                        ]
+                    ]
+                },
+                "container-title": [
+                    "The Major Gifts Report"
+                ],
+                "original-title": [],
+                "link": [
+                    {
+                        "URL": "https://api.wiley.com/onlinelibrary/tdm/v1/articles/10.1002%2Fmgr.20011",
+                        "content-type": "unspecified",
+                        "content-version": "vor",
+                        "intended-application": "text-mining"
+                    }
+                ],
+                "deposited": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            29
+                        ]
+                    ],
+                    "date-time": "2017-03-29T11:46:14Z",
+                    "timestamp": 1490787974000
+                },
+                "score": 1.0,
+                "subtitle": [],
+                "short-title": [],
+                "issued": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            18
+                        ]
+                    ]
+                },
+                "references-count": 0,
+                "URL": "http://dx.doi.org/10.1002/mgr.20011",
+                "relation": {},
+                "ISSN": [
+                    "1549-7712"
+                ],
+                "issn-type": [
+                    {
+                        "value": "1549-7712",
+                        "type": "print"
+                    }
+                ]
+            },
+            {
+                "indexed": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            30
+                        ]
+                    ],
+                    "date-time": "2017-03-30T07:48:27Z",
+                    "timestamp": 1490860107980
+                },
+                "reference-count": 0,
+                "publisher": "Wiley-Blackwell",
+                "issue": "39",
+                "license": [
+                    {
+                        "URL": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+                        "start": {
+                            "date-parts": [
+                                [
+                                    2015,
+                                    9,
+                                    1
+                                ]
+                            ],
+                            "date-time": "2015-09-01T00:00:00Z",
+                            "timestamp": 1441065600000
+                        },
+                        "delay-in-days": 687,
+                        "content-version": "tdm"
+                    }
+                ],
+                "content-domain": {
+                    "domain": [],
+                    "crossmark-restriction": false
+                },
+                "short-container-title": [
+                    "Mntl. Hlth. Wkly."
+                ],
+                "published-print": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            14
+                        ]
+                    ]
+                },
+                "DOI": "10.1002/mhw.20397",
+                "type": "journal-article",
+                "created": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            14
+                        ]
+                    ],
+                    "date-time": "2013-10-14T15:29:08Z",
+                    "timestamp": 1381764548000
+                },
+                "page": "1-8",
+                "source": "Crossref",
+                "is-referenced-by-count": 0,
+                "title": [
+                    "Table of Contents"
+                ],
+                "prefix": "10.1002",
+                "volume": "23",
+                "member": "311",
+                "published-online": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            14
+                        ]
+                    ]
+                },
+                "container-title": [
+                    "Mental Health Weekly"
+                ],
+                "original-title": [],
+                "link": [
+                    {
+                        "URL": "https://api.wiley.com/onlinelibrary/tdm/v1/articles/10.1002%2Fmhw.20397",
+                        "content-type": "unspecified",
+                        "content-version": "vor",
+                        "intended-application": "text-mining"
+                    }
+                ],
+                "deposited": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            29
+                        ]
+                    ],
+                    "date-time": "2017-03-29T11:46:04Z",
+                    "timestamp": 1490787964000
+                },
+                "score": 1.0,
+                "subtitle": [],
+                "short-title": [],
+                "issued": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            14
+                        ]
+                    ]
+                },
+                "references-count": 0,
+                "URL": "http://dx.doi.org/10.1002/mhw.20397",
+                "relation": {},
+                "ISSN": [
+                    "1058-1103"
+                ],
+                "issn-type": [
+                    {
+                        "value": "1058-1103",
+                        "type": "print"
+                    }
+                ]
+            },
+            {
+                "indexed": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            30
+                        ]
+                    ],
+                    "date-time": "2017-03-30T07:48:27Z",
+                    "timestamp": 1490860107983
+                },
+                "reference-count": 0,
+                "publisher": "Wiley-Blackwell",
+                "issue": "40",
+                "license": [
+                    {
+                        "URL": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+                        "start": {
+                            "date-parts": [
+                                [
+                                    2015,
+                                    9,
+                                    1
+                                ]
+                            ],
+                            "date-time": "2015-09-01T00:00:00Z",
+                            "timestamp": 1441065600000
+                        },
+                        "delay-in-days": 680,
+                        "content-version": "tdm"
+                    }
+                ],
+                "content-domain": {
+                    "domain": [],
+                    "crossmark-restriction": false
+                },
+                "short-container-title": [
+                    "Mntl. Hlth. Wkly."
+                ],
+                "published-print": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            21
+                        ]
+                    ]
+                },
+                "DOI": "10.1002/mhw.20398",
+                "type": "journal-article",
+                "created": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            21
+                        ]
+                    ],
+                    "date-time": "2013-10-21T20:04:35Z",
+                    "timestamp": 1382385875000
+                },
+                "page": "1-8",
+                "source": "Crossref",
+                "is-referenced-by-count": 0,
+                "title": [
+                    "Table of Contents"
+                ],
+                "prefix": "10.1002",
+                "volume": "23",
+                "member": "311",
+                "published-online": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            21
+                        ]
+                    ]
+                },
+                "container-title": [
+                    "Mental Health Weekly"
+                ],
+                "original-title": [],
+                "link": [
+                    {
+                        "URL": "https://api.wiley.com/onlinelibrary/tdm/v1/articles/10.1002%2Fmhw.20398",
+                        "content-type": "unspecified",
+                        "content-version": "vor",
+                        "intended-application": "text-mining"
+                    }
+                ],
+                "deposited": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            29
+                        ]
+                    ],
+                    "date-time": "2017-03-29T11:04:59Z",
+                    "timestamp": 1490785499000
+                },
+                "score": 1.0,
+                "subtitle": [],
+                "short-title": [],
+                "issued": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            21
+                        ]
+                    ]
+                },
+                "references-count": 0,
+                "URL": "http://dx.doi.org/10.1002/mhw.20398",
+                "relation": {},
+                "ISSN": [
+                    "1058-1103"
+                ],
+                "issn-type": [
+                    {
+                        "value": "1058-1103",
+                        "type": "print"
+                    }
+                ]
+            },
+            {
+                "indexed": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            30
+                        ]
+                    ],
+                    "date-time": "2017-03-30T07:48:38Z",
+                    "timestamp": 1490860118986
+                },
+                "reference-count": 14,
+                "publisher": "Wiley-Blackwell",
+                "issue": "8",
+                "license": [
+                    {
+                        "URL": "http://doi.wiley.com/10.1002/tdm_license_1",
+                        "start": {
+                            "date-parts": [
+                                [
+                                    2013,
+                                    9,
+                                    23
+                                ]
+                            ],
+                            "date-time": "2013-09-23T00:00:00Z",
+                            "timestamp": 1379894400000
+                        },
+                        "delay-in-days": 0,
+                        "content-version": "tdm"
+                    },
+                    {
+                        "URL": "http://onlinelibrary.wiley.com/termsAndConditions",
+                        "start": {
+                            "date-parts": [
+                                [
+                                    2013,
+                                    9,
+                                    23
+                                ]
+                            ],
+                            "date-time": "2013-09-23T00:00:00Z",
+                            "timestamp": 1379894400000
+                        },
+                        "delay-in-days": 0,
+                        "content-version": "vor"
+                    }
+                ],
+                "content-domain": {
+                    "domain": [],
+                    "crossmark-restriction": false
+                },
+                "short-container-title": [
+                    "Microsurgery"
+                ],
+                "published-print": {
+                    "date-parts": [
+                        [
+                            2013,
+                            11
+                        ]
+                    ]
+                },
+                "DOI": "10.1002/micr.22170",
+                "type": "journal-article",
+                "created": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            11
+                        ]
+                    ],
+                    "date-time": "2013-10-11T22:11:48Z",
+                    "timestamp": 1381529508000
+                },
+                "page": "631-637",
+                "source": "Crossref",
+                "is-referenced-by-count": 0,
+                "title": [
+                    "Reconstruction of two separate defects in the upper extremity using anterolateral thigh chimeric flap"
+                ],
+                "prefix": "10.1002",
+                "volume": "33",
+                "author": [
+                    {
+                        "given": "Feng",
+                        "family": "Peng",
+                        "affiliation": [
+                            {
+                                "name": "Department of Hand Surgery, Huashan Hospital; Fudan University; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Hand Reconstruction; Ministry of Health; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Peripheral Nerve and Microsurgery; Shanghai China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Lin",
+                        "family": "Chen",
+                        "affiliation": [
+                            {
+                                "name": "Department of Hand Surgery, Huashan Hospital; Fudan University; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Hand Reconstruction; Ministry of Health; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Peripheral Nerve and Microsurgery; Shanghai China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Dong",
+                        "family": "Han",
+                        "affiliation": [
+                            {
+                                "name": "Department of Hand Surgery, Huashan Hospital; Fudan University; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Hand Reconstruction; Ministry of Health; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Peripheral Nerve and Microsurgery; Shanghai China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Chenwei",
+                        "family": "Xiao",
+                        "affiliation": [
+                            {
+                                "name": "Department of Hand Surgery, Huashan Hospital; Fudan University; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Hand Reconstruction; Ministry of Health; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Peripheral Nerve and Microsurgery; Shanghai China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Qiyuan",
+                        "family": "Bao",
+                        "affiliation": [
+                            {
+                                "name": "Department of Hand Surgery, Huashan Hospital; Fudan University; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Hand Reconstruction; Ministry of Health; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Peripheral Nerve and Microsurgery; Shanghai China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Tao",
+                        "family": "Wang",
+                        "affiliation": [
+                            {
+                                "name": "Department of Hand Surgery, Huashan Hospital; Fudan University; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Hand Reconstruction; Ministry of Health; Shanghai China"
+                            },
+                            {
+                                "name": "Key Laboratory of Peripheral Nerve and Microsurgery; Shanghai China"
+                            }
+                        ]
+                    }
+                ],
+                "member": "311",
+                "published-online": {
+                    "date-parts": [
+                        [
+                            2013,
+                            9,
+                            23
+                        ]
+                    ]
+                },
+                "reference": [
+                    {
+                        "key": "10.1002/micr.22170-BIB0001|micr22170-cit-0001",
+                        "first-page": "149",
+                        "article-title": "The free thigh flap: A new free flap concept based on the septocutaneous artery",
+                        "volume": "37",
+                        "author": "Song",
+                        "year": "1984",
+                        "journal-title": "Br J Plast Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0002|micr22170-cit-0002",
+                        "first-page": "2227",
+                        "article-title": "Have we found an ideal soft-tissue flap? An experience with 672 anterolateral thigh flaps",
+                        "volume": "109",
+                        "author": "Wei",
+                        "year": "2002",
+                        "journal-title": "Plast Reconstr Surg"
+                    },
+                    {
+                        "issue": "6 Suppl",
+                        "key": "10.1002/micr.22170-BIB0003|micr22170-cit-0003",
+                        "first-page": "e395",
+                        "article-title": "The versatility of the anterolateral thigh flap",
+                        "volume": "124",
+                        "author": "Ali",
+                        "year": "2009",
+                        "journal-title": "Plast Reconstr Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0004|micr22170-cit-0004",
+                        "first-page": "34",
+                        "article-title": "Microsurgical coverage reconstruction in upper and lower extremities",
+                        "volume": "24",
+                        "author": "Spyropoulou",
+                        "year": "2010",
+                        "journal-title": "Semin Plast Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0005|micr22170-cit-0005",
+                        "first-page": "120",
+                        "article-title": "Reconstruction of very large defects: A novel application of the double skin paddle anterolateral thigh flap design provides for primary donor-site closure",
+                        "volume": "63",
+                        "author": "Marsh",
+                        "year": "2010",
+                        "journal-title": "J Plast Reconstr Aesthet Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0006|micr22170-cit-0006",
+                        "first-page": "289",
+                        "article-title": "Simultaneous reconstruction of head and neck defects following tumor resection and trismus release with a single anterolateral thigh donor site utilizing a lateral approach to flap harvest",
+                        "volume": "32",
+                        "author": "Lin",
+                        "year": "2012",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0007|micr22170-cit-0007",
+                        "first-page": "60",
+                        "article-title": "Reconstruction of the complete loss of upper and lower lips with a chimeric anterolateral thigh flap: A case report",
+                        "volume": "32",
+                        "author": "Lai",
+                        "year": "2012",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0008|micr22170-cit-0008",
+                        "first-page": "524",
+                        "article-title": "Single free anterolateral thigh flap for simultaneous reconstruction of composite hypopharyngeal and external neck skin defect after head and neck cancer ablation",
+                        "volume": "31",
+                        "author": "Tan",
+                        "year": "2011",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0009|micr22170-cit-0009",
+                        "first-page": "605",
+                        "article-title": "The efficacy of color duplex sonography in preoperative assessment of anterolateral thigh flap",
+                        "volume": "32",
+                        "author": "Ensat",
+                        "year": "2012",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0010|micr22170-cit-0010",
+                        "first-page": "2059",
+                        "article-title": "Using the descending branch of the lateral femoral circumflex vessel as a source of two independent flaps",
+                        "volume": "117",
+                        "author": "Chou",
+                        "year": "2006",
+                        "journal-title": "Plast Reconstr Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0011|micr22170-cit-0011",
+                        "first-page": "623",
+                        "article-title": "Salvage of finger length in septicemic necrosis using 3 free flaps from a single anterolateral thigh donor site",
+                        "volume": "60",
+                        "author": "Caulfield",
+                        "year": "2008",
+                        "journal-title": "Ann Plast Surg"
+                    },
+                    {
+                        "issue": "Suppl 3",
+                        "key": "10.1002/micr.22170-BIB0012|micr22170-cit-0012",
+                        "first-page": "S57",
+                        "article-title": "Free-style free flap",
+                        "volume": "39",
+                        "author": "Chang",
+                        "year": "2008",
+                        "journal-title": "Injury"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0013|micr22170-cit-0013",
+                        "first-page": "182",
+                        "article-title": "Defining vascular supply and territory of thinned perforator flaps: Part I. Anterolateral thigh perforator flap",
+                        "volume": "116",
+                        "author": "Nojima",
+                        "year": "2005",
+                        "journal-title": "Plast Reconstr Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22170-BIB0014|micr22170-cit-0014",
+                        "first-page": "409",
+                        "article-title": "To thin or not to thin: The use of the anterolateral thigh flap in the reconstruction of intraoral defects",
+                        "volume": "56",
+                        "author": "Ross",
+                        "year": "2003",
+                        "journal-title": "Br J Plast Surg"
+                    }
+                ],
+                "container-title": [
+                    "Microsurgery"
+                ],
+                "original-title": [],
+                "link": [
+                    {
+                        "URL": "https://api.wiley.com/onlinelibrary/tdm/v1/articles/10.1002%2Fmicr.22170",
+                        "content-type": "application/pdf",
+                        "content-version": "vor",
+                        "intended-application": "text-mining"
+                    },
+                    {
+                        "URL": "https://api.wiley.com/onlinelibrary/tdm/v1/articles/10.1002%2Fmicr.22170",
+                        "content-type": "unspecified",
+                        "content-version": "vor",
+                        "intended-application": "text-mining"
+                    }
+                ],
+                "deposited": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            29
+                        ]
+                    ],
+                    "date-time": "2017-03-29T17:06:27Z",
+                    "timestamp": 1490807187000
+                },
+                "score": 1.0,
+                "subtitle": [
+                    "Anterolateral Thigh Chimeric Flap"
+                ],
+                "short-title": [],
+                "issued": {
+                    "date-parts": [
+                        [
+                            2013,
+                            9,
+                            23
+                        ]
+                    ]
+                },
+                "references-count": 14,
+                "URL": "http://dx.doi.org/10.1002/micr.22170",
+                "archive": [
+                    "Portico"
+                ],
+                "relation": {
+                    "cites": []
+                },
+                "ISSN": [
+                    "0738-1085"
+                ],
+                "issn-type": [
+                    {
+                        "value": "0738-1085",
+                        "type": "print"
+                    }
+                ],
+                "subject": [
+                    "Surgery"
+                ]
+            },
+            {
+                "indexed": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            30
+                        ]
+                    ],
+                    "date-time": "2017-03-30T07:48:39Z",
+                    "timestamp": 1490860119223
+                },
+                "reference-count": 32,
+                "publisher": "Wiley-Blackwell",
+                "issue": "8",
+                "license": [
+                    {
+                        "URL": "http://doi.wiley.com/10.1002/tdm_license_1",
+                        "start": {
+                            "date-parts": [
+                                [
+                                    2013,
+                                    10,
+                                    15
+                                ]
+                            ],
+                            "date-time": "2013-10-15T00:00:00Z",
+                            "timestamp": 1381795200000
+                        },
+                        "delay-in-days": 0,
+                        "content-version": "tdm"
+                    },
+                    {
+                        "URL": "http://onlinelibrary.wiley.com/termsAndConditions",
+                        "start": {
+                            "date-parts": [
+                                [
+                                    2013,
+                                    10,
+                                    15
+                                ]
+                            ],
+                            "date-time": "2013-10-15T00:00:00Z",
+                            "timestamp": 1381795200000
+                        },
+                        "delay-in-days": 0,
+                        "content-version": "vor"
+                    }
+                ],
+                "funder": [
+                    {
+                        "DOI": "10.13039/501100001809",
+                        "name": "National Natural Science Foundation of China",
+                        "doi-asserted-by": "crossref",
+                        "award": [
+                            "81171713"
+                        ]
+                    }
+                ],
+                "content-domain": {
+                    "domain": [],
+                    "crossmark-restriction": false
+                },
+                "short-container-title": [
+                    "Microsurgery"
+                ],
+                "published-print": {
+                    "date-parts": [
+                        [
+                            2013,
+                            11
+                        ]
+                    ]
+                },
+                "DOI": "10.1002/micr.22178",
+                "type": "journal-article",
+                "created": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            15
+                        ]
+                    ],
+                    "date-time": "2013-10-15T16:35:10Z",
+                    "timestamp": 1381854910000
+                },
+                "page": "620-624",
+                "source": "Crossref",
+                "is-referenced-by-count": 0,
+                "title": [
+                    "Vacuum assisted closure therapy for treatment of complex wounds in replanted extremities"
+                ],
+                "prefix": "10.1002",
+                "volume": "33",
+                "author": [
+                    {
+                        "given": "Min",
+                        "family": "Zhou",
+                        "affiliation": [
+                            {
+                                "name": "Department of Orthopedics-Microsurgery; Zhongnan Hospital of Wuhan University; China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Baiwen",
+                        "family": "Qi",
+                        "affiliation": [
+                            {
+                                "name": "Department of Orthopedics-Microsurgery; Zhongnan Hospital of Wuhan University; China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Aixi",
+                        "family": "Yu",
+                        "affiliation": [
+                            {
+                                "name": "Department of Orthopedics-Microsurgery; Zhongnan Hospital of Wuhan University; China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Zhenyu",
+                        "family": "Pan",
+                        "affiliation": [
+                            {
+                                "name": "Department of Orthopedics-Microsurgery; Zhongnan Hospital of Wuhan University; China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Shaobo",
+                        "family": "Zhu",
+                        "affiliation": [
+                            {
+                                "name": "Department of Orthopedics-Microsurgery; Zhongnan Hospital of Wuhan University; China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Kai",
+                        "family": "Deng",
+                        "affiliation": [
+                            {
+                                "name": "Department of Orthopedics-Microsurgery; Zhongnan Hospital of Wuhan University; China"
+                            }
+                        ]
+                    },
+                    {
+                        "given": "Shengxiang",
+                        "family": "Tao",
+                        "affiliation": [
+                            {
+                                "name": "Department of Orthopedics-Microsurgery; Zhongnan Hospital of Wuhan University; China"
+                            }
+                        ]
+                    }
+                ],
+                "member": "311",
+                "published-online": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            15
+                        ]
+                    ]
+                },
+                "reference": [
+                    {
+                        "key": "10.1002/micr.22178-BIB0001|micr22178-cit-0001",
+                        "first-page": "187",
+                        "article-title": "Lower limb replantations: Indications and a new scoring system",
+                        "volume": "22",
+                        "author": "Battiston",
+                        "year": "2002",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0002|micr22178-cit-0002",
+                        "first-page": "462",
+                        "article-title": "Replantation and function reconstruction of destructive amputation of upper arm",
+                        "volume": "29",
+                        "author": "Niu",
+                        "year": "2006",
+                        "journal-title": "Zhong Hua Xian Wei Wai Ke Za Zhi"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0003|micr22178-cit-0003",
+                        "first-page": "334",
+                        "article-title": "An improved alternative to vacuum-assisted closure (VAC) as a negative pressure dressing in lower limb split skin grafting: A clinical trial",
+                        "volume": "61",
+                        "author": "Rozen",
+                        "year": "2008",
+                        "journal-title": "J Plast Reconstr Aesthe Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0004|micr22178-cit-0004",
+                        "first-page": "728",
+                        "article-title": "Subatmospheric pressure dressings in the temporary treatment of soft tissue injuries associated with type III open tibial shaft fractures in children",
+                        "volume": "26",
+                        "author": "Dedmond",
+                        "year": "2006",
+                        "journal-title": "J Pediatr Orthop"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0005|micr22178-cit-0005",
+                        "first-page": "S8",
+                        "article-title": "The efficacy of negative pressure wound therapy in the management of lower extremity trauma: Review of clinical evidence",
+                        "volume": "38S",
+                        "author": "Kanakaris",
+                        "year": "2007",
+                        "journal-title": "Injury"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0006|micr22178-cit-0006",
+                        "first-page": "683",
+                        "article-title": "Vacuum-assisted wound closure (VAC Therapy) for the management of patients with high-energy soft tissue injuries",
+                        "volume": "17",
+                        "author": "Herscovici",
+                        "year": "2003",
+                        "journal-title": "J Orthop Trauma"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0007|micr22178-cit-0007",
+                        "first-page": "531",
+                        "article-title": "Contact-free spectroscopy of leg ulcers: Principle, technique, and calculation of spectroscopic wound scores",
+                        "volume": "116",
+                        "author": "Schmidt",
+                        "year": "2001",
+                        "journal-title": "J Invest Dermatol"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0008|micr22178-cit-0008",
+                        "first-page": "111",
+                        "article-title": "Analysis of failure cases of replantation of severed limbs",
+                        "volume": "117",
+                        "author": "Mo",
+                        "year": "2003",
+                        "journal-title": "Shi Yong Shou Wai Ke Za Zhi"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0009|micr22178-cit-0009",
+                        "first-page": "288",
+                        "article-title": "Secondary ectopic transfer for replantation salvage after serve wound infection",
+                        "volume": "31",
+                        "author": "Cavadas",
+                        "year": "2011",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0010|micr22178-cit-0010",
+                        "first-page": "431",
+                        "article-title": "Outcomes of anterolateral thigh-free flaps and conversion from external to internal fixation with bone grafting in gustilo type IIIB open tibial fractures",
+                        "volume": "32",
+                        "author": "Lee",
+                        "year": "2012",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0011|micr22178-cit-0011",
+                        "first-page": "611",
+                        "article-title": "Anterograde-retrograde method for harvest of distally based sural fasciocutaneous flap: Report of results from 154 patients",
+                        "volume": "32",
+                        "author": "Dong",
+                        "year": "2012",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0012|micr22178-cit-0012",
+                        "first-page": "232",
+                        "article-title": "Topical antimicrobial protection of postoperative surgical sites at risk of infection with Propionibacterium acnes: an in-vitro study",
+                        "volume": "83",
+                        "author": "Bowler",
+                        "year": "2013",
+                        "journal-title": "J Hosp Infect"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0013|micr22178-cit-0013",
+                        "first-page": "302",
+                        "article-title": "Formulated collagen gel accelerates healing rate immediately after application in patients with diabetic neuropathic foot ulcers",
+                        "volume": "19",
+                        "author": "Blume",
+                        "year": "2011",
+                        "journal-title": "Wound Repair Regen"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0014|micr22178-cit-0014",
+                        "first-page": "397",
+                        "article-title": "Role of silicone derivative plus onion extract gel in presternal hypertrophic scar protection: A prospective randomized, double blinded, controlled trial",
+                        "volume": "9",
+                        "author": "Jenwitheesuk",
+                        "year": "2013",
+                        "journal-title": "Int Wound J"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0015|micr22178-cit-0015",
+                        "first-page": "196",
+                        "article-title": "Biobrane in the management of critical microsurgical wounds of the upper extremity",
+                        "volume": "32",
+                        "author": "Ahuja",
+                        "year": "2012",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0016|micr22178-cit-0016",
+                        "first-page": "104",
+                        "article-title": "Reconstruction of the radial forearm free flap donor site using integra artificial dermis",
+                        "volume": "31",
+                        "author": "Murray",
+                        "year": "2011",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0017|micr22178-cit-0017",
+                        "first-page": "211",
+                        "article-title": "Effects of vacuum-assisted closure on wound microcirculation: An experimental study",
+                        "volume": "28",
+                        "author": "Chen",
+                        "year": "2005",
+                        "journal-title": "Asian J Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0018|micr22178-cit-0018",
+                        "first-page": "253",
+                        "article-title": "Use of subatmospheric pressure therapy to prevent burn wound progression in human: first experiences",
+                        "volume": "30",
+                        "author": "Kamolz",
+                        "year": "2004",
+                        "journal-title": "Burns"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0019|micr22178-cit-0019",
+                        "first-page": "11",
+                        "article-title": "Bacterial load in relation to vacuum-assisted closure wound therapy: A prospective randomized trial",
+                        "volume": "12",
+                        "author": "Mou\u00ebs",
+                        "year": "2004",
+                        "journal-title": "Wound Repair Regen"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0020|micr22178-cit-0020",
+                        "first-page": "749",
+                        "article-title": "Vacuum-assisted closure therapy increases local interleukin-8 and vascular endothelial growth factor levels in traumatic wounds",
+                        "volume": "66",
+                        "author": "Labler",
+                        "year": "2009",
+                        "journal-title": "J Trauma"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0021|micr22178-cit-0021",
+                        "first-page": "418",
+                        "article-title": "Microdeformational wound therapy: Effects on angiogenesis and matrix metalloproteinases in chronic wounds of 3 debilitated patients",
+                        "volume": "56",
+                        "author": "Greene",
+                        "year": "2006",
+                        "journal-title": "Ann Plast Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0022|micr22178-cit-0022",
+                        "first-page": "1315",
+                        "article-title": "Lower extremity trauma: Trends in the management of soft-tissue reconstruction of open tibia-fibula fractures",
+                        "volume": "117",
+                        "author": "Parrett",
+                        "year": "2006",
+                        "journal-title": "Plast Reconstr Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0023|micr22178-cit-0023",
+                        "first-page": "780",
+                        "article-title": "Fix and flap in the era of vacuum suction devices: What do we know in terms of evidence based medicine?",
+                        "volume": "41",
+                        "author": "Stannard",
+                        "year": "2010",
+                        "journal-title": "Injury"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0024|micr22178-cit-0024",
+                        "first-page": "374",
+                        "article-title": "The clinical analysis of fixation of Gustilo III, IIIC tibia fracture and repair of tissue flap",
+                        "volume": "35",
+                        "author": "Deng",
+                        "year": "2012",
+                        "journal-title": "Zhong Hua Xian Wei Wai Ke Za Zhi"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0025|micr22178-cit-0025",
+                        "first-page": "552",
+                        "article-title": "Negative pressure wound therapy after severe open fractures: A prospective randomized study",
+                        "volume": "23",
+                        "author": "Stannard",
+                        "year": "2009",
+                        "journal-title": "J Orthop Trauma"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0026|micr22178-cit-0026",
+                        "first-page": "780",
+                        "article-title": "Fix and flap in the era of vacuum suction devices: What do we know in terms of evidence based medicine?",
+                        "volume": "41",
+                        "author": "Stannard",
+                        "year": "2010",
+                        "journal-title": "Injury"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0027|micr22178-cit-0027",
+                        "first-page": "553",
+                        "article-title": "Vacuum-assisted closure: A new method for wound control and treatment: animal studies and basic foundation",
+                        "volume": "38",
+                        "author": "Morykwas",
+                        "year": "1997",
+                        "journal-title": "Ann Plast Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0028|micr22178-cit-0028",
+                        "first-page": "655",
+                        "article-title": "Treatment of pelvic defect and infection with endoprosthesis exposure by topical negative pressure and irrigation with myocutaneous flap",
+                        "volume": "31",
+                        "author": "Yoshida",
+                        "year": "2011",
+                        "journal-title": "Microsurgery"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0029|micr22178-cit-0029",
+                        "first-page": "283",
+                        "article-title": "Bacterial growth kinetic without the influence of the immune system using vacuum-assisted closure dressing with and without negative pressure in an in vitro wound model",
+                        "volume": "7",
+                        "author": "Assadian",
+                        "year": "2010",
+                        "journal-title": "Int Wound J"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0030|micr22178-cit-0030",
+                        "first-page": "402",
+                        "article-title": "Angiogenesis in wounds treated by microdeformational wound therapy",
+                        "volume": "253",
+                        "author": "Erba",
+                        "year": "2011",
+                        "journal-title": "Ann Surg"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0031|micr22178-cit-0031",
+                        "first-page": "552",
+                        "article-title": "Negative pressure wound therapy after severe open fractures: A prospective randomized study",
+                        "volume": "23",
+                        "author": "Stannard",
+                        "year": "2009",
+                        "journal-title": "J Orthop Trauma"
+                    },
+                    {
+                        "key": "10.1002/micr.22178-BIB0032|micr22178-cit-0032",
+                        "first-page": "290",
+                        "article-title": "The effect of negative pressure therapy on the femoral vein blood flow and wall structure",
+                        "volume": "60",
+                        "author": "Lioupis",
+                        "year": "2009",
+                        "journal-title": "Angiology"
+                    }
+                ],
+                "container-title": [
+                    "Microsurgery"
+                ],
+                "original-title": [],
+                "link": [
+                    {
+                        "URL": "https://api.wiley.com/onlinelibrary/tdm/v1/articles/10.1002%2Fmicr.22178",
+                        "content-type": "application/pdf",
+                        "content-version": "vor",
+                        "intended-application": "text-mining"
+                    },
+                    {
+                        "URL": "https://api.wiley.com/onlinelibrary/tdm/v1/articles/10.1002%2Fmicr.22178",
+                        "content-type": "unspecified",
+                        "content-version": "vor",
+                        "intended-application": "text-mining"
+                    }
+                ],
+                "deposited": {
+                    "date-parts": [
+                        [
+                            2017,
+                            3,
+                            29
+                        ]
+                    ],
+                    "date-time": "2017-03-29T17:06:41Z",
+                    "timestamp": 1490807201000
+                },
+                "score": 1.0,
+                "subtitle": [
+                    "Vacuum Assisted Closure Therapy in Replanted Extremities"
+                ],
+                "short-title": [],
+                "issued": {
+                    "date-parts": [
+                        [
+                            2013,
+                            10,
+                            15
+                        ]
+                    ]
+                },
+                "references-count": 32,
+                "URL": "http://dx.doi.org/10.1002/micr.22178",
+                "archive": [
+                    "Portico"
+                ],
+                "relation": {
+                    "cites": []
+                },
+                "ISSN": [
+                    "0738-1085"
+                ],
+                "issn-type": [
+                    {
+                        "value": "0738-1085",
+                        "type": "print"
+                    }
+                ],
+                "subject": [
+                    "Surgery"
+                ]
+            }
+        ],
+        "items-per-page": 5,
+        "query": {
+            "start-index": 0,
+            "search-terms": null
+        }
+    }
+}

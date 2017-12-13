@@ -59,7 +59,7 @@ queries, as well as conceptual clarity and simplicity.
 
 The following diagrams are exports from [Oracle SQL Developer](http://www.oracle.com/technetwork/developer-tools/sql-developer/overview/index-097090.html).
 
-[Scalable version (PDF)](https://github.com/UMNLibraries/experts-dw-schema/blob/master/erd.pdf)
+[Scalable version (PDF)](https://github.com/UMNLibraries/experts_dw/blob/master/erd.pdf)
 
 ![ERD](erd.png)
 
