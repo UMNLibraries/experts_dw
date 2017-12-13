@@ -102,8 +102,7 @@
         },
         "pureapi": {
             "editable": true,
-            "git": "git://github.com/UMNLibraries/pureapi.git",
-            "ref": "c099df5f13fae3e881bcd9731ca95a6a1bfcdd59"
+            "git": "git://github.com/UMNLibraries/pureapi.git"
         },
         "python-dateutil": {
             "hashes": [
