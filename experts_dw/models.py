@@ -126,7 +126,7 @@ class Person(Base):
 class UmnPerson(Base):
   __tablename__ = 'umn_person'
   emplid = Column(String(11), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
   def __repr__(self):
     return 'emplid: {}, timestamp: {}'.format(self.emplid, self.timestamp)
@@ -135,7 +135,7 @@ class UmnPerson(Base):
 class UmnDept(Base):
   __tablename__ = 'umn_dept'
   deptid = Column(Integer, primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
   def __repr__(self):
     return 'deptid: {}, timestamp: {}'.format(self.deptid, self.timestamp)
