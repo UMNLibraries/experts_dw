@@ -1,7 +1,10 @@
-from sqlalchemy import Column, DateTime, String, Integer, func, ForeignKey
+from sqlalchemy import Table, Column, DateTime, String, Integer, func, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy_mptt.mixins import BaseNestedSets
+
+from experts_dw import db
+engine = db.engine('hotel')
 
 # Would like to name constraints, but Oracle limits names to 30 characters!
 #import common
@@ -225,6 +228,20 @@ class UmnDeptPureOrg(Base):
 
   def __repr__(self):
     return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_uuid: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_uuid, self.pure_org_id)
+
+## Views
+
+class AffiliateJobs(Base):
+  __table__ = Table(
+    'affiliate_jobs',
+    Base.metadata,
+    Column('emplid', String(11), primary_key=True),
+    Column('jobcode', String(5), primary_key=True),
+    Column('deptid', Integer, primary_key=True),
+    #Column('foreign_key', Integer, ForeignKey('sometablename.id')),
+    autoload=True,
+    autoload_with=engine
+ )
 
 ## Master Dataset tables. Names all start with 'mds_'.
 
