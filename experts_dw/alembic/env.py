@@ -42,6 +42,14 @@ def get_url():
     os.environ.get("HOTEL_DB_SERVICE_NAME"),
   )
 
+exclude_tables = config.get_section('alembic:exclude').get('tables', '').split(',')
+
+def include_object(object, name, type_, reflected, compare_to):    
+  if type_ == "table" and name in exclude_tables:
+    return False
+  else:
+    return True
+
 def run_migrations_offline():
   """Run migrations in 'offline' mode.
 
@@ -57,7 +65,13 @@ def run_migrations_offline():
 
   # Modified for Experts@Minnesota to support config via env vars.
   url = get_url()
-  context.configure(url=url, target_metadata=target_metadata, literal_binds=True, compare_type=True)
+  context.configure(
+    url=url,
+    target_metadata=target_metadata,
+    include_object=include_object,
+    literal_binds=True,
+    compare_type=True
+  )
 
   with context.begin_transaction():
     context.run_migrations()
@@ -74,7 +88,11 @@ def run_migrations_online():
   connectable = create_engine(get_url())
 
   with connectable.connect() as connection:
-    context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)
+    context.configure(
+      connection=connection,
+      target_metadata=target_metadata,
+      compare_type=True
+    )
 
     with context.begin_transaction():
       context.run_migrations()
