@@ -1,10 +1,16 @@
-from sqlalchemy import Table, Column, DateTime, String, Integer, func, ForeignKey
+from sqlalchemy import Table, Column, DateTime, String, Integer, create_engine, func, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy_mptt.mixins import BaseNestedSets
+import os
 
-from experts_dw import db
-engine = db.engine('hotel')
+engine = create_engine(
+  "oracle://%s:\"%s\"@%s" % (
+    os.environ.get('DB_USER'),
+    os.environ.get('DB_PASS'),
+    os.environ.get('HOTEL_DB_SERVICE_NAME'),
+  )
+)
 
 # Would like to name constraints, but Oracle limits names to 30 characters!
 #import common
@@ -305,6 +311,56 @@ class Demographics(Base):
     autoload=True,
     autoload_with=engine
  )
+
+## Snapshot tables for the views above:
+
+class AllJobsNew(Base):
+  __tablename__ = 'all_jobs_new'
+  emplid = Column(String(11), primary_key=True)
+  empl_rcdno = Column(String(40), nullable=True)
+  name = Column(String(50), nullable=True)
+  jobcode = Column(String(13), primary_key=True)
+  jobcode_descr = Column(String(35), nullable=True)
+  job_indicator = Column(String(40), primary_key=True)
+  empl_status = Column(String(4), nullable=True)
+  paygroup = Column(String(12), nullable=True)
+  deptid = Column(String(10), primary_key=True)
+  deptid_descr = Column(String(30), nullable=True)
+  um_jobcode_group = Column(String(8), nullable=True)
+  um_college = Column(String(20), nullable=True)
+  um_college_descr = Column(String(30), nullable=True)
+  campus = Column(String(20), nullable=True)
+  um_zdeptid = Column(String(80), nullable=True)
+  um_zdeptid_descr = Column(String(30), nullable=True)
+  status_flg = Column(String(1), nullable=True)
+  record_source = Column(String(1), nullable=True)
+  job_entry_dt = Column(DateTime, nullable=True)
+  position_entry_dt = Column(DateTime, nullable=True)
+  calculated_start_dt = Column(DateTime, nullable=True)
+
+class AllJobsPrevious(Base):
+  __tablename__ = 'all_jobs_previous'
+  emplid = Column(String(11), primary_key=True)
+  empl_rcdno = Column(String(40), nullable=True)
+  name = Column(String(50), nullable=True)
+  jobcode = Column(String(13), primary_key=True)
+  jobcode_descr = Column(String(35), nullable=True)
+  job_indicator = Column(String(40), primary_key=True)
+  empl_status = Column(String(4), nullable=True)
+  paygroup = Column(String(12), nullable=True)
+  deptid = Column(String(10), primary_key=True)
+  deptid_descr = Column(String(30), nullable=True)
+  um_jobcode_group = Column(String(8), nullable=True)
+  um_college = Column(String(20), nullable=True)
+  um_college_descr = Column(String(30), nullable=True)
+  campus = Column(String(20), nullable=True)
+  um_zdeptid = Column(String(80), nullable=True)
+  um_zdeptid_descr = Column(String(30), nullable=True)
+  status_flg = Column(String(1), nullable=True)
+  record_source = Column(String(1), nullable=True)
+  job_entry_dt = Column(DateTime, nullable=True)
+  position_entry_dt = Column(DateTime, nullable=True)
+  calculated_start_dt = Column(DateTime, nullable=True)
 
 ## Master Dataset tables. Names all start with 'mds_'.
 
