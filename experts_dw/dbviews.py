@@ -2,6 +2,68 @@ from . import db
 
 session = db.session('hotel')
 
+def create_pure_eligible_employees():
+  stmt = """
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEES" (
+  "EMPLID",
+  "NAME",
+  "JOBCODE",
+  "JOBCODE_DESCR",
+  "EMPL_STATUS",
+  "PAYGROUP",
+  "UM_COLLEGE",
+  "UM_COLLEGE_DESCR",
+  "CAMPUS",
+  "STATUS_FLG"
+) AS (
+  select
+    j.emplid,
+    j.name, -- for testing
+    j.jobcode,
+    j.jobcode_descr,
+    j.empl_status,
+    j.paygroup,
+    j.um_college,
+    j.um_college_descr,
+    j.rrc as campus,
+    j.status_flg
+  from ps_dwhr_job@dweprd.oit j
+    join job_codes jc
+      on j.jobcode = jc.jobcode
+  where empl_status in (
+    'A',
+    'L',
+    'P',
+    'W'
+  )
+    and j.status_flg = 'C'
+    and paygroup != 'PLH'
+    and rrc not in (
+      'UMRXX',
+      'UMCXX',
+      'UMMXX'
+    )
+    and um_college not in (
+      'TATH',
+      'TAUD',
+      'TAUX',
+      'TBOY',
+      'TCAP',
+      'TCTR',
+      'TFAC',
+      'TOGC',
+      'THSM',
+      'TINS',
+      'TOBR',
+      'TOHR',
+      'TSVC'
+    )
+)"""   
+  #print(stmt)
+  result = session.execute(stmt)
+  session.commit()
+  return result
+
 def create_employee_jobs_current():
   stmt = """
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."EMPLOYEE_JOBS_CURRENT" (
