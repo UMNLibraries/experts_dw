@@ -243,31 +243,9 @@ class AffiliateJobs(Base):
     autoload_with=engine
  )
 
-class AffiliateJobsCurrent(Base):
-  __table__ = Table(
-    'affiliate_jobs_current',
-    Base.metadata,
-    Column('emplid', String(11), primary_key=True),
-    Column('jobcode', String(5), primary_key=True),
-    Column('deptid', Integer, primary_key=True),
-    autoload=True,
-    autoload_with=engine
- )
-
 class AllJobs(Base):
   __table__ = Table(
     'all_jobs',
-    Base.metadata,
-    Column('emplid', String(11), primary_key=True),
-    Column('jobcode', String(5), primary_key=True),
-    Column('deptid', Integer, primary_key=True),
-    autoload=True,
-    autoload_with=engine
- )
-
-class AllJobsCurrent(Base):
-  __table__ = Table(
-    'all_jobs_current',
     Base.metadata,
     Column('emplid', String(11), primary_key=True),
     Column('jobcode', String(5), primary_key=True),
