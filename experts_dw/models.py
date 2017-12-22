@@ -2,15 +2,10 @@ from sqlalchemy import Table, Column, DateTime, String, Integer, create_engine, 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy_mptt.mixins import BaseNestedSets
-import os
 
-engine = create_engine(
-  "oracle://%s:\"%s\"@%s" % (
-    os.environ.get('DB_USER'),
-    os.environ.get('DB_PASS'),
-    os.environ.get('HOTEL_DB_SERVICE_NAME'),
-  )
-)
+from . import db
+
+engine = db.engine('hotel')
 
 # Would like to name constraints, but Oracle limits names to 30 characters!
 #import common
@@ -292,6 +287,15 @@ class EmployeeJobs(Base):
     autoload_with=engine
  )
 
+class Demographics(Base):
+  __table__ = Table(
+    'demographics',
+    Base.metadata,
+    Column('emplid', String(11), primary_key=True),
+    autoload=True,
+    autoload_with=engine
+ )
+
 class PureEligibleEmployeeJob(Base):
   __table__ = Table(
     'pure_eligible_employee_job',
@@ -300,15 +304,6 @@ class PureEligibleEmployeeJob(Base):
     Column('position_nbr', String(8), primary_key=True),
     Column('effdt', DateTime, primary_key=True),
     Column('effseq', Integer, primary_key=True),
-    autoload=True,
-    autoload_with=engine
- )
-
-class Demographics(Base):
-  __table__ = Table(
-    'demographics',
-    Base.metadata,
-    Column('emplid', String(11), primary_key=True),
     autoload=True,
     autoload_with=engine
  )

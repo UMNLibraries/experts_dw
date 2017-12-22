@@ -11,6 +11,11 @@ import os
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
+# Seems silly that I have to add this--probably a better way:
+import sys
+sys.path.append('.')
+from experts_dw import db, models
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -23,10 +28,6 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-import sys
-# Seems silly that I have to add this--probably a better way:
-sys.path.append('.')
-import models
 target_metadata = models.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -36,11 +37,7 @@ target_metadata = models.Base.metadata
 
 # Added for Experts@Minnesota to support config via env vars.
 def get_url():
-  return "oracle://%s:\"%s\"@%s" % (
-    os.environ.get("DB_USER"),
-    os.environ.get("DB_PASS"),
-    os.environ.get("HOTEL_DB_SERVICE_NAME"),
-  )
+   return db.url('hotel')
 
 exclude_tables = config.get_section('alembic:exclude').get('tables', '').split(',')
 

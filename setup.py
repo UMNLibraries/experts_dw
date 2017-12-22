@@ -7,5 +7,5 @@ setup(
   url='https://github.com/UMNLibraries/experts_dw',
   author='David Naughton',
   author_email='nihiliad@gmail.com',
-  packages=find_packages(exclude=['tests','docs','legacy','sql_acme','sql-developer-reports'])
+  packages=find_packages(exclude=['alembic','tests','docs','legacy','sql_acme','sql-developer-reports'])
 )
