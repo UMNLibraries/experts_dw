@@ -292,13 +292,14 @@ class EmployeeJobs(Base):
     autoload_with=engine
  )
 
-class EmployeeJobsCurrent(Base):
+class PureEligibleEmployeeJob(Base):
   __table__ = Table(
-    'employee_jobs_current',
+    'pure_eligible_employee_job',
     Base.metadata,
     Column('emplid', String(11), primary_key=True),
-    Column('jobcode', String(5), primary_key=True),
-    Column('deptid', Integer, primary_key=True),
+    Column('position_nbr', String(8), primary_key=True),
+    Column('effdt', DateTime, primary_key=True),
+    Column('effseq', Integer, primary_key=True),
     autoload=True,
     autoload_with=engine
  )

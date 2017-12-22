@@ -2,26 +2,26 @@ from . import db
 
 session = db.session('hotel')
 
-def create_pure_eligible_persons():
+def create_pure_eligible_person():
   stmt = """
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_PERSONS" (
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_PERSON" (
   "EMPLID",
   "NAME"
 ) AS (
   select emplid, name
-  from pure_eligible_affiliates
+  from pure_eligible_affiliate
   union
   select emplid, name
-  from pure_eligible_employees
+  from pure_eligible_employee
 )"""
-  #print(stmt)
   result = session.execute(stmt)
   session.commit()
   return result
 
-def create_pure_eligible_affiliates():
+# Defines the criteria for an affiliate person to be Pure-eligible.
+def create_pure_eligible_affiliate():
   stmt = """
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATES" (
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
   "EMPLID",
   "NAME",
   "JOBCODE",
@@ -76,14 +76,14 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATES" (
      'TSVC'
    )
 )"""
-  #print(stmt)
   result = session.execute(stmt)
   session.commit()
   return result
 
-def create_pure_eligible_employees():
+# Defines the criteria for an employee person to be Pure-eligible.
+def create_pure_eligible_employee():
   stmt = """
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEES" (
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
   "EMPLID",
   "NAME",
   "JOBCODE",
@@ -138,14 +138,14 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEES" (
       'TSVC'
     )
 )"""   
-  #print(stmt)
   result = session.execute(stmt)
   session.commit()
   return result
 
-def create_employee_jobs_current():
+# All Pure-eligible jobs ever held by a Pure-eligible employee.
+def create_pure_eligible_employee_job():
   stmt = """
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."EMPLOYEE_JOBS_CURRENT" (
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE_JOB" (
   "EMPLID",
   "EMPL_RCDNO",
   "EFFDT",
@@ -225,7 +225,6 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."EMPLOYEE_JOBS_CURRENT" (
   )
   and emplid in (select emplid from umn_person)
 )"""   
-  #print(stmt)
   result = session.execute(stmt)
   session.commit()
   return result
