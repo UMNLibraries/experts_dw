@@ -358,6 +358,62 @@ class AllJobsPrevious(Base):
   position_entry_dt = Column(DateTime, nullable=True)
   calculated_start_dt = Column(DateTime, nullable=True)
 
+class PureEligibleEmpJobNew(Base):
+  __tablename__ = 'pure_eligible_emp_job_new'
+  emplid = Column(String(11), primary_key=True)
+  empl_rcdno = Column(String(40), nullable=True)
+  effdt = Column(DateTime, primary_key=True)
+  effseq = Column(Integer, primary_key=True),
+  name = Column(String(50), nullable=True)
+  position_nbr = Column(String(8), primary_key=True),
+  jobcode = Column(String(13), nullable=True)
+  jobcode_descr = Column(String(35), nullable=True)
+  job_indicator = Column(String(40), nullable=True)
+  empl_status = Column(String(4), nullable=True)
+  paygroup = Column(String(12), nullable=True)
+  deptid = Column(String(10), primary_key=True)
+  deptid_descr = Column(String(30), nullable=True)
+  um_jobcode_group = Column(String(8), nullable=True)
+  um_college = Column(String(20), nullable=True)
+  um_college_descr = Column(String(30), nullable=True)
+  campus = Column(String(20), nullable=True)
+  um_zdeptid = Column(String(80), nullable=True)
+  um_zdeptid_descr = Column(String(30), nullable=True)
+  status_flg = Column(String(1), nullable=True)
+  job_terminated = Column(String(1), nullable=True)
+  last_date_worked = Column(DateTime, nullable=True)
+  job_entry_dt = Column(DateTime, nullable=True)
+  position_entry_dt = Column(DateTime, nullable=True)
+  calculated_start_dt = Column(DateTime, nullable=True)
+
+class PureEligibleEmpJobPrevious(Base):
+  __tablename__ = 'pure_eligible_emp_job_previous'
+  emplid = Column(String(11), primary_key=True)
+  empl_rcdno = Column(String(40), nullable=True)
+  effdt = Column(DateTime, primary_key=True)
+  effseq = Column(Integer, primary_key=True),
+  name = Column(String(50), nullable=True)
+  position_nbr = Column(String(8), primary_key=True),
+  jobcode = Column(String(13), nullable=True)
+  jobcode_descr = Column(String(35), nullable=True)
+  job_indicator = Column(String(40), nullable=True)
+  empl_status = Column(String(4), nullable=True)
+  paygroup = Column(String(12), nullable=True)
+  deptid = Column(String(10), primary_key=True)
+  deptid_descr = Column(String(30), nullable=True)
+  um_jobcode_group = Column(String(8), nullable=True)
+  um_college = Column(String(20), nullable=True)
+  um_college_descr = Column(String(30), nullable=True)
+  campus = Column(String(20), nullable=True)
+  um_zdeptid = Column(String(80), nullable=True)
+  um_zdeptid_descr = Column(String(30), nullable=True)
+  status_flg = Column(String(1), nullable=True)
+  job_terminated = Column(String(1), nullable=True)
+  last_date_worked = Column(DateTime, nullable=True)
+  job_entry_dt = Column(DateTime, nullable=True)
+  position_entry_dt = Column(DateTime, nullable=True)
+  calculated_start_dt = Column(DateTime, nullable=True)
+
 ## Master Dataset tables. Names all start with 'mds_'.
 
 class MdsPerson(Base):
