@@ -1,7 +1,7 @@
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 from experts_dw import db, dbviews
-from experts_dw.models import PureEligibleEmployeeJob
+from experts_dw.models import PureEligibleEmpJob
 from sqlalchemy import func
 from sqlalchemy.engine import ResultProxy
 
@@ -19,8 +19,8 @@ def test_pure_eligible_person():
   result = dbviews.create_pure_eligible_person()
   assert isinstance(result, ResultProxy)
 
-def test_pure_eligible_employee_job():
-  result = dbviews.create_pure_eligible_employee_job()
+def test_pure_eligible_emp_job():
+  result = dbviews.create_pure_eligible_emp_job()
   assert isinstance(result, ResultProxy)
-  rows = session.query(func.count(PureEligibleEmployeeJob.emplid)).scalar()
+  rows = session.query(func.count(PureEligibleEmpJob.emplid)).scalar()
   assert rows > 0

@@ -143,9 +143,9 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
   return result
 
 # All Pure-eligible jobs ever held by a Pure-eligible employee.
-def create_pure_eligible_employee_job():
+def create_pure_eligible_emp_job():
   stmt = """
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE_JOB" (
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
   "EMPLID",
   "EMPL_RCDNO",
   "EFFDT",

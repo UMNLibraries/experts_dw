@@ -296,9 +296,9 @@ class Demographics(Base):
     autoload_with=engine
  )
 
-class PureEligibleEmployeeJob(Base):
+class PureEligibleEmpJob(Base):
   __table__ = Table(
-    'pure_eligible_employee_job',
+    'pure_eligible_emp_job',
     Base.metadata,
     Column('emplid', String(11), primary_key=True),
     Column('position_nbr', String(8), primary_key=True),
@@ -363,9 +363,9 @@ class PureEligibleEmpJobNew(Base):
   emplid = Column(String(11), primary_key=True)
   empl_rcdno = Column(String(40), nullable=True)
   effdt = Column(DateTime, primary_key=True)
-  effseq = Column(Integer, primary_key=True),
+  effseq = Column(Integer, primary_key=True)
   name = Column(String(50), nullable=True)
-  position_nbr = Column(String(8), primary_key=True),
+  position_nbr = Column(String(8), primary_key=True)
   jobcode = Column(String(13), nullable=True)
   jobcode_descr = Column(String(35), nullable=True)
   job_indicator = Column(String(40), nullable=True)
@@ -391,9 +391,9 @@ class PureEligibleEmpJobPrevious(Base):
   emplid = Column(String(11), primary_key=True)
   empl_rcdno = Column(String(40), nullable=True)
   effdt = Column(DateTime, primary_key=True)
-  effseq = Column(Integer, primary_key=True),
+  effseq = Column(Integer, primary_key=True)
   name = Column(String(50), nullable=True)
-  position_nbr = Column(String(8), primary_key=True),
+  position_nbr = Column(String(8), primary_key=True)
   jobcode = Column(String(13), nullable=True)
   jobcode_descr = Column(String(35), nullable=True)
   job_indicator = Column(String(40), nullable=True)
