@@ -148,6 +148,8 @@ def create_employee_jobs_current():
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."EMPLOYEE_JOBS_CURRENT" (
   "EMPLID",
   "EMPL_RCDNO",
+  "EFFDT",
+  "EFFSEQ",
   "NAME",
   "POSITION_NBR",
   "JOBCODE",
@@ -164,7 +166,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."EMPLOYEE_JOBS_CURRENT" (
   "UM_ZDEPTID",
   "UM_ZDEPTID_DESCR",
   "STATUS_FLG",
-  "RECORD_SOURCE",
+  "JOB_TERMINATED",
+  "LAST_DATE_WORKED",
   "JOB_ENTRY_DT",
   "POSITION_ENTRY_DT",
   "CALCULATED_START_DT"
@@ -172,6 +175,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."EMPLOYEE_JOBS_CURRENT" (
   select
     j.emplid,
     to_char(j.empl_rcdno) as empl_rcdno,
+    j.effdt,
+    j.effseq,
     j.name, -- for testing
     j.position_nbr,
     j.jobcode,
@@ -188,41 +193,37 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."EMPLOYEE_JOBS_CURRENT" (
     j.um_zdeptid,
     j.um_zdeptid_descr,
     j.status_flg,
-    'J' as record_source, -- J for ps_dwhr_job or A for ps_um_affiliates for source
+    j.job_terminated,
+    j.last_date_worked,
     j.job_entry_dt,
     j.position_entry_dt,
     least(j.job_entry_dt, j.position_entry_dt) as calculated_start_dt
   from ps_dwhr_job@dweprd.oit j
     join job_codes jc
       on j.jobcode = jc.jobcode
-  where empl_status in (
-    'A',
-    'L',
-    'P',
-    'W'
+  where j.status_flg in ('C','H')
+  and paygroup != 'PLH'
+  and rrc not in (
+    'UMRXX',
+    'UMCXX',
+    'UMMXX'
   )
-    and j.status_flg = 'C'
-    and paygroup != 'PLH'
-    and rrc not in (
-      'UMRXX',
-      'UMCXX',
-      'UMMXX'
-    )
-    and um_college not in (
-      'TATH',
-      'TAUD',
-      'TAUX',
-      'TBOY',
-      'TCAP',
-      'TCTR',
-      'TFAC',
-      'TOGC',
-      'THSM',
-      'TINS',
-      'TOBR',
-      'TOHR',
-      'TSVC'
-    )
+  and um_college not in (
+    'TATH',
+    'TAUD',
+    'TAUX',
+    'TBOY',
+    'TCAP',
+    'TCTR',
+    'TFAC',
+    'TOGC',
+    'THSM',
+    'TINS',
+    'TOBR',
+    'TOHR',
+    'TSVC'
+  )
+  and emplid in (select emplid from umn_person)
 )"""   
   #print(stmt)
   result = session.execute(stmt)
