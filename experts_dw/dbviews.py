@@ -32,7 +32,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
   "CAMPUS",
   "STATUS_FLG"
 ) AS (
-  select
+  select distinct
     emplid,
     name, -- for testing
     um_affil_relation as jobcode,
@@ -95,7 +95,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
   "CAMPUS",
   "STATUS_FLG"
 ) AS (
-  select
+  select distinct
     j.emplid,
     j.name, -- for testing
     j.jobcode,
@@ -172,7 +172,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
   "POSITION_ENTRY_DT",
   "CALCULATED_START_DT"
 ) AS (
-  select
+  select distinct
     j.emplid,
     to_char(j.empl_rcdno) as empl_rcdno,
     j.effdt,
