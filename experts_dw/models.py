@@ -402,7 +402,7 @@ class PureEligibleEmpJobNew(Base):
   um_jobcode_group = Column(String(8), nullable=True)
   um_college = Column(String(20), nullable=True)
   um_college_descr = Column(String(30), nullable=True)
-  campus = Column(String(20), nullable=True)
+  rrc = Column(String(20), nullable=True)
   um_zdeptid = Column(String(80), nullable=True)
   um_zdeptid_descr = Column(String(30), nullable=True)
   status_flg = Column(String(1), nullable=True)
@@ -410,7 +410,6 @@ class PureEligibleEmpJobNew(Base):
   last_date_worked = Column(DateTime, nullable=True)
   job_entry_dt = Column(DateTime, nullable=True)
   position_entry_dt = Column(DateTime, nullable=True)
-  calculated_start_dt = Column(DateTime, nullable=True)
 
 class PureEligibleEmpJobPrevious(Base):
   __tablename__ = 'pure_eligible_emp_job_previous'
@@ -430,7 +429,7 @@ class PureEligibleEmpJobPrevious(Base):
   um_jobcode_group = Column(String(8), nullable=True)
   um_college = Column(String(20), nullable=True)
   um_college_descr = Column(String(30), nullable=True)
-  campus = Column(String(20), nullable=True)
+  rrc = Column(String(20), nullable=True)
   um_zdeptid = Column(String(80), nullable=True)
   um_zdeptid_descr = Column(String(30), nullable=True)
   status_flg = Column(String(1), nullable=True)
@@ -438,7 +437,6 @@ class PureEligibleEmpJobPrevious(Base):
   last_date_worked = Column(DateTime, nullable=True)
   job_entry_dt = Column(DateTime, nullable=True)
   position_entry_dt = Column(DateTime, nullable=True)
-  calculated_start_dt = Column(DateTime, nullable=True)
 
 ## Master Dataset tables. Names all start with 'mds_'.
 

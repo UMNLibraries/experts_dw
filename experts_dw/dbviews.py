@@ -232,15 +232,14 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
   "UM_JOBCODE_GROUP",
   "UM_COLLEGE",
   "UM_COLLEGE_DESCR",
-  "CAMPUS",
+  "RRC",
   "UM_ZDEPTID",
   "UM_ZDEPTID_DESCR",
   "STATUS_FLG",
   "JOB_TERMINATED",
   "LAST_DATE_WORKED",
   "JOB_ENTRY_DT",
-  "POSITION_ENTRY_DT",
-  "CALCULATED_START_DT"
+  "POSITION_ENTRY_DT"
 ) AS (
   select distinct
     j.emplid,
@@ -259,15 +258,15 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
     j.um_jobcode_group,
     j.um_college,
     j.um_college_descr,
-    j.rrc as campus,
+    j.rrc, -- experts_data: as campus
     j.um_zdeptid,
     j.um_zdeptid_descr,
     j.status_flg,
     j.job_terminated,
     j.last_date_worked,
     j.job_entry_dt,
-    j.position_entry_dt,
-    least(j.job_entry_dt, j.position_entry_dt) as calculated_start_dt
+    j.position_entry_dt
+    -- experts_data: least(j.job_entry_dt, j.position_entry_dt) as calculated_start_dt
   from ps_dwhr_job@dweprd.oit j
     join job_codes jc
       on j.jobcode = jc.jobcode
