@@ -24,23 +24,23 @@ def create_pure_eligible_affiliate():
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
   "EMPLID",
   "NAME",
-  "JOBCODE",
+  "UM_AFFIL_RELATION",
   "DEPTID",
   "DEPTID_DESCR",
   "UM_COLLEGE",
   "UM_COLLEGE_DESCR",
-  "CAMPUS",
+  "UM_CAMPUS",
   "STATUS_FLG"
 ) AS (
   select distinct
     emplid,
     name, -- for testing
-    um_affil_relation as jobcode,
+    um_affil_relation, -- experts_data: as jobcode
     deptid,
     deptid_descr,
     um_college,
     um_college_descr,
-    um_campus as campus,
+    um_campus, -- experts_data: as campus
     status_flg
  from ps_dwhr_um_affiliates@dweprd.oit a
  where poi_type = '00012'
@@ -92,7 +92,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
   "PAYGROUP",
   "UM_COLLEGE",
   "UM_COLLEGE_DESCR",
-  "CAMPUS",
+  "RRC",
   "STATUS_FLG"
 ) AS (
   select distinct
@@ -104,7 +104,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
     j.paygroup,
     j.um_college,
     j.um_college_descr,
-    j.rrc as campus,
+    j.rrc, -- experts_data: as campus
     j.status_flg
   from ps_dwhr_job@dweprd.oit j
     join job_codes jc
