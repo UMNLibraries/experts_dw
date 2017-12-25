@@ -161,7 +161,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFF_JOB" (
   "UM_ZDEPTID",
   "UM_ZDEPTID_DESCR",
   "STATUS_FLG"
-) AS select
+) AS select distinct
   emplid,
   name, -- for testing
   um_affiliate_id,
