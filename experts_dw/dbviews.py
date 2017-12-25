@@ -206,6 +206,7 @@ where poi_type = '00012'
     'TOHR',
     'TSVC'
   )
+  and emplid in (select emplid from umn_person)
 """   
   result = session.execute(stmt)
   session.commit()
