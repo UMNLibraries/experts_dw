@@ -142,6 +142,75 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
   session.commit()
   return result
 
+# All Pure-eligible jobs ever held by a Pure-eligible affiliate employee.
+def create_pure_eligible_aff_job():
+  stmt = """
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFF_JOB" (
+  "EMPLID",
+  "NAME",
+  "UM_AFFILIATE_ID",
+  "EFFDT",
+  "UM_AFFIL_RELATION",
+  "TITLE",
+  "DEPTID",
+  "DEPTID_DESCR",
+  "STATUS",
+  "UM_COLLEGE",
+  "UM_COLLEGE_DESCR",
+  "UM_CAMPUS",
+  "UM_ZDEPTID",
+  "UM_ZDEPTID_DESCR",
+  "STATUS_FLG"
+) AS select
+  emplid,
+  name, -- for testing
+  um_affiliate_id,
+  effdt,
+  um_affil_relation, -- experts_data: as jobcode
+  title, -- AKA jobcode_descr
+  deptid,
+  deptid_descr,
+  status,
+  um_college,
+  um_college_descr,
+  um_campus, -- experts_data: as campus
+  um_zdeptid,
+  um_zdeptid_descr,
+  status_flg
+from ps_dwhr_um_affiliates@dweprd.oit a
+where poi_type = '00012'
+  and status_flg in ('C','H')
+  and (
+    (
+      um_affil_relation in -- jobcode criteria table
+        (select jobcode from job_codes where pool = 'A')
+    ) or (
+      um_affil_relation in -- only affiliates in designated jobcodes AND departments
+        (select jobcode from job_codes where pool = 'C')
+      and deptid in (select deptid from affiliate_departments)
+    )
+  )
+  and um_campus in ('TXXX','DXXX')
+  and um_college not in (
+    'TATH',
+    'TAUD',
+    'TAUX',
+    'TBOY',
+    'TCAP',
+    'TCTR',
+    'TFAC',
+    'TOGC',
+    'THSM',
+    'TINS',
+    'TOBR',
+    'TOHR',
+    'TSVC'
+  )
+"""   
+  result = session.execute(stmt)
+  session.commit()
+  return result
+
 # All Pure-eligible jobs ever held by a Pure-eligible employee.
 def create_pure_eligible_emp_job():
   stmt = """
