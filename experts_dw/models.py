@@ -286,6 +286,18 @@ class PureEligibleEmpJob(Base):
     autoload_with=engine
  )
 
+class PureEligibleAffJob(Base):
+  __table__ = Table(
+    'pure_eligible_aff_job',
+    Base.metadata,
+    Column('emplid', String(11), primary_key=True),
+    Column('um_affiliate_id', String(2), primary_key=True),
+    Column('effdt', DateTime, primary_key=True),
+    Column('deptid', String(10), primary_key=True),
+    autoload=True,
+    autoload_with=engine
+ )
+
 ## Snapshot tables for the views above:
 
 class AllJobsNew(Base):
@@ -335,6 +347,42 @@ class AllJobsPrevious(Base):
   job_entry_dt = Column(DateTime, nullable=True)
   position_entry_dt = Column(DateTime, nullable=True)
   calculated_start_dt = Column(DateTime, nullable=True)
+
+class PureEligibleAffJobNew(Base):
+  __tablename__ = 'pure_eligible_aff_job_new'
+  emplid = Column(String(11), primary_key=True)
+  name = Column(String(50), nullable=True)
+  um_affiliate_id = Column(String(2), primary_key=True)
+  effdt = Column(DateTime, primary_key=True)
+  um_affil_relation = Column(String(6), nullable=True)
+  title = Column(String(35), nullable=True)
+  deptid = Column(String(10), primary_key=True)
+  deptid_descr = Column(String(30), nullable=True)
+  status = Column(String(1), nullable=True)
+  um_college = Column(String(20), nullable=True)
+  um_college_descr = Column(String(30), nullable=True)
+  um_campus = Column(String(20), nullable=True)
+  um_zdeptid = Column(String(80), nullable=True)
+  um_zdeptid_descr = Column(String(30), nullable=True)
+  status_flg = Column(String(1), nullable=True)
+
+class PureEligibleAffJobPrevious(Base):
+  __tablename__ = 'pure_eligible_aff_job_previous'
+  emplid = Column(String(11), primary_key=True)
+  name = Column(String(50), nullable=True)
+  um_affiliate_id = Column(String(2), primary_key=True)
+  effdt = Column(DateTime, primary_key=True)
+  um_affil_relation = Column(String(6), nullable=True)
+  title = Column(String(35), nullable=True)
+  deptid = Column(String(10), primary_key=True)
+  deptid_descr = Column(String(30), nullable=True)
+  status = Column(String(1), nullable=True)
+  um_college = Column(String(20), nullable=True)
+  um_college_descr = Column(String(30), nullable=True)
+  um_campus = Column(String(20), nullable=True)
+  um_zdeptid = Column(String(80), nullable=True)
+  um_zdeptid_descr = Column(String(30), nullable=True)
+  status_flg = Column(String(1), nullable=True)
 
 class PureEligibleEmpJobNew(Base):
   __tablename__ = 'pure_eligible_emp_job_new'
