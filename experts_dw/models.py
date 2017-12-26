@@ -366,8 +366,9 @@ class PureEligibleAffJobNew(Base):
   um_zdeptid_descr = Column(String(30), nullable=True)
   status_flg = Column(String(1), nullable=True)
 
-class PureEligibleAffJobPrevious(Base):
-  __tablename__ = 'pure_eligible_aff_job_previous'
+# A history of changes to Pure-eligible affiliate jobs.
+class PureEligibleAffJobChngHst(Base):
+  __tablename__ = 'pure_eligible_aff_job_chng_hst'
   emplid = Column(String(11), primary_key=True)
   name = Column(String(50), nullable=True)
   um_affiliate_id = Column(String(2), primary_key=True)
@@ -411,8 +412,9 @@ class PureEligibleEmpJobNew(Base):
   job_entry_dt = Column(DateTime, nullable=True)
   position_entry_dt = Column(DateTime, nullable=True)
 
-class PureEligibleEmpJobPrevious(Base):
-  __tablename__ = 'pure_eligible_emp_job_previous'
+# A history of changes to Pure-eligible employee jobs.
+class PureEligibleEmpJobChngHst(Base):
+  __tablename__ = 'pure_eligible_emp_job_chng_hst'
   emplid = Column(String(11), primary_key=True)
   empl_rcdno = Column(String(40), primary_key=True)
   effdt = Column(DateTime, primary_key=True)
