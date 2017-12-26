@@ -300,6 +300,23 @@ class PureEligibleAffJob(Base):
 
 ## Snapshot tables for the views above:
 
+# A history of demographics changes.
+class DemographicsChngHist(Base):
+  __tablename__ = 'demographics_chng_hst'
+  emplid = Column(String(11), primary_key=True)
+  internet_id = Column(String(15), nullable=True)
+  name = Column(String(50), nullable=True)
+  last_name = Column(String(30), nullable=True)
+  first_name = Column(String(30), nullable=True)
+  middle_initial = Column(String(1), nullable=True)
+  name_suffix = Column(String(3), nullable=True)
+  instl_email_addr = Column(String(70), nullable=True)
+  tenure_flag = Column(String(1), nullable=True)
+  tenure_track_flag = Column(String(1), nullable=True)
+  primary_empl_rcdno = Column(String(38), nullable=True)
+  um_directory_url = Column(String(38), nullable=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
+
 class AllJobsNew(Base):
   __tablename__ = 'all_jobs_new'
   emplid = Column(String(11), primary_key=True)
