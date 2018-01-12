@@ -5,13 +5,12 @@ session = db.session('hotel')
 def create_pure_eligible_person():
   stmt = """
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_PERSON" (
-  "EMPLID",
-  "NAME"
+  "EMPLID"
 ) AS (
-  select emplid, name
+  select emplid
   from pure_eligible_affiliate
   union
-  select emplid, name
+  select emplid
   from pure_eligible_employee
 )"""
   result = session.execute(stmt)
