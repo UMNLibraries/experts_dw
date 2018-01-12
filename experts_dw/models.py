@@ -274,6 +274,15 @@ class Demographics(Base):
     autoload_with=engine
  )
 
+class PureEligiblePerson(Base):
+  __table__ = Table(
+    'pure_eligible_person',
+    Base.metadata,
+    Column('emplid', String(11), primary_key=True),
+    autoload=True,
+    autoload_with=engine
+ )
+
 class PureEligibleEmpJob(Base):
   __table__ = Table(
     'pure_eligible_emp_job',
@@ -299,6 +308,15 @@ class PureEligibleAffJob(Base):
  )
 
 ## Snapshot tables for the views above:
+
+class PureEligiblePersonNew(Base):
+  __tablename__ = 'pure_eligible_person_new'
+  emplid = Column(String(11), primary_key=True)
+
+class PureEligiblePersonChngHst(Base):
+  __tablename__ = 'pure_eligible_person_chng_hst'
+  emplid = Column(String(11), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
 # A history of demographics changes.
 class DemographicsChngHist(Base):
