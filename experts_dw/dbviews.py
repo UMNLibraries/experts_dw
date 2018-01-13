@@ -205,7 +205,7 @@ where poi_type = '00012'
     'TOHR',
     'TSVC'
   )
-  and emplid in (select emplid from umn_person)
+  and emplid in (select emplid from pure_eligible_person_chng_hst)
 """   
   result = session.execute(stmt)
   session.commit()
@@ -291,7 +291,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
     'TOHR',
     'TSVC'
   )
-  and emplid in (select emplid from umn_person)
+  and emplid in (select emplid from pure_eligible_person_chng_hst)
 )"""   
   result = session.execute(stmt)
   session.commit()
