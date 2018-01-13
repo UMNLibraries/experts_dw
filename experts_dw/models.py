@@ -126,15 +126,6 @@ class Person(Base):
   def __repr__(self):
     return 'uuid: {}'.format(self.uuid)
 
-# Records all UMN persons in Pure, with a timestamp for the datetime added to this table.
-class UmnPerson(Base):
-  __tablename__ = 'umn_person'
-  emplid = Column(String(11), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
-
-  def __repr__(self):
-    return 'emplid: {}, timestamp: {}'.format(self.emplid, self.timestamp)
-
 # Records all UMN departments in Pure, with a timestamp for the datetime added to this table.
 class UmnDept(Base):
   __tablename__ = 'umn_dept'
@@ -317,6 +308,9 @@ class PureEligiblePersonChngHst(Base):
   __tablename__ = 'pure_eligible_person_chng_hst'
   emplid = Column(String(11), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'emplid: {}, timestamp: {}'.format(self.emplid, self.timestamp)
 
 # A history of demographics changes.
 class DemographicsChngHist(Base):
