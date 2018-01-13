@@ -2,6 +2,48 @@ from . import db
 
 session = db.session('hotel')
 
+def create_pure_eligible_demog():
+  stmt = """
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_DEMOG" (
+  "EMPLID",
+  "INTERNET_ID",
+  "NAME",
+  "LAST_NAME",
+  "FIRST_NAME",
+  "MIDDLE_INITIAL",
+  "NAME_SUFFIX",
+  "INSTL_EMAIL_ADDR",
+  "TENURE_FLAG",
+  "TENURE_TRACK_FLAG",
+  "PRIMARY_EMPL_RCDNO"
+) AS select distinct
+  da.emplid,
+  da.internet_id,
+  da.name, -- for testing
+  da.last_name,
+  da.first_name,
+  substr(da.middle_name, 1, 1) as middle_initial,
+  case
+    when da.name_suffix like 'Jr%' then 'Jr'
+    when da.name_suffix like 'Sr%' then 'Sr'
+    when da.name_suffix like 'III%' then 'III'
+    when da.name_suffix like 'II%' then 'II'
+    when da.name_suffix like 'IV%' then 'IV'
+    when da.name_suffix like 'V%' then 'V'
+    else ''
+  end as name_suffix,
+  da.instl_email_addr,
+  da.tenure_flag,
+  da.tenure_track_flag,
+  da.primary_empl_rcdno
+from pure_eligible_person_chng_hst p
+  join ps_dwhr_demo_addr_vw@dweprd.oit da
+    on p.emplid = da.emplid
+"""
+  result = session.execute(stmt)
+  session.commit()
+  return result
+
 def create_pure_eligible_person():
   stmt = """
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_PERSON" (

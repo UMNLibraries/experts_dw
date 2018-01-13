@@ -265,6 +265,15 @@ class Demographics(Base):
     autoload_with=engine
  )
 
+class PureEligibleDemog(Base):
+  __table__ = Table(
+    'pure_eligible_demog',
+    Base.metadata,
+    Column('emplid', String(11), primary_key=True),
+    autoload=True,
+    autoload_with=engine
+ )
+
 class PureEligiblePerson(Base):
   __table__ = Table(
     'pure_eligible_person',

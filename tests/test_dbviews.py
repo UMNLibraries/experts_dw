@@ -15,6 +15,10 @@ def test_pure_eligible_employee():
   result = dbviews.create_pure_eligible_employee()
   assert isinstance(result, ResultProxy)
 
+def test_pure_eligible_demog():
+  result = dbviews.create_pure_eligible_demog()
+  assert isinstance(result, ResultProxy)
+
 def test_pure_eligible_person():
   result = dbviews.create_pure_eligible_person()
   assert isinstance(result, ResultProxy)
