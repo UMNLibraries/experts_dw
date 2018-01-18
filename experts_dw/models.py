@@ -221,6 +221,27 @@ class UmnDeptPureOrg(Base):
   def __repr__(self):
     return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_uuid: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_uuid, self.pure_org_id)
 
+class PureNewStaffDeptDefaults(Base):
+  __tablename__ = 'pure_new_staff_dept_defaults'
+  deptid = Column(String(10), primary_key=True)
+  deptid_descr = Column(String(30), nullable=True)
+  pure_org_id = Column(String(50), nullable=True)
+  jobcode = Column(String(13), primary_key=True)
+  jobcode_descr = Column(String(35), nullable=True)
+  um_college = Column(String(20), nullable=True)
+  um_college_descr = Column(String(30), nullable=True)
+  default_visibility = Column(String(10), nullable=False)
+  default_profiled = Column(String(3), nullable=False)
+
+class PureNewStaffPosDefaults(Base):
+  __tablename__ = 'pure_new_staff_pos_defaults'
+  jobcode = Column(String(13), primary_key=True)
+  jobcode_descr = Column(String(35), nullable=True)
+  um_jobcode_group = Column(String(8), nullable=True)
+  um_jobcode_group_descr = Column(String(50), nullable=True)
+  default_staff_type = Column(String(10), nullable=False)
+  default_employed_as = Column(String(50), nullable=False)
+
 ## Views
 
 class AffiliateJobs(Base):
