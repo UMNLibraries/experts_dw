@@ -227,7 +227,7 @@ class PureNewStaffDeptDefaults(Base):
   deptid_descr = Column(String(30), nullable=True)
   pure_org_id = Column(String(50), nullable=True)
   jobcode = Column(String(13), primary_key=True)
-  jobcode_descr = Column(String(35), nullable=True)
+  jobcode_descr = Column(String(35), primary_key=True)
   um_college = Column(String(20), nullable=True)
   um_college_descr = Column(String(30), nullable=True)
   default_visibility = Column(String(10), nullable=False)
@@ -239,7 +239,7 @@ class PureNewStaffPosDefaults(Base):
   jobcode_descr = Column(String(35), nullable=True)
   um_jobcode_group = Column(String(8), nullable=True)
   um_jobcode_group_descr = Column(String(50), nullable=True)
-  default_staff_type = Column(String(10), nullable=False)
+  default_staff_type = Column(String(11), nullable=False)
   default_employed_as = Column(String(50), nullable=False)
 
 ## Views
