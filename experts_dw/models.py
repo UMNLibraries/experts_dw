@@ -231,7 +231,7 @@ class PureNewStaffDeptDefaults(Base):
   um_college = Column(String(20), nullable=True)
   um_college_descr = Column(String(30), nullable=True)
   default_visibility = Column(String(10), nullable=False)
-  default_profiled = Column(String(3), nullable=False)
+  default_profiled = Column(String(5), nullable=False)
 
 class PureNewStaffPosDefaults(Base):
   __tablename__ = 'pure_new_staff_pos_defaults'
