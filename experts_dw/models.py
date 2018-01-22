@@ -357,7 +357,7 @@ class PureEligibleDemogNew(Base):
   primary_empl_rcdno = Column(String(38), nullable=True)
 
 # A history of demographics changes.
-class PureEligibleDemogChngHist(Base):
+class PureEligibleDemogChngHst(Base):
   __tablename__ = 'pure_eligible_demog_chng_hst'
   emplid = Column(String(11), primary_key=True)
   internet_id = Column(String(15), nullable=True)
