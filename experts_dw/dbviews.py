@@ -102,6 +102,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
      'DXXX'
    )
    and um_college not in (
+     'DATH',
+     'DCAS',
      'TATH',
      'TAUD',
      'TAUX',
@@ -164,6 +166,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
       'UMMXX'
     )
     and um_college not in (
+      'DATH',
+      'DCAS',
       'TATH',
       'TAUD',
       'TAUX',
@@ -233,6 +237,8 @@ where poi_type = '00012'
   )
   and um_campus in ('TXXX','DXXX')
   and um_college not in (
+    'DATH',
+    'DCAS',
     'TATH',
     'TAUD',
     'TAUX',
@@ -319,6 +325,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
     'UMMXX'
   )
   and um_college not in (
+    'DATH',
+    'DCAS',
     'TATH',
     'TAUD',
     'TAUX',
