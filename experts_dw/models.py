@@ -443,11 +443,11 @@ class PureEligibleAffJobChngHst(Base):
   __tablename__ = 'pure_eligible_aff_job_chng_hst'
   emplid = Column(String(11), primary_key=True)
   name = Column(String(50), nullable=True)
-  um_affiliate_id = Column(String(2), primary_key=True)
-  effdt = Column(DateTime, primary_key=True)
+  um_affiliate_id = Column(String(2), nullable=True)
+  effdt = Column(DateTime, nullable=True)
   um_affil_relation = Column(String(6), nullable=True)
   title = Column(String(35), nullable=True)
-  deptid = Column(String(10), primary_key=True)
+  deptid = Column(String(10), nullable=True)
   deptid_descr = Column(String(30), nullable=True)
   status = Column(String(1), nullable=True)
   um_college = Column(String(20), nullable=True)
@@ -456,7 +456,7 @@ class PureEligibleAffJobChngHst(Base):
   um_zdeptid = Column(String(80), nullable=True)
   um_zdeptid_descr = Column(String(30), nullable=True)
   status_flg = Column(String(1), nullable=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
 
 class PureEligibleEmpJobNew(Base):
   __tablename__ = 'pure_eligible_emp_job_new'
@@ -489,17 +489,17 @@ class PureEligibleEmpJobNew(Base):
 class PureEligibleEmpJobChngHst(Base):
   __tablename__ = 'pure_eligible_emp_job_chng_hst'
   emplid = Column(String(11), primary_key=True)
-  empl_rcdno = Column(String(40), primary_key=True)
-  effdt = Column(DateTime, primary_key=True)
-  effseq = Column(Integer, primary_key=True)
+  empl_rcdno = Column(String(40), nullable=True)
+  effdt = Column(DateTime, nullable=True)
+  effseq = Column(Integer, nullable=True)
   name = Column(String(50), nullable=True)
-  position_nbr = Column(String(8), primary_key=True)
-  jobcode = Column(String(13), primary_key=True)
+  position_nbr = Column(String(8), nullable=True)
+  jobcode = Column(String(13), nullable=True)
   jobcode_descr = Column(String(35), nullable=True)
   job_indicator = Column(String(40), nullable=True)
-  empl_status = Column(String(4), primary_key=True)
+  empl_status = Column(String(4), nullable=True)
   paygroup = Column(String(12), nullable=True)
-  deptid = Column(String(10), primary_key=True)
+  deptid = Column(String(10), nullable=True)
   deptid_descr = Column(String(30), nullable=True)
   um_jobcode_group = Column(String(8), nullable=True)
   um_college = Column(String(20), nullable=True)
@@ -507,12 +507,12 @@ class PureEligibleEmpJobChngHst(Base):
   rrc = Column(String(20), nullable=True)
   um_zdeptid = Column(String(80), nullable=True)
   um_zdeptid_descr = Column(String(30), nullable=True)
-  status_flg = Column(String(1), primary_key=True)
+  status_flg = Column(String(1), nullable=True)
   job_terminated = Column(String(1), nullable=True)
   last_date_worked = Column(DateTime, nullable=True)
   job_entry_dt = Column(DateTime, nullable=True)
   position_entry_dt = Column(DateTime, nullable=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
 
 ## Master Dataset tables. Names all start with 'mds_'.
 
