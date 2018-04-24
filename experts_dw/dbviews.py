@@ -103,6 +103,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
    )
    and um_college not in (
      'DATH',
+     'DAUS',
      'DCAS',
      'TATH',
      'TAUD',
@@ -110,6 +111,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
      'TBOY',
      'TCAP',
      'TCTR',
+     'TESU',
      'TFAC',
      'TOGC',
      'THSM',
@@ -167,6 +169,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
     )
     and um_college not in (
       'DATH',
+      'DAUS',
       'DCAS',
       'TATH',
       'TAUD',
@@ -174,6 +177,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
       'TBOY',
       'TCAP',
       'TCTR',
+      'TESU',
       'TFAC',
       'TOGC',
       'THSM',
@@ -238,6 +242,7 @@ where poi_type = '00012'
   and um_campus in ('TXXX','DXXX')
   and um_college not in (
     'DATH',
+    'DAUS',
     'DCAS',
     'TATH',
     'TAUD',
@@ -245,6 +250,7 @@ where poi_type = '00012'
     'TBOY',
     'TCAP',
     'TCTR',
+    'TESU',
     'TFAC',
     'TOGC',
     'THSM',
@@ -326,6 +332,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
   )
   and um_college not in (
     'DATH',
+    'DAUS',
     'DCAS',
     'TATH',
     'TAUD',
@@ -333,6 +340,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
     'TBOY',
     'TCAP',
     'TCTR',
+    'TESU',
     'TFAC',
     'TOGC',
     'THSM',
