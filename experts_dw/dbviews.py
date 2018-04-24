@@ -89,12 +89,12 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
    and status_flg = 'C'
    and (
      (
-       um_affil_relation in -- jobcode criteria table
-       (select jobcode from job_codes where pool = 'A')
+       um_affil_relation in
+       (select jobcode from job_codes where pool = 'A') -- Affiliate-specific jobcodes, e.g., 9401A, 9402A, and 9403A
      ) or (
-       um_affil_relation in -- only affiliates in designated jobcodes AND departments
-       (select jobcode from job_codes where pool = 'C')
-       and deptid in (select deptid from affiliate_departments)
+       um_affil_relation in
+       (select jobcode from job_codes where pool = 'J') -- Non-affiliate jobcodes (most of them).
+       and deptid in (select deptid from affiliate_departments) -- Include jobs only from eligible departments for these jobcodes.
      )
    )
    and um_campus in (
@@ -231,12 +231,12 @@ where poi_type = '00012'
   and status_flg in ('C','H')
   and (
     (
-      um_affil_relation in -- jobcode criteria table
-        (select jobcode from job_codes where pool = 'A')
+      um_affil_relation in
+        (select jobcode from job_codes where pool = 'A') -- Affiliate-specific jobcodes, e.g., 9401A, 9402A, and 9403A
     ) or (
-      um_affil_relation in -- only affiliates in designated jobcodes AND departments
-        (select jobcode from job_codes where pool = 'C')
-      and deptid in (select deptid from affiliate_departments)
+      um_affil_relation in
+        (select jobcode from job_codes where pool = 'J') -- Non-affiliate jobcodes (most of them).
+      and deptid in (select deptid from affiliate_departments) -- Include jobs only from eligible departments for these jobcodes.
     )
   )
   and um_campus in ('TXXX','DXXX')
