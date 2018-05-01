@@ -123,8 +123,20 @@ class Person(Base):
   # UMN employees may be classified as external in Pure.
   pure_internal = Column(String(1), nullable=False) 
 
+  scopus_ids = relationship("PersonScopusId", backref="person")
+
   def __repr__(self):
     return 'uuid: {}'.format(self.uuid)
+
+class PersonScopusId(Base):
+  __tablename__ = 'person_scopus_id'
+  person_uuid = Column(ForeignKey('person.uuid'), primary_key=True)
+
+  # This scopus ID may be unnecessarily long:
+  scopus_id = Column(String(35), primary_key=True)
+
+  def __repr__(self):
+    return 'person_uuid: {}, scopus_id: {}'.format(self.person_uuid, self.scopus_id)
 
 # Records all UMN departments in Pure, with a timestamp for the datetime added to this table.
 class UmnDept(Base):
