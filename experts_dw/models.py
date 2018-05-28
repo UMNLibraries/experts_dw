@@ -1,6 +1,7 @@
-from sqlalchemy import Table, Column, DateTime, String, Integer, create_engine, func, ForeignKey
+from sqlalchemy import Table, Column, DateTime, Integer, String, Text, create_engine, func, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm import backref, relationship
 from sqlalchemy_mptt.mixins import BaseNestedSets
 
 from . import db
@@ -48,7 +49,13 @@ class Pub(Base):
   # also provides citation counts per year, which we may decide to use later.
   citation_total = Column(Integer, nullable=True)
 
-  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+  persons = association_proxy(
+    'person_associations',
+    'person',
+  )
+
+  owner_pure_org = relationship('PureOrg', backref='publications')
+  #author_orgs = relationship('PubPersonPureOrg', backref='publication')
 
 class PubPerson(Base):
   __tablename__ = 'pub_person'
@@ -76,18 +83,14 @@ class PubPerson(Base):
   # status, or the status at the time of publication?
   person_pure_internal = Column(String(1), nullable=True) 
 
-  pub = relationship('Pub', cascade="all, delete-orphan", single_parent=True)
-  person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
+  person = relationship('Person', backref="pub_associations")
+  pub = relationship('Pub', backref="person_associations")
 
 class PubPersonPureOrg(Base):
   __tablename__ = 'pub_person_pure_org'
   pub_uuid = Column(ForeignKey('pub.uuid'), nullable=False, primary_key=True)
   person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
   pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
-
-  pub = relationship('Pub', cascade="all, delete-orphan", single_parent=True)
-  person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
-  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'pub_uuid: {}, person_uuid: {}, pure_org_uuid: {}'.format(self.pub_uuid, self.person_uuid, self.pure_org_uuid)
@@ -123,7 +126,21 @@ class Person(Base):
   # UMN employees may be classified as external in Pure.
   pure_internal = Column(String(1), nullable=False) 
 
-  scopus_ids = relationship("PersonScopusId", backref="person")
+  # Reads from and writes to a list of PersonScopusId objects:
+  _scopus_ids = relationship('PersonScopusId', backref='person')
+
+  # Provides a 'view' of PersonScopusId objects as a list of scopus_id strings.
+  scopus_ids = association_proxy(
+    '_scopus_ids',
+    'scopus_id',
+  )
+  #authorship_orgs = relationship("PubPersonPureOrg", backref="person")
+  #pure_orgs = relationship("PureOrg", backref="person")
+
+  publications = association_proxy(
+    'pub_associations',
+    'pub',
+  )
 
   def __repr__(self):
     return 'uuid: {}'.format(self.uuid)
@@ -177,6 +194,9 @@ class PureOrg(Base):
   name_variant_en = Column(String(255), nullable=True)
   url = Column(String(255), nullable=True)
 
+  #persons = relationship("PersonPureOrg", backref="pure_org")
+  #authorships = relationship("PubPersonPureOrg", backref="owner_pure_org")
+
   def __repr__(self):
     return 'pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.pure_uuid, self.pure_id, self.type, self.name_en)
 
@@ -186,7 +206,6 @@ class PersonPureOrg(Base):
   pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
 
   person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
-  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'person_uuid: {}, pure_org_uuid: {}'.format(self.pub_uuid, self.person_uuid, self.pure_org_uuid)
@@ -525,6 +544,19 @@ class PureEligibleEmpJobChngHst(Base):
   job_entry_dt = Column(DateTime, nullable=True)
   position_entry_dt = Column(DateTime, nullable=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
+
+## Tables that store records retrieved via the Pure web services API.
+
+class PureApiPub(Base):
+  __tablename__ = 'pure_api_pub'
+  uuid = Column(String(36), primary_key=True)
+  json = Column(Text, nullable=False)
+  created = Column(DateTime, nullable=False)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, created: {}, modified: {}, downloaded: {}'.format(self.uuid, self.created, self.modified, self.downloaded)
 
 ## Master Dataset tables. Names all start with 'mds_'.
 
