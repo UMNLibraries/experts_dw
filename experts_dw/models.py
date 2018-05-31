@@ -49,6 +49,9 @@ class Pub(Base):
   # also provides citation counts per year, which we may decide to use later.
   citation_total = Column(Integer, nullable=True)
 
+  # Date the associated record was last modified in Pure.
+  pure_modified = Column(DateTime, nullable=True)
+
   persons = association_proxy(
     'person_associations',
     'person',
@@ -126,6 +129,9 @@ class Person(Base):
   # UMN employees may be classified as external in Pure.
   pure_internal = Column(String(1), nullable=False) 
 
+  # Date the associated record was last modified in Pure.
+  pure_modified = Column(DateTime, nullable=True)
+
   # Reads from and writes to a list of PersonScopusId objects:
   _scopus_ids = relationship('PersonScopusId', backref='person')
 
@@ -193,6 +199,9 @@ class PureOrg(Base):
   name_en = Column(String(255), nullable=False)
   name_variant_en = Column(String(255), nullable=True)
   url = Column(String(255), nullable=True)
+
+  # Date the associated record was last modified in Pure.
+  pure_modified = Column(DateTime, nullable=True)
 
   #persons = relationship("PersonPureOrg", backref="pure_org")
   #authorships = relationship("PubPersonPureOrg", backref="owner_pure_org")
@@ -558,140 +567,3 @@ class PureApiPub(Base):
   def __repr__(self):
     return 'uuid: {}, created: {}, modified: {}, downloaded: {}'.format(self.uuid, self.created, self.modified, self.downloaded)
 
-## Master Dataset tables. Names all start with 'mds_'.
-
-class MdsPerson(Base):
-  __tablename__ = 'mds_person'
-  uuid = Column(String(36), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
-
-  def __repr__(self):
-    return 'uuid: {}, timestamp: {}'.format(self.uuid, self.timestamp)
-
-class MdsPersonEmplid(Base):
-  __tablename__ = 'mds_person_emplid'
-  emplid = Column(String(11), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'emplid: {}, uuid: {}, timestamp: {}'.format(self.emplid, self.uuid, self.timestamp)
-
-# The Scival ID was automatically-generated for Elsevier's predecessor-to-Pure
-# product, SciVal. After moving to Pure we started using UMN's EmplID for new
-# persons, but kept the SciVal ID for existing persons. This list should be
-# static, neither growing nor shrinking nor changing.
-
-class MdsPersonScivalId(Base):
-  __tablename__ = 'mds_person_scival_id'
-  scival_id = Column(Integer, nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'scival_id: {}, uuid: {}, timestamp: {}'.format(self.scival_id, self.uuid, self.timestamp)
-
-# The following group of tables all track data from ps_dwhr_demo_addr, which does
-# not have an effective date (effdt) column.
-
-class MdsPersonInternetId(Base):
-  __tablename__ = 'mds_person_internet_id'
-  internet_id = Column(String(15), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'internet_id: {}, uuid: {}, timestamp: {}'.format(self.internet_id, self.uuid, self.timestamp)
-
-class MdsPersonPreferredName(Base):
-  __tablename__ = 'mds_person_preferred_name'
-  preferred_name = Column(String(255), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'preferred_name: {}, uuid: {}, timestamp: {}'.format(self.preferred_name, self.uuid, self.timestamp)
-
-class MdsPersonFirstName(Base):
-  __tablename__ = 'mds_person_first_name'
-  first_name = Column(String(100), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'first_name: {}, uuid: {}, timestamp: {}'.format(self.first_name, self.uuid, self.timestamp)
-
-class MdsPersonMiddleName(Base):
-  __tablename__ = 'mds_person_middle_name'
-  middle_name = Column(String(100), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'middle_name: {}, uuid: {}, timestamp: {}'.format(self.middle_name, self.uuid, self.timestamp)
-
-class MdsPersonLastName(Base):
-  __tablename__ = 'mds_person_last_name'
-  last_name = Column(String(100), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'last_name: {}, uuid: {}, timestamp: {}'.format(self.last_name, self.uuid, self.timestamp)
-
-class MdsPersonNameSuffix(Base):
-  __tablename__ = 'mds_person_name_suffix'
-  name_suffix = Column(String(30), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'name_suffix: {}, uuid: {}, timestamp: {}'.format(self.name_suffix, self.uuid, self.timestamp)
-
-class MdsPersonInstlEmailAddr(Base):
-  __tablename__ = 'mds_person_instl_email_addr'
-  instl_email_addr = Column(String(70), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'instl_email_addr: {}, uuid: {}, timestamp: {}'.format(self.inst_email_addr, self.uuid, self.timestamp)
-
-class MdsPersonTenureFlag(Base):
-  __tablename__ = 'mds_person_tenure_flag'
-  tenure_flag = Column(String(1), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'tenure_flag: {}, uuid: {}, timestamp: {}'.format(self.tenure_flag, self.uuid, self.timestamp)
-
-class MdsPersonTenureTrackFlag(Base):
-  __tablename__ = 'mds_person_tenure_track_flag'
-  tenure_track_flag = Column(String(1), nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'tenure_track_flag: {}, uuid: {}, timestamp: {}'.format(self.tenure_track_flag, self.uuid, self.timestamp)
-
-class MdsPersonPrimaryEmplRcdno(Base):
-  __tablename__ = 'mds_person_primary_empl_rcdno'
-  primary_empl_rcdno = Column(Integer, nullable=True)
-  uuid = Column(ForeignKey('mds_person.uuid'), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-  mds_person = relationship('MdsPerson', cascade="all, delete-orphan", single_parent=True)
-
-  def __repr__(self):
-    return 'primary_empl_rcdno: {}, uuid: {}, timestamp: {}'.format(self.primary_empl_rcdno, self.uuid, self.timestamp)
