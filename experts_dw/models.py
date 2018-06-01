@@ -58,7 +58,6 @@ class Pub(Base):
   )
 
   owner_pure_org = relationship('PureOrg', backref='publications')
-  #author_orgs = relationship('PubPersonPureOrg', backref='publication')
 
 class PubPerson(Base):
   __tablename__ = 'pub_person'
@@ -89,6 +88,10 @@ class PubPerson(Base):
   person = relationship('Person', backref="pub_associations")
   pub = relationship('Pub', backref="person_associations")
 
+# This may need some improvement, maybe even drastic changes. Therefore, holding
+# off on defining relationships for now.
+# Also, does the Pure API return more than one organisation
+# per person per pub? For external persons, at least, it seems to return only one.
 class PubPersonPureOrg(Base):
   __tablename__ = 'pub_person_pure_org'
   pub_uuid = Column(ForeignKey('pub.uuid'), nullable=False, primary_key=True)
@@ -140,12 +143,20 @@ class Person(Base):
     '_scopus_ids',
     'scopus_id',
   )
-  #authorship_orgs = relationship("PubPersonPureOrg", backref="person")
-  #pure_orgs = relationship("PureOrg", backref="person")
 
   publications = association_proxy(
     'pub_associations',
     'pub',
+  )
+
+  pure_orgs = association_proxy(
+    'pure_org_associations',
+    'pure_org',
+  )
+
+  umn_pure_orgs = association_proxy(
+    'umn_pure_org_associations',
+    'pure_org',
   )
 
   def __repr__(self):
@@ -182,7 +193,7 @@ class PureInternalOrg(Base, BaseNestedSets):
   pure_id = Column(String(50), nullable=True, index=True)
   name_en = Column(String(255))
 
-  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
+  pure_org = relationship('PureOrg', backref=backref('pure_internal_org', uselist=False))
 
   def __repr__(self):
     return 'id: {}, parent_id: {}, lft: {}, rgt: {}, pure_uuid: {}, name_en: {}'.format(self.id, self.parent_id, self.lft, self.rgt, self.pure_uuid, self.name_en)
@@ -203,8 +214,17 @@ class PureOrg(Base):
   # Date the associated record was last modified in Pure.
   pure_modified = Column(DateTime, nullable=True)
 
-  #persons = relationship("PersonPureOrg", backref="pure_org")
-  #authorships = relationship("PubPersonPureOrg", backref="owner_pure_org")
+  persons = association_proxy(
+    'person_associations',
+    'person',
+  )
+
+  umn_persons = association_proxy(
+    'umn_person_associations',
+    'person',
+  )
+
+  umn_depts = relationship('UmnDeptPureOrg', backref='pure_org')
 
   def __repr__(self):
     return 'pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.pure_uuid, self.pure_id, self.type, self.name_en)
@@ -214,7 +234,8 @@ class PersonPureOrg(Base):
   person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
   pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
 
-  person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
+  person = relationship('Person', backref="pure_org_associations")
+  pure_org = relationship('PureOrg', backref="person_associations")
 
   def __repr__(self):
     return 'person_uuid: {}, pure_org_uuid: {}'.format(self.pub_uuid, self.person_uuid, self.pure_org_uuid)
@@ -244,8 +265,9 @@ class UmnPersonPureOrg(Base):
 
   end_date = Column(DateTime, nullable=True)
   primary = Column(String(1), nullable=True) # (Y|N): Primary affiliation flag.
-  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
-  person = relationship('Person', cascade="all, delete-orphan", single_parent=True)
+
+  person = relationship('Person', backref="umn_pure_org_associations")
+  pure_org = relationship('PureOrg', backref="umn_person_associations")
 
 class UmnDeptPureOrg(Base):
   __tablename__ = 'umn_dept_pure_org'
@@ -255,8 +277,6 @@ class UmnDeptPureOrg(Base):
 
   # De-normalization column--not really required.
   pure_org_id = Column(String(50), nullable=True)
-
-  pure_org = relationship('PureOrg', cascade="all, delete-orphan", single_parent=True)
 
   def __repr__(self):
     return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_uuid: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_uuid, self.pure_org_id)
