@@ -42,8 +42,8 @@ class Pub(Base):
   title = Column(String(2000), nullable=False)
   container_title = Column(String(2000), nullable=True)
   issn = Column(String(9), nullable=True)
-  volume = Column(String(25), nullable=True)
-  issue = Column(String(50), nullable=True)
+  volume = Column(String(2000), nullable=True)
+  issue = Column(String(2000), nullable=True)
   pages = Column(String(50), nullable=True)
 
   # Total number of citations of the output. We call it a "total" because Pure
