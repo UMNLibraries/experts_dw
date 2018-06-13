@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy_mptt.mixins import BaseNestedSets
+import json
 
 from . import db
 
@@ -59,6 +60,13 @@ class Pub(Base):
 
   owner_pure_org = relationship('PureOrg', backref='publications')
 
+  def __repr__(self):
+    d = {}
+    for k in ['uuid','pure_uuid','owner_pure_org_uuid','scopus_id','pmid','doi','type','issued_precision','title','container_title','issn','volume','issue','pages','citation_total']:
+      d[k] = getattr(self, k)
+    #return 'uuid: {}'.format(self.uuid)
+    return json.dumps(d)
+
 class PubPerson(Base):
   __tablename__ = 'pub_person'
   pub_uuid = Column(ForeignKey('pub.uuid'), nullable=False, primary_key=True)
@@ -88,6 +96,12 @@ class PubPerson(Base):
   person = relationship('Person', backref="pub_associations")
   pub = relationship('Pub', backref="person_associations")
 
+  def __repr__(self):
+    d = {}
+    for k in ['pub_uuid','person_uuid','person_ordinal','person_role','person_pure_internal','first_name','last_name','emplid']:
+      d[k] = getattr(self, k)
+    return json.dumps(d)
+
 # This may need some improvement, maybe even drastic changes. Therefore, holding
 # off on defining relationships for now.
 # Also, does the Pure API return more than one organisation
@@ -99,7 +113,10 @@ class PubPersonPureOrg(Base):
   pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
 
   def __repr__(self):
-    return 'pub_uuid: {}, person_uuid: {}, pure_org_uuid: {}'.format(self.pub_uuid, self.person_uuid, self.pure_org_uuid)
+    d = {}
+    for k in ['pub_uuid','person_uuid','pure_org_uuid']:
+      d[k] = getattr(self, k)
+    return json.dumps(d)
 
 class Person(Base):
   __tablename__ = 'person'
@@ -160,7 +177,11 @@ class Person(Base):
   )
 
   def __repr__(self):
-    return 'uuid: {}'.format(self.uuid)
+    d = {}
+    for k in ['uuid','pure_uuid','pure_id','orcid','hindex','emplid','internet_id','first_name','last_name','pure_internal']:
+      d[k] = getattr(self, k)
+    #return 'uuid: {}'.format(self.uuid)
+    return json.dumps(d)
 
 class PersonScopusId(Base):
   __tablename__ = 'person_scopus_id'
