@@ -595,16 +595,129 @@ class PureEligibleEmpJobChngHst(Base):
   position_entry_dt = Column(DateTime, nullable=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
 
-## Tables that store records retrieved via the Pure web services API.
+## Tables that store records and metadata retrieved via the Pure web services API.
+
+class PureApiChange(Base):
+  __tablename__ = 'pure_api_change'
+  uuid = Column(String(36), primary_key=True)
+  family_system_name = Column(String(150), nullable=False)
+  change_type = Column(String(10), nullable=False)
+  json = Column(Text, nullable=False)
+  version = Column(Integer, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, family_system_name: {}, change_type: {}, version: {}, downloaded: {}'.format(self.uuid, self.family_system_name, self.change_type, self.version, self.downloaded)
+
+class PureApiChangeHst(Base):
+  __tablename__ = 'pure_api_change_hst'
+  uuid = Column(String(36), primary_key=True)
+  family_system_name = Column(String(150), nullable=False)
+  change_type = Column(String(10), nullable=False)
+  version = Column(Integer, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, nullable=False)
+  processed = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, family_system_name: {}, change_type: {}, version: {}, downloaded: {}, processed: {}'.format(self.uuid, self.family_system_name, self.change_type, self.version, self.downloaded, self.processed)
 
 class PureApiPub(Base):
   __tablename__ = 'pure_api_pub'
   uuid = Column(String(36), primary_key=True)
   json = Column(Text, nullable=False)
-  created = Column(DateTime, nullable=False)
   modified = Column(DateTime, nullable=False, primary_key=True)
   downloaded = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
   def __repr__(self):
-    return 'uuid: {}, created: {}, modified: {}, downloaded: {}'.format(self.uuid, self.created, self.modified, self.downloaded)
+    return 'uuid: {}, modified: {}, downloaded: {}'.format(self.uuid, self.modified, self.downloaded)
+
+class PureApiPubHst(Base):
+  __tablename__ = 'pure_api_pub_hst'
+  uuid = Column(String(36), primary_key=True)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, nullable=False)
+  processed = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, modified: {}, downloaded: {}, processed: {}'.format(self.uuid, self.modified, self.downloaded, self.processed)
+
+class PureApiInternalPerson(Base):
+  __tablename__ = 'pure_api_internal_person'
+  uuid = Column(String(36), primary_key=True)
+  json = Column(Text, nullable=False)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, modified: {}, downloaded: {}'.format(self.uuid, self.modified, self.downloaded)
+
+class PureApiInternalPersonHst(Base):
+  __tablename__ = 'pure_api_internal_person_hst'
+  uuid = Column(String(36), primary_key=True)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, nullable=False)
+  processed = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, modified: {}, downloaded: {}, processed: {}'.format(self.uuid, self.modified, self.downloaded, self.processed)
+
+class PureApiExternalPerson(Base):
+  __tablename__ = 'pure_api_external_person'
+  uuid = Column(String(36), primary_key=True)
+  json = Column(Text, nullable=False)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, modified: {}, downloaded: {}'.format(self.uuid, self.modified, self.downloaded)
+
+class PureApiExternalPersonHst(Base):
+  __tablename__ = 'pure_api_external_person_hst'
+  uuid = Column(String(36), primary_key=True)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, nullable=False)
+  processed = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, modified: {}, downloaded: {}, processed: {}'.format(self.uuid, self.modified, self.downloaded, self.processed)
+
+class PureApiInternalOrg(Base):
+  __tablename__ = 'pure_api_internal_org'
+  uuid = Column(String(36), primary_key=True)
+  json = Column(Text, nullable=False)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, modified: {}, downloaded: {}'.format(self.uuid, self.modified, self.downloaded)
+
+class PureApiInternalOrgHst(Base):
+  __tablename__ = 'pure_api_internal_org_hst'
+  uuid = Column(String(36), primary_key=True)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, nullable=False)
+  processed = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, modified: {}, downloaded: {}, processed: {}'.format(self.uuid, self.modified, self.downloaded, self.processed)
+
+class PureApiExternalOrg(Base):
+  __tablename__ = 'pure_api_external_org'
+  uuid = Column(String(36), primary_key=True)
+  json = Column(Text, nullable=False)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, modified: {}, downloaded: {}'.format(self.uuid, self.modified, self.downloaded)
+
+class PureApiExternalOrgHst(Base):
+  __tablename__ = 'pure_api_external_org_hst'
+  uuid = Column(String(36), primary_key=True)
+  modified = Column(DateTime, nullable=False, primary_key=True)
+  downloaded = Column(DateTime, nullable=False)
+  processed = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+  def __repr__(self):
+    return 'uuid: {}, modified: {}, downloaded: {}, processed: {}'.format(self.uuid, self.modified, self.downloaded, self.processed)
 
