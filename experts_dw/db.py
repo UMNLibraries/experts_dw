@@ -1,21 +1,25 @@
+from contextlib import contextmanager
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_mptt import mptt_sessionmaker
 
-def url(db_name):
+default_db_name = 'hotel'
+
+def url(db_name=default_db_name):
   # db_name must be the generic part of the service name,
   # without the (tst|prd).oit suffix, e.g. 'dwe' or 'hotel'.
-  return "oracle://%s:\"%s\"@%s" % (
+  return 'oracle://{}:"{}"@{}'.format(
       os.environ.get('DB_USER'),
       os.environ.get('DB_PASS'),
       os.environ.get(db_name.upper() + '_DB_SERVICE_NAME'),
   )
 
-def engine(db_name):
+def engine(db_name=default_db_name):
   return create_engine(url(db_name))
 
-def session(db_name):
+@contextmanager
+def session(db_name=default_db_name):
   # Original:
   #Session = sessionmaker()
   # mptt docs:
@@ -23,6 +27,14 @@ def session(db_name):
   # This didn't work:
   #Session = mptt_sessionmaker(sessionmaker())
 
-  #Session.configure(bind=engine(db_name))
   Session = mptt_sessionmaker(sessionmaker(bind=engine(db_name)))
-  return Session()
+  #return Session()
+  session = Session()
+  try:
+    yield session
+    session.commit()
+  except:
+    session.rollback()
+    raise
+  finally:
+    session.close()

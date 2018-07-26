@@ -1,14 +1,16 @@
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+import pytest
 from sqlalchemy import func
 from experts_dw import db, models
 
-session = db.session('hotel')
+@pytest.fixture
+def session():
+  with db.session('hotel') as session:
+    yield session
 
-def test_pub():
+def test_pub(session):
   count = session.query(func.count(models.Pub.uuid)).scalar()
   assert count > 0
 
-def test_views():
+def test_views(session):
   count = session.query(func.count(models.AffiliateJobs.emplid)).scalar()
   assert count > 0
