@@ -1,8 +1,4 @@
-from . import db
-
-session = db.session('hotel')
-
-def create_pure_eligible_demog():
+def create_pure_eligible_demog(session):
   stmt = """
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_DEMOG" (
   "EMPLID",
@@ -44,7 +40,7 @@ from pure_eligible_person_chng_hst p
   session.commit()
   return result
 
-def create_pure_eligible_person():
+def create_pure_eligible_person(session):
   stmt = """
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_PERSON" (
   "EMPLID"
@@ -60,7 +56,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_PERSON" (
   return result
 
 # Defines the criteria for an affiliate person to be Pure-eligible.
-def create_pure_eligible_affiliate():
+def create_pure_eligible_affiliate(session):
   stmt = """
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
   "EMPLID",
@@ -118,6 +114,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
      'TINS',
      'TOBR',
      'TOHR',
+     'TPSR',
      'TSVC'
    )
 )"""
@@ -126,7 +123,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFFILIATE" (
   return result
 
 # Defines the criteria for an employee person to be Pure-eligible.
-def create_pure_eligible_employee():
+def create_pure_eligible_employee(session):
   stmt = """
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
   "EMPLID",
@@ -184,6 +181,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
       'TINS',
       'TOBR',
       'TOHR',
+      'TPSR',
       'TSVC'
     )
 )"""   
@@ -192,7 +190,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
   return result
 
 # All Pure-eligible jobs ever held by a Pure-eligible affiliate employee.
-def create_pure_eligible_aff_job():
+def create_pure_eligible_aff_job(session):
   stmt = """
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_AFF_JOB" (
   "EMPLID",
@@ -257,6 +255,7 @@ where poi_type = '00012'
     'TINS',
     'TOBR',
     'TOHR',
+    'TPSR',
     'TSVC'
   )
   and emplid in (select emplid from pure_eligible_person_chng_hst)
@@ -266,7 +265,7 @@ where poi_type = '00012'
   return result
 
 # All Pure-eligible jobs ever held by a Pure-eligible employee.
-def create_pure_eligible_emp_job():
+def create_pure_eligible_emp_job(session):
   stmt = """
 CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
   "EMPLID",
@@ -347,6 +346,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
     'TINS',
     'TOBR',
     'TOHR',
+    'TPSR',
     'TSVC'
   )
   and emplid in (select emplid from pure_eligible_person_chng_hst)
