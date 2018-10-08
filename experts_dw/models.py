@@ -53,6 +53,9 @@ class Pub(Base):
   # Date the associated record was last modified in Pure.
   pure_modified = Column(DateTime, nullable=True)
 
+  pure_type = Column(String(50), nullable=True)
+  pure_subtype = Column(String(50), nullable=True)
+
   persons = association_proxy(
     'person_associations',
     'person',
