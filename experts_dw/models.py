@@ -296,7 +296,6 @@ class UmnPersonPureOrg(Base):
 class UmnDeptPureOrg(Base):
   __tablename__ = 'umn_dept_pure_org'
   deptid = Column(String(10), primary_key=True)
-  umn_dept_id = Column(Integer)
   deptid_descr = Column(String(255), nullable=True)
   pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
 
