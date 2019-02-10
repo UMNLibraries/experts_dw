@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "experts_dw"
-version = "3.0.0"
+version = "3.0.1"
 description = "Tools for working with the Experts@Minnesota Data Warehouse."
 readme = "README.md"
 authors = ["David Naughton <naughton@umn.edu>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "3.*"
+python = "^3.6.3"
 cx_oracle = "*"
 sqlalchemy = "*"
 sqlalchemy_mptt = "*"
