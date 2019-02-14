@@ -158,6 +158,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMPLOYEE" (
     'W'
   )
     and j.status_flg = 'C'
+    and j.action_reason <> 'EIE' -- Entered in Error
     and paygroup != 'PLH'
     and rrc not in (
       'UMRXX',
@@ -323,6 +324,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "EXPERT"."PURE_ELIGIBLE_EMP_JOB" (
     join job_codes jc
       on j.jobcode = jc.jobcode
   where j.status_flg in ('C','H')
+  and j.action_reason <> 'EIE' -- Entered in Error
   and paygroup != 'PLH'
   and rrc not in (
     'UMRXX',
