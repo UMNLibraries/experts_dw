@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, DateTime, Integer, String, Text, create_engine, func, ForeignKey
+from sqlalchemy import Table, Column, Boolean, DateTime, Integer, String, Text, create_engine, func, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import backref, relationship
@@ -9,8 +9,7 @@ from . import db
 
 engine = db.engine('hotel')
 
-# Would like to name constraints, but Oracle limits names to 30 characters!
-#import common
+#from . import common
 #Base = declarative_base(metadata=common.metadata)
 Base = declarative_base()
 
@@ -325,6 +324,37 @@ class PureNewStaffPosDefaults(Base):
   um_jobcode_group_descr = Column(String(50), nullable=True)
   default_staff_type = Column(String(11), nullable=False)
   default_employed_as = Column(String(50), nullable=False)
+
+class PureEligibleJobcode(Base):
+  __tablename__ = 'pure_eligible_jobcode'
+  jobcode = Column(String(13), primary_key=True)
+  jobcode_descr = Column(String(35), nullable=True)
+  pure_job_description = Column(String(50), nullable=False)
+  default_employed_as = Column(String(50), nullable=False)
+  default_staff_type = Column(String(11), nullable=False)
+  default_visibility = Column(String(10), nullable=False)
+  default_profiled = Column(Boolean(), nullable=False)
+  default_profiled_overrideable = Column(Boolean(), nullable=False)
+
+class PureEligibleAffiliateJobcode(Base):
+  __tablename__ = 'pure_eligible_affiliate_jobcode'
+  jobcode = Column(String(13), primary_key=True)
+
+class PureEligibleAffiliateDept(Base):
+  __tablename__ = 'pure_eligible_affiliate_dept'
+  deptid = Column(String(10), primary_key=True)
+
+class PureJobcodeDefaultOverride(Base):
+  __tablename__ = 'pure_jobcode_default_override'
+  jobcode = Column(String(13), primary_key=True)
+  deptid = Column(String(10), primary_key=True)
+  profiled = Column(Boolean(), nullable=False)
+
+class KnownOverrideableJobcodeDept(Base):
+  __tablename__ = 'known_overrideable_jobcode_dept'
+  jobcode = Column(String(13), primary_key=True)
+  deptid = Column(String(10), primary_key=True)
+  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
 ## Views
 
