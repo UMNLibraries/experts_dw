@@ -219,7 +219,8 @@ class PureInternalOrg(Base, BaseNestedSets):
   pure_org = relationship('PureOrg', backref=backref('pure_internal_org', uselist=False))
 
   def __repr__(self):
-    return 'id: {}, parent_id: {}, lft: {}, rgt: {}, pure_uuid: {}, name_en: {}'.format(self.id, self.parent_id, self.lft, self.rgt, self.pure_uuid, self.name_en)
+    #return 'id: {}, parent_id: {}, lft: {}, rgt: {}, pure_uuid: {}, name_en: {}'.format(self.id, self.parent_id, self.lft, self.rgt, self.pure_uuid, self.name_en)
+    return 'id: {}, pure_uuid: {}, pure_id: {}, name_en: {}'.format(self.id, self.pure_uuid, self.pure_id, self.name_en)
 
 class PureOrg(Base):
   __tablename__ = 'pure_org'
@@ -353,6 +354,102 @@ class KnownOverrideableJobcodeDept(Base):
   jobcode = Column(String(13), primary_key=True)
   deptid = Column(String(10), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+class UmnDataError(Base):
+  __tablename__ = 'umn_data_error'
+  error_id = Column(String(40), primary_key=True)
+  message = Column(String(255), nullable=False)
+  jobcode = Column(String(13), nullable=True)
+  deptid = Column(String(10), nullable=True)
+  emplid = Column(String(11), nullable=True)
+  first_seen = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  last_seen = Column(DateTime, default=func.current_timestamp(), nullable=False)
+  count = Column(Integer, nullable=False)
+  # If null, no notification has been sent.
+  notified = Column(DateTime, default=func.current_timestamp(), nullable=True)
+
+  def __repr__(self):
+    return self.message
+
+## Pure sync tables, for populating XML files to upload to Pure.
+
+# Based on PERSON_DATA in:
+# https://doc.pure.elsevier.com/download/attachments/28412327/oracle_person_view_create_statements.sql?version=5&modificationDate=1529322570793&api=v2
+class PureSyncPersonData(Base):
+  __tablename__ = 'pure_sync_person_data'
+  person_id = Column(String(1024), primary_key=True)
+  first_name = Column(String(1024), nullable=True)
+  last_name = Column(String(1024), nullable=False)
+  # Pure allows the remaining columns to be null, but UMN does not:
+  visibility = Column(String(1024), nullable=False) # 'Public', 'Campus', or 'Restricted'
+  profiled = Column(Boolean(), nullable=False)
+
+  # Added by UMN:
+  emplid = Column(String(11), nullable=False)
+  internet_id = Column(String(15), nullable=True)
+  # We use this instead of the Pure PERSON_TITLES table, because this is the only title we use:
+  postnominal = Column(String(255), nullable=True)
+
+  staff_org_associations = relationship('PureSyncStaffOrgAssociation', backref='person')
+  user = relationship('PureSyncUserData', backref='person')
+
+  # Unused columns from Pure's PERSON_DATA spec.
+#  date_of_birth = Column(DateTime, nullable=True)
+#  nationality = Column(String(1024), nullable=True)
+#  gender = Column(String(1024) nullable=True) # We always set this to 'unknown'.
+#  employee_start_date = Column(DateTime, nullable=True)
+#  system_leaving_date = Column(DateTime, nullable=True)
+#  retiral_date = Column(DateTime, nullable=True)
+#  academic_profession_entry = Column(DateTime, nullable=True)
+#  expert = Column(Boolean(), nullable=True)
+#  willingness_to_phd  = Column(Boolean(), nullable=True)
+#  phd_research_projects = CLOB,
+#  affiliation_note = CLOB,
+#  orcid = Column(String(20), nullable=True)
+#  building = Column(String(1024), nullable=True)
+#  city = Column(String(1024), nullable=True)
+#  country = Column(String(1024), nullable=True)
+#  postal_code = Column(String(1024), nullable=True)
+#  road = Column(String(1024), nullable=True)
+#  room = Column(String(1024), nullable=True)
+#  user_id = Column(String(1024), nullable=True)
+#  managed_in_pure = Column(Boolean(), nullable=True) # We always set this to 'false'.
+
+# Based on STAFF_ORG_RELATION in:
+# https://doc.pure.elsevier.com/download/attachments/28412327/oracle_person_view_create_statements.sql?version=5&modificationDate=1529322570793&api=v2
+class PureSyncStaffOrgAssociation(Base):
+  __tablename__ = 'pure_sync_staff_org_association'
+  staff_org_association_id = Column(String(1024), primary_key=True)
+  person_id = Column(ForeignKey('pure_sync_person_data.person_id'), nullable=False)
+  period_start_date = Column(DateTime, nullable=False)
+  period_end_date = Column(DateTime, nullable=True)
+  # Pure allows the remaining columns to be null, but UMN does not:
+  org_id = Column(String(1024), nullable=False)
+  employment_type = Column(String(1024), nullable=False)
+  staff_type = Column(String(1024), nullable=False) # 'academic' or 'nonacademic'
+  visibility = Column(String(1024), nullable=False) # 'Public', 'Campus', or 'Restricted'
+  primary_association = Column(Boolean(), nullable=False)
+  job_description = Column(String(1024), nullable=False)
+
+  # Unused columns from Pure's STAFF_ORG_RELATION spec.
+#  org_pure_id = Column(Integer, nullable=True)
+#  org_source_id = Column(String(1024), nullable=True)
+#  org_classified_ids_id = Column(String(1024), nullable=True)
+#  org_classified_ids_type = Column(String(1024), nullable=True)
+#  contract_type = Column(String(1024), nullable=True)
+#  job_title = Column(String(1024), nullable=True)
+#  fte = Column(Integer, nullable=True)
+#  managed_in_pure = Column(Boolean(), nullable=True) # We always set this to 'false'.
+
+# Based on:
+# https://doc.pure.elsevier.com/download/attachments/28412333/oracle_user_view_create_statements.sql?version=1&modificationDate=1424698361313&api=v2
+class PureSyncUserData(Base):
+  __tablename__ = 'pure_sync_user_data'
+  person_id = Column(ForeignKey('pure_sync_person_data.person_id'), primary_key=True) # 'id' in Pure's USER_DATA spec
+  first_name = Column(String(1024), nullable=True)
+  last_name = Column(String(1024), nullable=True)
+  user_name = Column(String(1024), nullable=False) # umn internet id
+  email = Column(String(1024), nullable=False)
 
 ## Views
 
