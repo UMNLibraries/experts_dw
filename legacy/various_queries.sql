@@ -1,7 +1,7 @@
 -- We now have access to PSSNAP tables, as of 2018-05-04!
 -- But ask about the "department tree" or whatever it was Chris Dinger called it, too.
-describe table hr_ps_job@dweprd.oit;
-describe table hr_ps_position_data@dweprd.oit;
+describe hr_ps_job@dweprd.oit;
+describe hr_ps_position_data@dweprd.oit;
 
 -- Do I need to commit these?
 grant select on person to oit_expert_rd_all;
