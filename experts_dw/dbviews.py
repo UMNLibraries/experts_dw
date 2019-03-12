@@ -42,6 +42,7 @@ employee_job_columns =  ', '.join([
     'UM_JOBCODE_GROUP',
     'UM_COLLEGE',
     'UM_COLLEGE_DESCR',
+    'UM_CAMPUS',
     'RRC',
     'UM_ZDEPTID',
     'UM_ZDEPTID_DESCR',
@@ -112,6 +113,7 @@ employee_job_ps_dwhr_job_columns = ', '.join([
     'j.um_jobcode_group',
     'j.um_college',
     'j.um_college_descr',
+    'j.um_campus',
     'j.rrc', # experts_data: as campus
     'j.um_zdeptid',
     'j.um_zdeptid_descr',
@@ -139,23 +141,6 @@ affiliate_job_ps_dwhr_um_affiliates_columns = ', '.join([
     'um_zdeptid_descr',
     'status_flg',
 ])
-
-um_campuses_to_include = ', '.join(list(map(
-    lambda x: f"'{x}'",
-    [
-        'TXXX',
-        'DXXX',
-    ]
-)))
-
-rrcs_to_exclude = ', '.join(list(map(
-    lambda x: f"'{x}'",
-    [
-        'UMRXX',
-        'UMCXX',
-        'UMMXX',
-    ]
-)))
 
 um_colleges_to_exclude = ', '.join(list(map(
     lambda x: f"'{x}'",
@@ -193,9 +178,6 @@ employee_common_restrictions = f'''
   AND j.action_reason <> 'EIE' -- Entered in Error
   AND paygroup != 'PLH'
   AND empl_class != 'FTD' -- (Fac - Temp/Duluth Non-Reg)
-  AND rrc NOT IN (
-    {rrcs_to_exclude}
-  )
   AND um_college NOT IN (
     {um_colleges_to_exclude}
   )
@@ -207,9 +189,6 @@ affiliate_common_restrictions = f'''
     (um_affil_relation IN (SELECT jobcode FROM pure_eligible_affiliate_jobcode)) -- Affiliate-specific jobcodes, e.g., 9401A, 9402A, and 9403A
     OR
     (deptid IN (SELECT deptid FROM pure_eligible_affiliate_dept)) -- Include jobs only from eligible departments for all other jobcodes.
-  )
-  AND um_campus IN (
-    {um_campuses_to_include}
   )
   AND um_college NOT IN (
     {um_colleges_to_exclude}

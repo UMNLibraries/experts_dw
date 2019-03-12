@@ -297,7 +297,8 @@ class UmnDeptPureOrg(Base):
   __tablename__ = 'umn_dept_pure_org'
   deptid = Column(String(10), primary_key=True)
   deptid_descr = Column(String(255), nullable=True)
-  pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
+  #pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
+  pure_org_uuid = Column(String(255), nullable=True)
   pure_org_id = Column(String(50), nullable=False)
 
   def __repr__(self):
@@ -430,6 +431,11 @@ class PureSyncStaffOrgAssociation(Base):
   visibility = Column(String(1024), nullable=False) # 'Public', 'Campus', or 'Restricted'
   primary_association = Column(Boolean(), nullable=False)
   job_description = Column(String(1024), nullable=False)
+
+  # Added by UMN:
+  # person.xsd can include affiliationId, but there seems to be no column for it in Pure's
+  # STAFF_ORG_RELATION spec. We use this for jobcode.
+  affiliation_id = Column(String(30), nullable=True)
 
   # Unused columns from Pure's STAFF_ORG_RELATION spec.
 #  org_pure_id = Column(Integer, nullable=True)
