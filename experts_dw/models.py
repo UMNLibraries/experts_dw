@@ -195,15 +195,6 @@ class PersonScopusId(Base):
   def __repr__(self):
     return 'person_uuid: {}, scopus_id: {}'.format(self.person_uuid, self.scopus_id)
 
-# Records all UMN departments in Pure, with a timestamp for the datetime added to this table.
-class UmnDept(Base):
-  __tablename__ = 'umn_dept'
-  deptid = Column(Integer, primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
-
-  def __repr__(self):
-    return 'deptid: {}, timestamp: {}'.format(self.deptid, self.timestamp)
-
 # The hierarchy of Pure UMN-internal organisations.
 # Not all Pure organisations are UMN-internal.
 # External orgs are not included here.
@@ -248,7 +239,8 @@ class PureOrg(Base):
     'person',
   )
 
-  umn_depts = relationship('UmnDeptPureOrg', backref='pure_org')
+  # Temporary FK removal.
+  #umn_depts = relationship('UmnDeptPureOrg', backref='pure_org')
 
   def __repr__(self):
     return 'pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.pure_uuid, self.pure_id, self.type, self.name_en)
@@ -303,27 +295,6 @@ class UmnDeptPureOrg(Base):
 
   def __repr__(self):
     return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_uuid: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_uuid, self.pure_org_id)
-
-class PureNewStaffDeptDefaults(Base):
-  __tablename__ = 'pure_new_staff_dept_defaults'
-  deptid = Column(String(10), primary_key=True)
-  deptid_descr = Column(String(30), nullable=True)
-  pure_org_id = Column(String(50), nullable=True)
-  jobcode = Column(String(13), primary_key=True)
-  jobcode_descr = Column(String(35), primary_key=True)
-  um_college = Column(String(20), nullable=True)
-  um_college_descr = Column(String(30), nullable=True)
-  default_visibility = Column(String(10), nullable=False)
-  default_profiled = Column(String(5), nullable=False)
-
-class PureNewStaffPosDefaults(Base):
-  __tablename__ = 'pure_new_staff_pos_defaults'
-  jobcode = Column(String(13), primary_key=True)
-  jobcode_descr = Column(String(35), nullable=True)
-  um_jobcode_group = Column(String(8), nullable=True)
-  um_jobcode_group_descr = Column(String(50), nullable=True)
-  default_staff_type = Column(String(11), nullable=False)
-  default_employed_as = Column(String(50), nullable=False)
 
 class PureEligibleJobcode(Base):
   __tablename__ = 'pure_eligible_jobcode'
@@ -459,48 +430,6 @@ class PureSyncUserData(Base):
 
 ## Views
 
-class AffiliateJobs(Base):
-  __table__ = Table(
-    'affiliate_jobs',
-    Base.metadata,
-    Column('emplid', String(11), primary_key=True),
-    Column('jobcode', String(5), primary_key=True),
-    Column('deptid', Integer, primary_key=True),
-    autoload=True,
-    autoload_with=engine
- )
-
-class AllJobs(Base):
-  __table__ = Table(
-    'all_jobs',
-    Base.metadata,
-    Column('emplid', String(11), primary_key=True),
-    Column('jobcode', String(5), primary_key=True),
-    Column('deptid', Integer, primary_key=True),
-    autoload=True,
-    autoload_with=engine
- )
-
-class EmployeeJobs(Base):
-  __table__ = Table(
-    'employee_jobs',
-    Base.metadata,
-    Column('emplid', String(11), primary_key=True),
-    Column('jobcode', String(5), primary_key=True),
-    Column('deptid', Integer, primary_key=True),
-    autoload=True,
-    autoload_with=engine
- )
-
-class Demographics(Base):
-  __table__ = Table(
-    'demographics',
-    Base.metadata,
-    Column('emplid', String(11), primary_key=True),
-    autoload=True,
-    autoload_with=engine
- )
-
 class PureEligibleDemog(Base):
   __table__ = Table(
     'pure_eligible_demog',
@@ -528,17 +457,17 @@ class PureEligiblePerson(Base):
     autoload_with=engine
  )
 
-class PureEligibleEmpJob(Base):
-  __table__ = Table(
-    'pure_eligible_emp_job',
-    Base.metadata,
-    Column('emplid', String(11), primary_key=True),
-    Column('position_nbr', String(8), primary_key=True),
-    Column('effdt', DateTime, primary_key=True),
-    Column('effseq', Integer, primary_key=True),
-    autoload=True,
-    autoload_with=engine
- )
+#class PureEligibleEmpJob(Base):
+#  __table__ = Table(
+#    'pure_eligible_emp_job',
+#    Base.metadata,
+#    Column('emplid', String(11), primary_key=True),
+#    Column('position_nbr', String(8), primary_key=True),
+#    Column('effdt', DateTime, primary_key=True),
+#    Column('effseq', Integer, primary_key=True),
+#    autoload=True,
+#    autoload_with=engine
+# )
 
 class PureEligibleEmployeeJob(Base):
   __table__ = Table(
@@ -552,17 +481,17 @@ class PureEligibleEmployeeJob(Base):
     autoload_with=engine
  )
 
-class PureEligibleAffJob(Base):
-  __table__ = Table(
-    'pure_eligible_aff_job',
-    Base.metadata,
-    Column('emplid', String(11), primary_key=True),
-    Column('um_affiliate_id', String(2), primary_key=True),
-    Column('effdt', DateTime, primary_key=True),
-    Column('deptid', String(10), primary_key=True),
-    autoload=True,
-    autoload_with=engine
- )
+#class PureEligibleAffJob(Base):
+#  __table__ = Table(
+#    'pure_eligible_aff_job',
+#    Base.metadata,
+#    Column('emplid', String(11), primary_key=True),
+#    Column('um_affiliate_id', String(2), primary_key=True),
+#    Column('effdt', DateTime, primary_key=True),
+#    Column('deptid', String(10), primary_key=True),
+#    autoload=True,
+#    autoload_with=engine
+# )
 
 class PureEligibleAffiliateJob(Base):
   __table__ = Table(
@@ -618,148 +547,6 @@ class PureEligibleDemogChngHst(Base):
   tenure_flag = Column(String(1), nullable=True)
   tenure_track_flag = Column(String(1), nullable=True)
   primary_empl_rcdno = Column(String(38), nullable=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-
-class AllJobsNew(Base):
-  __tablename__ = 'all_jobs_new'
-  emplid = Column(String(11), primary_key=True)
-  empl_rcdno = Column(String(40), nullable=True)
-  name = Column(String(50), nullable=True)
-  jobcode = Column(String(13), primary_key=True)
-  jobcode_descr = Column(String(35), nullable=True)
-  job_indicator = Column(String(40), primary_key=True)
-  empl_status = Column(String(4), nullable=True)
-  paygroup = Column(String(12), nullable=True)
-  deptid = Column(String(10), primary_key=True)
-  deptid_descr = Column(String(30), nullable=True)
-  um_jobcode_group = Column(String(8), nullable=True)
-  um_college = Column(String(20), nullable=True)
-  um_college_descr = Column(String(30), nullable=True)
-  campus = Column(String(20), nullable=True)
-  um_zdeptid = Column(String(80), nullable=True)
-  um_zdeptid_descr = Column(String(30), nullable=True)
-  status_flg = Column(String(1), nullable=True)
-  record_source = Column(String(1), nullable=True)
-  job_entry_dt = Column(DateTime, nullable=True)
-  position_entry_dt = Column(DateTime, nullable=True)
-  calculated_start_dt = Column(DateTime, nullable=True)
-
-class AllJobsPrevious(Base):
-  __tablename__ = 'all_jobs_previous'
-  emplid = Column(String(11), primary_key=True)
-  empl_rcdno = Column(String(40), nullable=True)
-  name = Column(String(50), nullable=True)
-  jobcode = Column(String(13), primary_key=True)
-  jobcode_descr = Column(String(35), nullable=True)
-  job_indicator = Column(String(40), primary_key=True)
-  empl_status = Column(String(4), nullable=True)
-  paygroup = Column(String(12), nullable=True)
-  deptid = Column(String(10), primary_key=True)
-  deptid_descr = Column(String(30), nullable=True)
-  um_jobcode_group = Column(String(8), nullable=True)
-  um_college = Column(String(20), nullable=True)
-  um_college_descr = Column(String(30), nullable=True)
-  campus = Column(String(20), nullable=True)
-  um_zdeptid = Column(String(80), nullable=True)
-  um_zdeptid_descr = Column(String(30), nullable=True)
-  status_flg = Column(String(1), nullable=True)
-  record_source = Column(String(1), nullable=True)
-  job_entry_dt = Column(DateTime, nullable=True)
-  position_entry_dt = Column(DateTime, nullable=True)
-  calculated_start_dt = Column(DateTime, nullable=True)
-
-class PureEligibleAffJobNew(Base):
-  __tablename__ = 'pure_eligible_aff_job_new'
-  emplid = Column(String(11), primary_key=True)
-  name = Column(String(50), nullable=True)
-  um_affiliate_id = Column(String(2), primary_key=True)
-  effdt = Column(DateTime, primary_key=True)
-  um_affil_relation = Column(String(6), nullable=True)
-  title = Column(String(35), nullable=True)
-  deptid = Column(String(10), primary_key=True)
-  deptid_descr = Column(String(30), nullable=True)
-  status = Column(String(1), nullable=True)
-  um_college = Column(String(20), nullable=True)
-  um_college_descr = Column(String(30), nullable=True)
-  um_campus = Column(String(20), nullable=True)
-  um_zdeptid = Column(String(80), nullable=True)
-  um_zdeptid_descr = Column(String(30), nullable=True)
-  status_flg = Column(String(1), nullable=True)
-
-# A history of changes to Pure-eligible affiliate jobs.
-class PureEligibleAffJobChngHst(Base):
-  __tablename__ = 'pure_eligible_aff_job_chng_hst'
-  emplid = Column(String(11), primary_key=True)
-  name = Column(String(50), nullable=True)
-  um_affiliate_id = Column(String(2), nullable=True)
-  effdt = Column(DateTime, nullable=True)
-  um_affil_relation = Column(String(6), nullable=True)
-  title = Column(String(35), nullable=True)
-  deptid = Column(String(10), nullable=True)
-  deptid_descr = Column(String(30), nullable=True)
-  status = Column(String(1), nullable=True)
-  um_college = Column(String(20), nullable=True)
-  um_college_descr = Column(String(30), nullable=True)
-  um_campus = Column(String(20), nullable=True)
-  um_zdeptid = Column(String(80), nullable=True)
-  um_zdeptid_descr = Column(String(30), nullable=True)
-  status_flg = Column(String(1), nullable=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
-
-class PureEligibleEmpJobNew(Base):
-  __tablename__ = 'pure_eligible_emp_job_new'
-  emplid = Column(String(11), primary_key=True)
-  empl_rcdno = Column(String(40), primary_key=True)
-  effdt = Column(DateTime, primary_key=True)
-  effseq = Column(Integer, primary_key=True)
-  name = Column(String(50), nullable=True)
-  position_nbr = Column(String(8), primary_key=True)
-  jobcode = Column(String(13), primary_key=True)
-  jobcode_descr = Column(String(35), nullable=True)
-  job_indicator = Column(String(40), nullable=True)
-  empl_status = Column(String(4), primary_key=True)
-  paygroup = Column(String(12), nullable=True)
-  deptid = Column(String(10), primary_key=True)
-  deptid_descr = Column(String(30), nullable=True)
-  um_jobcode_group = Column(String(8), nullable=True)
-  um_college = Column(String(20), nullable=True)
-  um_college_descr = Column(String(30), nullable=True)
-  rrc = Column(String(20), nullable=True)
-  um_zdeptid = Column(String(80), nullable=True)
-  um_zdeptid_descr = Column(String(30), nullable=True)
-  status_flg = Column(String(1), primary_key=True)
-  job_terminated = Column(String(1), nullable=True)
-  last_date_worked = Column(DateTime, nullable=True)
-  job_entry_dt = Column(DateTime, nullable=True)
-  position_entry_dt = Column(DateTime, nullable=True)
-
-# A history of changes to Pure-eligible employee jobs.
-class PureEligibleEmpJobChngHst(Base):
-  __tablename__ = 'pure_eligible_emp_job_chng_hst'
-  emplid = Column(String(11), primary_key=True)
-  empl_rcdno = Column(String(40), nullable=True)
-  effdt = Column(DateTime, nullable=True)
-  effseq = Column(Integer, nullable=True)
-  name = Column(String(50), nullable=True)
-  position_nbr = Column(String(8), nullable=True)
-  jobcode = Column(String(13), nullable=True)
-  jobcode_descr = Column(String(35), nullable=True)
-  job_indicator = Column(String(40), nullable=True)
-  empl_status = Column(String(4), nullable=True)
-  paygroup = Column(String(12), nullable=True)
-  deptid = Column(String(10), nullable=True)
-  deptid_descr = Column(String(30), nullable=True)
-  um_jobcode_group = Column(String(8), nullable=True)
-  um_college = Column(String(20), nullable=True)
-  um_college_descr = Column(String(30), nullable=True)
-  rrc = Column(String(20), nullable=True)
-  um_zdeptid = Column(String(80), nullable=True)
-  um_zdeptid_descr = Column(String(30), nullable=True)
-  status_flg = Column(String(1), nullable=True)
-  job_terminated = Column(String(1), nullable=True)
-  last_date_worked = Column(DateTime, nullable=True)
-  job_entry_dt = Column(DateTime, nullable=True)
-  position_entry_dt = Column(DateTime, nullable=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), primary_key=True)
 
 ## Tables that store records and metadata retrieved via the Pure web services API.
