@@ -240,7 +240,7 @@ class PureOrg(Base):
   )
 
   # Temporary FK removal.
-  #umn_depts = relationship('UmnDeptPureOrg', backref='pure_org')
+  umn_depts = relationship('UmnDeptPureOrg', backref='pure_org')
 
   def __repr__(self):
     return 'pure_uuid: {}, pure_id: {}, type: {}, name_en: {}'.format(self.pure_uuid, self.pure_id, self.type, self.name_en)
@@ -289,8 +289,7 @@ class UmnDeptPureOrg(Base):
   __tablename__ = 'umn_dept_pure_org'
   deptid = Column(String(10), primary_key=True)
   deptid_descr = Column(String(255), nullable=True)
-  #pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
-  pure_org_uuid = Column(String(255), nullable=True)
+  pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
   pure_org_id = Column(String(50), nullable=False)
 
   def __repr__(self):
@@ -457,18 +456,6 @@ class PureEligiblePerson(Base):
     autoload_with=engine
  )
 
-#class PureEligibleEmpJob(Base):
-#  __table__ = Table(
-#    'pure_eligible_emp_job',
-#    Base.metadata,
-#    Column('emplid', String(11), primary_key=True),
-#    Column('position_nbr', String(8), primary_key=True),
-#    Column('effdt', DateTime, primary_key=True),
-#    Column('effseq', Integer, primary_key=True),
-#    autoload=True,
-#    autoload_with=engine
-# )
-
 class PureEligibleEmployeeJob(Base):
   __table__ = Table(
     'pure_eligible_employee_job',
@@ -480,18 +467,6 @@ class PureEligibleEmployeeJob(Base):
     autoload=True,
     autoload_with=engine
  )
-
-#class PureEligibleAffJob(Base):
-#  __table__ = Table(
-#    'pure_eligible_aff_job',
-#    Base.metadata,
-#    Column('emplid', String(11), primary_key=True),
-#    Column('um_affiliate_id', String(2), primary_key=True),
-#    Column('effdt', DateTime, primary_key=True),
-#    Column('deptid', String(10), primary_key=True),
-#    autoload=True,
-#    autoload_with=engine
-# )
 
 class PureEligibleAffiliateJob(Base):
   __table__ = Table(
