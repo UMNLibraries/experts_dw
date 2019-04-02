@@ -337,7 +337,7 @@ class UmnDataError(Base):
   last_seen = Column(DateTime, default=func.current_timestamp(), nullable=False)
   count = Column(Integer, nullable=False)
   # If null, no notification has been sent.
-  notified = Column(DateTime, default=func.current_timestamp(), nullable=True)
+  notified = Column(DateTime, nullable=True)
 
   def __repr__(self):
     return self.message
