@@ -82,8 +82,8 @@ class PubPerson(Base):
   # Person's name as it appears in the Pure author list. 
   # TODO: Does this reflect the person's name at the time of publication,
   # such that it may be different than the current name?
-  first_name = Column(String(100), nullable=True)
-  last_name = Column(String(100), nullable=True)
+  first_name = Column(String(1024), nullable=True)
+  last_name = Column(String(1024), nullable=True)
 
   # TODO: Should the role really be nullable?
   person_role = Column(String(255), nullable=True)
@@ -127,7 +127,7 @@ class Person(Base):
 
   # May be emplid or old scival_id. Seems emplids may contain more
   # characters than scival ids, so using the emplid length:
-  pure_id = Column(String(11), nullable=True, index=True)
+  pure_id = Column(String(1024), nullable=True, index=True)
 
   # Not sure where to get this. Pure API research outputs? Scopus?
   # It's not in the Pure API person data.
@@ -143,8 +143,8 @@ class Person(Base):
 
   emplid = Column(String(11), nullable=True, index=True)
   internet_id = Column(String(15), nullable=True)
-  first_name = Column(String(100), nullable=True)
-  last_name = Column(String(100), nullable=True)
+  first_name = Column(String(1024), nullable=True)
+  last_name = Column(String(1024), nullable=True)
 
   # (Y|N): Y if the person is UMN-internal *and* we have added
   # That person's data to the Pure database. Therefore, some
@@ -204,8 +204,8 @@ class PureInternalOrg(Base, BaseNestedSets):
   pure_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
 
   # De-normalization columns--not really required:
-  pure_id = Column(String(50), nullable=True, index=True)
-  name_en = Column(String(255))
+  pure_id = Column(String(1024), nullable=True, index=True)
+  name_en = Column(String(512))
 
   pure_org = relationship('PureOrg', backref=backref('pure_internal_org', uselist=False))
 
@@ -216,15 +216,15 @@ class PureInternalOrg(Base, BaseNestedSets):
 class PureOrg(Base):
   __tablename__ = 'pure_org'
   pure_uuid = Column(String(36), primary_key=True)
-  pure_id = Column(String(50), nullable=True)
+  pure_id = Column(String(1024), nullable=True)
   parent_pure_uuid = Column(String(36), nullable=True)
-  parent_pure_id = Column(String(50), nullable=True)
+  parent_pure_id = Column(String(1024), nullable=True)
   # (Y|N): Y if the org is UMN-internal:
   pure_internal = Column(String(1), nullable=False) 
-  type = Column(String(25), nullable=True)
-  name_en = Column(String(255), nullable=False)
-  name_variant_en = Column(String(255), nullable=True)
-  url = Column(String(255), nullable=True)
+  type = Column(String(1024), nullable=True)
+  name_en = Column(String(512), nullable=False)
+  name_variant_en = Column(String(1024), nullable=True)
+  url = Column(String(1024), nullable=True)
 
   # Date the associated record was last modified in Pure.
   pure_modified = Column(DateTime, nullable=True)
@@ -239,7 +239,6 @@ class PureOrg(Base):
     'person',
   )
 
-  # Temporary FK removal.
   umn_depts = relationship('UmnDeptPureOrg', backref='pure_org')
 
   def __repr__(self):
@@ -266,14 +265,14 @@ class UmnPersonPureOrg(Base):
   # De-normalization columns--not really required.
   emplid = Column(String(11), nullable=False)
   pure_person_id = Column(String(11), nullable=False)
-  pure_org_id = Column(String(50), nullable=True)
+  pure_org_id = Column(String(1024), nullable=True)
 
   # We should probably include a job code in the PK instead of this, but we
   # don't have those yet:
-  job_description = Column(String(255), nullable=True, primary_key=True)
+  job_description = Column(String(1024), nullable=True, primary_key=True)
 
-  employed_as = Column(String(50), nullable=True) # Academic (anything else?)
-  staff_type = Column(String(11), nullable=True) # (non)?academic
+  employed_as = Column(String(1024), nullable=True) # Academic (anything else?)
+  staff_type = Column(String(1024), nullable=True) # (non)?academic
 
   # Seems wrong that we should have to add this to the PK, but it's the only
   # way I can get the data to load the first time, at least:
@@ -290,7 +289,7 @@ class UmnDeptPureOrg(Base):
   deptid = Column(String(10), primary_key=True)
   deptid_descr = Column(String(255), nullable=True)
   pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
-  pure_org_id = Column(String(50), nullable=False)
+  pure_org_id = Column(String(1024), nullable=False)
 
   def __repr__(self):
     return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_uuid: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_uuid, self.pure_org_id)
