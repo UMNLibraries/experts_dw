@@ -19,41 +19,108 @@ Base = declarative_base()
 # outputs are publications.
 class Pub(Base):
   __tablename__ = 'pub'
-  uuid = Column(String(36), primary_key=True)
-  pure_uuid = Column(String(36), nullable=False, unique=True, index=True)
-  owner_pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
+  __table_args__ = {'comment': 'Research output. Named "pub", short for "publication", due to Oracle character-length limits.'}
+  uuid = Column(
+      String(36),
+      primary_key=True,
+      comment='Universally-unique ID for the item, generated for this Experts@Minnesota database.',
+  )
+  pure_uuid = Column(
+      String(36),
+      nullable=False,
+      unique=True,
+      index=True,
+      comment='Universally-unique ID for the item in our [Elsevier Pure database](https://experts.umn.edu).',
+  )
+  owner_pure_org_uuid = Column(
+      ForeignKey('pure_org.pure_uuid'),
+      nullable=False,
+      comment='Unique ID for the organization that owns the item in our [Elsevier Pure database](https://experts.umn.edu).',
+  )
 
   # The Pure API does not provide scopus ID to us. Can we change that?
-  scopus_id = Column(String(35), nullable=True)
+  scopus_id = Column(
+      String(35),
+      nullable=True,
+      comment='Unique ID for the item in the [Elsevier Scopus database](https://www.elsevier.com/solutions/scopus).',
+  )
 
-  pmid = Column(String(50), nullable=True)
-  doi = Column(String(150), nullable=True)
+  pmid = Column(
+      String(50),
+      nullable=True,
+      comment='Unique ID for the item in the [NCBI PubMed database](https://www.ncbi.nlm.nih.gov/pubmed/).',
+  )
+  doi = Column(
+      String(150),
+      nullable=True,
+      comment='[Digital Object Identifier](https://www.doi.org/) for the item.',
+  )
+  type = Column(
+      String(50),
+      nullable=True,
+      comment='Publication type or format of the item. See the [CSL spec](http://docs.citationstyles.org/en/stable/specification.html#appendix-iii-types) for a list of values.',
+  )
+  issued = Column(
+      DateTime,
+      nullable=False,
+      comment='Date the item was issued/published.',
+  )
+  issued_precision = Column(
+      Integer,
+      nullable=False,
+      comment='Precision of the ISSUED column, in days: 366 (year), 31 (month), 1 (day).',
+  )
+  title = Column(
+      String(2000),
+      nullable=False,
+      comment='Primary title of the item.',
+  )
+  container_title = Column(
+      String(2000),
+      nullable=True,
+      comment='Title of the container holding the item (e.g. the book title for a book chapter, the journal title for a journal article).',
+  )
+  issn = Column(
+      String(9),
+      nullable=True,
+      comment='[International Standard Serial Number](http://www.issn.org/understanding-the-issn/what-is-an-issn/).',
+  )
+  volume = Column(
+      String(2000),
+      nullable=True,
+      comment='Volume holding the item (e.g. “2” when citing a chapter from book volume 2).',
+  )
+  issue = Column(
+      String(2000),
+      nullable=True,
+      comment='Issue holding the item (e.g. “5” when citing a journal article from journal volume 2, issue 5).',
+  )
+  pages = Column(
+      String(50),
+      nullable=True,
+      comment='Range of pages the item (e.g. a journal article) covers in a container (e.g. a journal issue).',
+  )
+  citation_total = Column(
+      Integer,
+      nullable=True,
+      comment='Number of citations of the item. We call it a "total" because Pure also provides citation counts per year, which we may decide to use later.',
+  )
+  pure_modified = Column(
+      DateTime,
+      nullable=True,
+      comment='Date the associated record was last modified in Pure.',
+  )
 
-  # See CSL spec for a list of types.
-  type = Column(String(50), nullable=True)
-
-  # Publication date: we call it "issued" to conform with CSL.
-  issued = Column(DateTime, nullable=False)
-  # Precision in days: 366 (year), 31 (month), 1 (day), etc. 
-  # Maybe 0 could represent a timestamp?
-  issued_precision = Column(Integer, nullable=False)
-
-  title = Column(String(2000), nullable=False)
-  container_title = Column(String(2000), nullable=True)
-  issn = Column(String(9), nullable=True)
-  volume = Column(String(2000), nullable=True)
-  issue = Column(String(2000), nullable=True)
-  pages = Column(String(50), nullable=True)
-
-  # Total number of citations of the output. We call it a "total" because Pure
-  # also provides citation counts per year, which we may decide to use later.
-  citation_total = Column(Integer, nullable=True)
-
-  # Date the associated record was last modified in Pure.
-  pure_modified = Column(DateTime, nullable=True)
-
-  pure_type = Column(String(50), nullable=True)
-  pure_subtype = Column(String(50), nullable=True)
+  pure_type = Column(
+      String(50),
+      nullable=True,
+      comment='Publication type or format of the item in Pure.',
+  )
+  pure_subtype = Column(
+      String(50),
+      nullable=True,
+      comment='Publication subtype or sub-format of the item in Pure.',
+  )
 
   persons = association_proxy(
     'person_associations',
@@ -71,29 +138,57 @@ class Pub(Base):
 
 class PubPerson(Base):
   __tablename__ = 'pub_person'
-  pub_uuid = Column(ForeignKey('pub.uuid'), nullable=False, primary_key=True)
-  person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
-  emplid = Column(String(11), nullable=True)
+  __table_args__ = {'comment': 'Associates research outputs with persons (authors).'}
+  pub_uuid = Column(
+      ForeignKey('pub.uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PUB.',
+  )
+  person_uuid = Column(
+      ForeignKey('person.uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PERSON.',
+  )
+  emplid = Column(
+      String(11),
+      nullable=True,
+      comment='De-normalization column. See the description in PERSON.',
+  )
 
-  # Ordinal refers to the person's position in the Pure author list.
   # TODO: Is this the same as the publication author list?
-  person_ordinal = Column(Integer, nullable=False)
+  person_ordinal = Column(
+      Integer,
+      nullable=False,
+      comment='The position of the person in the author list for the research output in Pure.',
+  )
 
-  # Person's name as it appears in the Pure author list. 
-  # TODO: Does this reflect the person's name at the time of publication,
-  # such that it may be different than the current name?
-  first_name = Column(String(1024), nullable=True)
-  last_name = Column(String(1024), nullable=True)
+  first_name = Column(
+      String(1024),
+      nullable=True,
+      comment='The given name for the person as it appears in the author list for the research output in Pure. Note that this may be differ from PERSON.FIRST_NAME.',
+  )
+  last_name = Column(
+      String(1024),
+      nullable=True,
+      comment='The family name for the person as it appears in the author list for the research output in Pure. Note that this may be differ from PERSON.LAST_NAME.',
+  )
 
   # TODO: Should the role really be nullable?
-  person_role = Column(String(255), nullable=True)
+  person_role = Column(
+      String(255),
+      nullable=True,
+      comment='"author" or "editor". Need to find Pure documentation on any other possible values.',
+  )
 
-  # (Y|N): Y if the person is included in our UMN Pure database,
-  # i.e. true only if the person is/was UMN-affiliated AND we
-  # have loaded that person's info into Pure.
   # TODO: Does this reflect the person's current internal/external
   # status, or the status at the time of publication?
-  person_pure_internal = Column(String(1), nullable=True) 
+  person_pure_internal = Column(
+      String(1),
+      nullable=True,
+      comment='"Y" if Pure classified the person as UMN-internal at the time of publication of the research output, "N" otherwise. Note that, because we have not loaded data for all UMN persons into Pure, some UMN persons will be classified as external in Pure.',
+  ) 
 
   person = relationship('Person', backref="pub_associations")
   pub = relationship('Pub', backref="person_associations")
@@ -110,9 +205,25 @@ class PubPerson(Base):
 # per person per pub? For external persons, at least, it seems to return only one.
 class PubPersonPureOrg(Base):
   __tablename__ = 'pub_person_pure_org'
-  pub_uuid = Column(ForeignKey('pub.uuid'), nullable=False, primary_key=True)
-  person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
-  pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
+  __table_args__ = {'comment': 'Associates with persons with their organization affiliations at the time of publication of a research output.'}
+  pub_uuid = Column(
+      ForeignKey('pub.uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PUB.',
+  )
+  person_uuid = Column(
+      ForeignKey('person.uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PERSON.',
+  )
+  pure_org_uuid = Column(
+      ForeignKey('pure_org.pure_uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PURE_ORG.',
+  )
 
   def __repr__(self):
     d = {}
@@ -122,34 +233,78 @@ class PubPersonPureOrg(Base):
 
 class Person(Base):
   __tablename__ = 'person'
-  uuid = Column(String(36), primary_key=True)
-  pure_uuid = Column(String(36), nullable=True, index=True)
+  __table_args__ = {'comment': 'A person, usually an author of research outputs. May be internal or external to UMN.'}
+  uuid = Column(
+      String(36),
+      primary_key=True,
+      comment='Universally-unique ID for the person, generated for this Experts@Minnesota database.',
+  )
+  pure_uuid = Column(
+      String(36),
+      nullable=True,
+      index=True,
+      comment='Universally-unique ID for the person in our [Elsevier Pure database](https://experts.umn.edu).',
+  )
 
   # May be emplid or old scival_id. Seems emplids may contain more
   # characters than scival ids, so using the emplid length:
-  pure_id = Column(String(1024), nullable=True, index=True)
+  pure_id = Column(
+      String(1024),
+      nullable=True,
+      index=True,
+      comment='Unique ID for the person in our [Elsevier Pure database](https://experts.umn.edu). For UMN persons whose data we loaded into the Elsevier predecessor product, SciVal, this will be the SciVal ID. For other UMN persons whose data we have loaded into Pure, this will be the UMN employee ID (emplid). For UMN-external persons, this will be NULL. Note that because we have not loaded data for all UMN persons into Pure, some UMN persons will be classified as external in Pure.',
+  )
 
   # Not sure where to get this. Pure API research outputs? Scopus?
   # It's not in the Pure API person data.
-  orcid = Column(String(20), nullable=True)
+  orcid = Column(
+      String(20),
+      nullable=True,
+      comment='[Open Researcher and Contributor ID](https://orcid.org/) for the person.',
+  )
 
   # This scopus ID may be unnecessarily long. Also, some sources claim
   # that a person may (incorrectly, I think) have more than one scopus ID:
-  scopus_id = Column(String(35), nullable=True)
+  scopus_id = Column(
+      String(35),
+      nullable=True,
+      comment='Unique ID for the person in the [Elsevier Scopus database](https://www.elsevier.com/solutions/scopus).',
+  )
 
   # Apparently there can be multiples of these, from different sources.
   # We use only the one from Scopus for now:
-  hindex = Column(Integer, nullable=True)
+  hindex = Column(
+      Integer,
+      nullable=True,
+      comment='An index that attempts to measure both the productivity and impact of the published work of a scientist or scholar. Used only in some disciplines, so for many persons this will be NULL. [More info](https://blog.scopus.com/posts/the-scopus-h-index-what-s-it-all-about-part-i) on [blog.scopus.com](https://blog.scopus.com/posts/5-facts-about-scopus-and-the-h-index).',
+  )
 
-  emplid = Column(String(11), nullable=True, index=True)
-  internet_id = Column(String(15), nullable=True)
-  first_name = Column(String(1024), nullable=True)
-  last_name = Column(String(1024), nullable=True)
-
-  # (Y|N): Y if the person is UMN-internal *and* we have added
-  # That person's data to the Pure database. Therefore, some
-  # UMN employees may be classified as external in Pure.
-  pure_internal = Column(String(1), nullable=False) 
+  emplid = Column(
+      String(11),
+      nullable=True,
+      index=True,
+      comment='UMN employee ID (emplid).',
+  )
+  internet_id = Column(
+      String(15),
+      nullable=True,
+      comment='UMN internet ID.',
+  )
+  first_name = Column(
+      String(1024),
+      nullable=True,
+      comment='The given name for the person.',
+  )
+  last_name = Column(
+      String(1024),
+      nullable=True,
+      comment='The family name for the person.',
+  )
+  pure_internal = Column(
+      String(1),
+      nullable=False,
+      comment='"Y" if Pure classifies the person as UMN-internal, "N" otherwise. Note that, because we have not loaded data for all UMN persons into Pure, some UMN persons will be classified as external in Pure.',
+  ) 
 
   # Date the associated record was last modified in Pure.
   pure_modified = Column(DateTime, nullable=True)
@@ -200,12 +355,29 @@ class PersonScopusId(Base):
 # External orgs are not included here.
 class PureInternalOrg(Base, BaseNestedSets):
   __tablename__ = 'pure_internal_org'
-  id = Column(Integer, primary_key=True)
-  pure_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
+  __table_args__ = {'comment': 'The hierarchy (tree) of Pure UMN-internal organizations. This tree uses [nested sets](https://en.wikipedia.org/wiki/Nested_set_model), as implemented by the Python package [sqlalchemy_mptt](https://pypi.python.org/pypi/sqlalchemy_mptt/). However, because Oracle supports [recursive queries](https://explainextended.com/2009/09/28/adjacency-list-vs-nested-sets-oracle/), this may not be the best implementation. Because parent-child relationships (adjacency lists) already exist in the PURE_ORG table, this entire table may be unnecessary and may go away.'}
+  id = Column(
+      Integer,
+      primary_key=True,
+      comment='The unique ID for the node. Defined by sqlalchemy_mptt.',
+  )
+  pure_uuid = Column(
+      ForeignKey('pure_org.pure_uuid'),
+      nullable=False,
+      comment='See the description in PURE_ORG.',
+  )
 
   # De-normalization columns--not really required:
-  pure_id = Column(String(1024), nullable=True, index=True)
-  name_en = Column(String(512))
+  pure_id = Column(
+      String(1024),
+      nullable=True,
+      index=True,
+      comment='See the description in PURE_ORG.',
+  )
+  name_en = Column(
+      String(512),
+      comment='See the description in PURE_ORG.',
+  )
 
   pure_org = relationship('PureOrg', backref=backref('pure_internal_org', uselist=False))
 
@@ -215,19 +387,57 @@ class PureInternalOrg(Base, BaseNestedSets):
 
 class PureOrg(Base):
   __tablename__ = 'pure_org'
-  pure_uuid = Column(String(36), primary_key=True)
-  pure_id = Column(String(1024), nullable=True)
-  parent_pure_uuid = Column(String(36), nullable=True)
-  parent_pure_id = Column(String(1024), nullable=True)
-  # (Y|N): Y if the org is UMN-internal:
-  pure_internal = Column(String(1), nullable=False) 
-  type = Column(String(1024), nullable=True)
-  name_en = Column(String(512), nullable=False)
-  name_variant_en = Column(String(1024), nullable=True)
-  url = Column(String(1024), nullable=True)
-
-  # Date the associated record was last modified in Pure.
-  pure_modified = Column(DateTime, nullable=True)
+  __table_args__ = {'comment': 'An organization (e.g. university, college, department, etc.) in Pure. May be internal or external to UMN. Pure requires all UMN-internal organizations to be part of a single hierarchy, with UMN itself as the root. Note that sometimes we combine multiple UMN departments into one Pure organization. UMN-external organizations are never part of a hierarchy in Pure, and Pure gives us limited information for them in general.'}
+  pure_uuid = Column(
+      String(36),
+      primary_key=True,
+      comment='Universally-unique ID for the organization in our [Elsevier Pure database](https://experts.umn.edu).',
+  )
+  pure_id = Column(
+      String(1024),
+      nullable=True,
+      comment='Unique ID for the organization in our [Elsevier Pure database](https://experts.umn.edu). NULL for UMN-external organizations, and some UMN-internal organizations.',
+  )
+  parent_pure_uuid = Column(
+      String(36),
+      nullable=True,
+      comment='Universally-unique ID for the parent organization in our [Elsevier Pure database](https://experts.umn.edu). NULL for UMN-external organizations.',
+  )
+  parent_pure_id = Column(
+      String(1024),
+      nullable=True,
+      comment='Unique ID for the parent organization in our [Elsevier Pure database](https://experts.umn.edu). NULL for UMN-external organizations, and some UMN-internal organizations.',
+  )
+  pure_internal = Column(
+      String(1),
+      nullable=False,
+      comment='"Y" if Pure classifies the organization as UMN-internal, "N" otherwise.',
+  ) 
+  type = Column(
+      String(1024),
+      nullable=True,
+      comment='"academic", "college", "corporate", "department", "government", "initiative", "institute", "medical", "private non-profit", "university", or "unknown"',
+  )
+  name_en = Column(
+      String(512),
+      nullable=False,
+      comment='Name of the organization. Called "name_en" to be consistent with Pure naming, and to indicate that this is an English name.',
+  )
+  name_variant_en = Column(
+      String(1024),
+      nullable=True,
+      comment='An alternative name of the organization. Called "name_variant_en" to be consistent with Pure naming, and to indicate that this is an English name.',
+  )
+  url = Column(
+      String(1024),
+      nullable=True,
+      comment='The website for the organization.',
+  )
+  pure_modified = Column(
+      DateTime,
+      nullable=True,
+      comment='Date the associated record was last modified in Pure.',
+  )
 
   persons = association_proxy(
     'person_associations',
@@ -246,8 +456,19 @@ class PureOrg(Base):
 
 class PersonPureOrg(Base):
   __tablename__ = 'person_pure_org'
-  person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
-  pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
+  __table_args__ = {'comment': 'Associates persons with their organizations.'}
+  person_uuid = Column(
+      ForeignKey('person.uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PERSON.',
+  )
+  pure_org_uuid = Column(
+      ForeignKey('pure_org.pure_uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PURE_ORG.',
+  )
 
   person = relationship('Person', backref="pure_org_associations")
   pure_org = relationship('PureOrg', backref="person_associations")
@@ -259,37 +480,95 @@ class PersonPureOrg(Base):
 # for UMN-internal persons, some of which we use to ensure row uniqueness.
 class UmnPersonPureOrg(Base):
   __tablename__ = 'umn_person_pure_org'
-  person_uuid = Column(ForeignKey('person.uuid'), nullable=False, primary_key=True)
-  pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False, primary_key=True)
+  __table_args__ = {'comment': 'Associates persons that Pure classifies as UMN-internal with Pure organizations. We use this table, in addition to PERSON_PURE_ORG, because Pure attaches far more data to UMN-internal persons, some of which we use to ensure row uniqueness. Note that there are four columns in the primary key: PURE_ORG_UUID, PERSON_UUID, JOB_DESCRIPTION, and START_DATE. This is because UMN-internal persons may change positions, and also organization affiliations, over time. There may be multiple rows for the same person in this table.'}
+  person_uuid = Column(
+      ForeignKey('person.uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PERSON.',
+  )
+  pure_org_uuid = Column(
+      ForeignKey('pure_org.pure_uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PURE_ORG.',
+  )
 
   # De-normalization columns--not really required.
-  emplid = Column(String(11), nullable=False)
-  pure_person_id = Column(String(11), nullable=False)
-  pure_org_id = Column(String(1024), nullable=True)
+  emplid = Column(
+      String(11),
+      nullable=False,
+      comment='De-normalization column. See the description in PERSON.',
+  )
+  pure_person_id = Column(
+      String(11),
+      nullable=False,
+      comment='De-normalization column. See the description for PERSON.PURE_ID.',
+  )
+  pure_org_id = Column(
+      String(1024),
+      nullable=True,
+      comment='De-normalization column. See the description for PURE_ORG.PURE_ID.',
+  )
 
   # We should probably include a job code in the PK instead of this, but we
   # don't have those yet:
-  job_description = Column(String(1024), nullable=True, primary_key=True)
+  job_description = Column(
+      String(1024),
+      nullable=True,
+      primary_key=True,
+      comment='The description of this job in PeopleSoft. Maybe be better to use a job code here instead.',
+  )
 
-  employed_as = Column(String(1024), nullable=True) # Academic (anything else?)
-  staff_type = Column(String(1024), nullable=True) # (non)?academic
+  employed_as = Column(
+      String(1024),
+      nullable=True,
+      comment='Always "Academic" for the data we have loaded so far. Uncertain whether we will have other values in the future.',
+  )
+  staff_type = Column(
+      String(1024),
+      nullable=True,
+      comment='"academic" or "nonacademic".',
+  ) # (non)?academic
 
   # Seems wrong that we should have to add this to the PK, but it's the only
   # way I can get the data to load the first time, at least:
-  start_date = Column(DateTime, default=func.current_timestamp(), primary_key=True)
+  start_date = Column(
+      DateTime,
+      default=func.current_timestamp(),
+      primary_key=True,
+      comment='The date the person started this job with this organization.',
+  )
 
-  end_date = Column(DateTime, nullable=True)
-  primary = Column(String(1), nullable=True) # (Y|N): Primary affiliation flag.
+  end_date = Column(
+      DateTime,
+      nullable=True,
+      comment='The date the person ended this job with this organization.',
+  )
+  primary = Column(
+      String(1),
+      nullable=True,
+      comment='"Y" if this is the person"s primary organization affiliation, otherwise "N".',
+  )
 
   person = relationship('Person', backref="umn_pure_org_associations")
   pure_org = relationship('PureOrg', backref="umn_person_associations")
 
 class UmnDeptPureOrg(Base):
   __tablename__ = 'umn_dept_pure_org'
+  __table_args__ = {'comment': 'Associates UMN departments with Pure organizations. Note that many UMN departments may map to one Pure organization.'}
   deptid = Column(String(10), primary_key=True)
-  deptid_descr = Column(String(255), nullable=True)
+  deptid_descr = Column(
+      String(255),
+      nullable=True,
+      comment='Name of the UMN department in PeopleSoft. De-normalization column.',
+  )
   pure_org_uuid = Column(ForeignKey('pure_org.pure_uuid'), nullable=False)
-  pure_org_id = Column(String(1024), nullable=False)
+  pure_org_id = Column(
+      String(1024),
+      nullable=False,
+      comment='Unique ID for the organization in our [Elsevier Pure database](https://experts.umn.edu).',
+  )
 
   def __repr__(self):
     return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_uuid: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_uuid, self.pure_org_id)
