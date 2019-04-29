@@ -126,6 +126,10 @@ class Pub(Base):
     'person_associations',
     'person',
   )
+  author_collaborations = association_proxy(
+    'author_collaboration_associations',
+    'author_collaboration',
+  )
 
   owner_pure_org = relationship('PureOrg', backref='publications')
 
@@ -198,6 +202,43 @@ class PubPerson(Base):
     for k in ['pub_uuid','person_uuid','person_ordinal','person_role','person_pure_internal','first_name','last_name','emplid']:
       d[k] = getattr(self, k)
     return json.dumps(d)
+
+class PubAuthorCollaboration(Base):
+  __tablename__ = 'pub_author_collaboration'
+  __table_args__ = {'comment': 'Associates research outputs with author collaborations (a type of author).'}
+  pub_uuid = Column(
+      ForeignKey('pub.uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to PUB.',
+  )
+  author_collaboration_uuid = Column(
+      ForeignKey('author_collaboration.uuid'),
+      nullable=False,
+      primary_key=True,
+      comment='Foreign key to AUTHOR_COLLABORATION.',
+  )
+  author_ordinal = Column(
+      Integer,
+      nullable=False,
+      comment='The position of the author collaboration in the author list for the research output in Pure.',
+  )
+  # TODO: Should the role really be nullable?
+  author_role = Column(
+      String(255),
+      nullable=True,
+      comment='"author" or "editor". Need to find Pure documentation on any other possible values.',
+  )
+
+  author_collaboration = relationship('AuthorCollaboration', backref="pub_associations")
+  pub = relationship('Pub', backref="author_collaboration_associations")
+
+  def __repr__(self):
+    d = {}
+    for k in ['pub_uuid','author_collaboration_uuid','author_ordinal','author_role',]:
+      d[k] = getattr(self, k)
+    return json.dumps(d)
+
 
 # This may need some improvement, maybe even drastic changes. Therefore, holding
 # off on defining relationships for now.
@@ -338,6 +379,37 @@ class Person(Base):
     for k in ['uuid','pure_uuid','pure_id','orcid','hindex','emplid','internet_id','first_name','last_name','pure_internal']:
       d[k] = getattr(self, k)
     #return 'uuid: {}'.format(self.uuid)
+    return json.dumps(d)
+
+class AuthorCollaboration(Base):
+  __tablename__ = 'author_collaboration'
+  __table_args__ = {'comment': 'An organization through which authors collaborate on research outputs.'}
+  uuid = Column(
+      String(36),
+      primary_key=True,
+      comment='Universally-unique ID for the author collaboration, generated for this Experts@Minnesota database.',
+  )
+  pure_uuid = Column(
+      String(36),
+      nullable=False,
+      index=True,
+      comment='Universally-unique ID for the author collaboration in our [Elsevier Pure database](https://experts.umn.edu).',
+  )
+  name = Column(
+      String(1024),
+      nullable=False,
+      comment='The name of the author collaboration organization.',
+  )
+
+  publications = association_proxy(
+    'pub_associations',
+    'pub',
+  )
+
+  def __repr__(self):
+    d = {}
+    for k in ['uuid','pure_uuid','name',]:
+      d[k] = getattr(self, k)
     return json.dumps(d)
 
 class PersonScopusId(Base):
