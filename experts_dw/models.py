@@ -688,6 +688,7 @@ class UmnDataError(Base):
   count = Column(Integer, nullable=False)
   # If null, no notification has been sent.
   notified = Column(DateTime, nullable=True)
+  notes = Column(Text, nullable=True)
 
   def __repr__(self):
     return self.message
