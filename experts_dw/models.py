@@ -62,12 +62,12 @@ class Pub(Base):
   )
   issued = Column(
       DateTime,
-      nullable=False,
+      nullable=True,
       comment='Date the item was issued/published.',
   )
   issued_precision = Column(
       Integer,
-      nullable=False,
+      nullable=True,
       comment='Precision of the ISSUED column, in days: 366 (year), 31 (month), 1 (day).',
   )
   title = Column(
