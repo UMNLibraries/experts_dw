@@ -20,6 +20,20 @@ class PureJsonResearchOutput(Base):
   modified = Column(DateTime(), nullable=False)
   downloaded = Column(DateTime(), default=func.current_timestamp(), nullable=True)
 
+class PureJsonPerson(Base):
+  __tablename__ = 'pure_json_person'
+  uuid = Column(String(36), primary_key=True)
+  json = Column(Text(), nullable=False)
+  modified = Column(DateTime(), nullable=False)
+  downloaded = Column(DateTime(), default=func.current_timestamp(), nullable=True)
+
+class PureJsonOrganisation(Base):
+  __tablename__ = 'pure_json_organisation'
+  uuid = Column(String(36), primary_key=True)
+  json = Column(Text(), nullable=False)
+  modified = Column(DateTime(), nullable=False)
+  downloaded = Column(DateTime(), default=func.current_timestamp(), nullable=True)
+
 # Would like to use a longer name, like "research_output", but
 # Oracle's stupid 30-character limit for names makes that difficult.
 # pub is short for publication, even though not all research
