@@ -84,12 +84,92 @@ class Pub(Base):
   issued = Column(
       DateTime,
       nullable=True,
-      comment='Date the item was issued/published.',
+      comment='Date the item was/will be issued/published.',
+  )
+  issued_current = Column(
+      Boolean(),
+      nullable=True,
+      comment='True or false depending on whether this is a current state.',
   )
   issued_precision = Column(
       Integer,
       nullable=True,
       comment='Precision of the ISSUED column, in days: 366 (year), 31 (month), 1 (day).',
+  )
+  eissued = Column(
+      DateTime,
+      nullable=True,
+      comment='Date the item was/will be electronically issued/published, possibly ahead of print.',
+  )
+  eissued_current = Column(
+      Boolean(),
+      nullable=True,
+      comment='True or false depending on whether this is a current state.',
+  )
+  eissued_precision = Column(
+      Integer,
+      nullable=True,
+      comment='Precision of the EISSUED column, in days: 366 (year), 31 (month), 1 (day).',
+  )
+  unissued = Column(
+      DateTime,
+      nullable=True,
+      comment='Date the item was/will be unissued/unpublished.',
+  )
+  unissued_current = Column(
+      Boolean(),
+      nullable=True,
+      comment='True or false depending on whether this is a current state.',
+  )
+  unissued_precision = Column(
+      Integer,
+      nullable=True,
+      comment='Precision of the UNISSUED column, in days: 366 (year), 31 (month), 1 (day).',
+  )
+  inprep = Column(
+      DateTime,
+      nullable=True,
+      comment='Date the item was/will be in preparation to be issued/published.',
+  )
+  inprep_current = Column(
+      Boolean(),
+      nullable=True,
+      comment='True or false depending on whether this is a current state.',
+  )
+  inprep_precision = Column(
+      Integer,
+      nullable=True,
+      comment='Precision of the INPREP column, in days: 366 (year), 31 (month), 1 (day).',
+  )
+  submitted = Column(
+      DateTime,
+      nullable=True,
+      comment='Date the item was/will be submitted to be issued/published.',
+  )
+  submitted_current = Column(
+      Boolean(),
+      nullable=True,
+      comment='True or false depending on whether this is a current state.',
+  )
+  submitted_precision = Column(
+      Integer,
+      nullable=True,
+      comment='Precision of the SUBMITTED column, in days: 366 (year), 31 (month), 1 (day).',
+  )
+  inpress = Column(
+      DateTime,
+      nullable=True,
+      comment='Date the item was/will be accepted/in press.',
+  )
+  inpress_current = Column(
+      Boolean(),
+      nullable=True,
+      comment='True or false depending on whether this is a current state.',
+  )
+  inpress_precision = Column(
+      Integer,
+      nullable=True,
+      comment='Precision of the INPRESS column, in days: 366 (year), 31 (month), 1 (day).',
   )
   title = Column(
       String(2000),
