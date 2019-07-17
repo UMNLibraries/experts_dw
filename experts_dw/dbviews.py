@@ -43,6 +43,7 @@ employee_job_columns =  ', '.join([
     'UM_COLLEGE',
     'UM_COLLEGE_DESCR',
     'UM_CAMPUS',
+    'UM_CAMPUS_DESCR',
     'RRC',
     'UM_ZDEPTID',
     'UM_ZDEPTID_DESCR',
@@ -66,6 +67,7 @@ affiliate_job_columns =  ', '.join([
     'UM_COLLEGE',
     'UM_COLLEGE_DESCR',
     'UM_CAMPUS',
+    'UM_CAMPUS_DESCR',
     'UM_ZDEPTID',
     'UM_ZDEPTID_DESCR',
     'STATUS_FLG',
@@ -114,6 +116,7 @@ employee_job_ps_dwhr_job_columns = ', '.join([
     'j.um_college',
     'j.um_college_descr',
     'j.um_campus',
+    'j.um_campus_descr',
     'j.rrc', # experts_data: as campus
     'j.um_zdeptid',
     'j.um_zdeptid_descr',
@@ -137,6 +140,7 @@ affiliate_job_ps_dwhr_um_affiliates_columns = ', '.join([
     'um_college',
     'um_college_descr',
     'um_campus', # experts_data: as campus
+    'um_campus_descr',
     'um_zdeptid',
     'um_zdeptid_descr',
     'status_flg',
