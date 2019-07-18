@@ -782,6 +782,7 @@ class UmnDataError(Base):
   error_id = Column(String(40), primary_key=True)
   message = Column(String(255), nullable=False)
   jobcode = Column(String(13), nullable=True)
+  jobcode_descr = Column(String(35), nullable=True)
   deptid = Column(String(10), nullable=True)
   deptid_descr = Column(String(30), nullable=True)
   persons_in_dept = Column(Integer, nullable=True)
