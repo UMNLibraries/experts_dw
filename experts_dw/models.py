@@ -794,8 +794,8 @@ class UmnDataError(Base):
   first_seen = Column(DateTime, default=func.current_timestamp(), nullable=False)
   last_seen = Column(DateTime, default=func.current_timestamp(), nullable=False)
   count = Column(Integer, nullable=False)
-  # If null, no notification has been sent.
-  notified = Column(DateTime, nullable=True)
+  # If null, the error has not been reported, i.e, no notification has been sent.
+  reported = Column(DateTime, nullable=True)
   notes = Column(Text, nullable=True)
 
   def __repr__(self):
