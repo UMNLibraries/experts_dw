@@ -12,5 +12,5 @@ def test_pub(session):
   assert count > 0
 
 def test_views(session):
-  count = session.query(func.count(models.AffiliateJobs.emplid)).scalar()
+  count = session.query(func.count(models.PureEligibleAffiliateJob.emplid)).scalar()
   assert count > 0

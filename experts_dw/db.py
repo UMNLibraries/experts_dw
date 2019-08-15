@@ -10,9 +10,10 @@ def url(db_name=default_db_name):
   # db_name must be the generic part of the service name,
   # without the (tst|prd).oit suffix, e.g. 'dwe' or 'hotel'.
   return 'oracle://{}:"{}"@{}'.format(
-      os.environ.get('DB_USER'),
-      os.environ.get('DB_PASS'),
-      os.environ.get(db_name.upper() + '_DB_SERVICE_NAME'),
+      os.environ.get('EXPERTS_DB_USER'),
+      os.environ.get('EXPERTS_DB_PASS'),
+      #os.environ.get(db_name.upper() + '_DB_SERVICE_NAME'),
+      os.environ.get('EXPERTS_DB_SERVICE_NAME'),
   )
 
 def engine(db_name=default_db_name):
