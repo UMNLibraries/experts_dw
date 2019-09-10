@@ -247,8 +247,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_AFFILIATE_JOB (
   AND emplid IN (SELECT emplid FROM pure_eligible_person_chng_hst)
 )'''
 
-def create_pure_eligible_demographics(session):
-    stmt = """
+pure_eligible_demographics = f'''
 CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_DEMOGRAPHICS (
   EMPLID,
   INTERNET_ID,
@@ -284,13 +283,9 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_DEMOGRAPHICS (
 FROM pure_eligible_person_chng_hst p
   JOIN ps_dwhr_demo_addr_vw@dweprd.oit da
     ON p.emplid = da.emplid
-"""
-    result = session.execute(stmt)
-    session.commit()
-    return result
+'''
 
-def create_pure_eligible_person(session):
-    stmt = """
+pure_eligible_person = f'''
 CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_PERSON (
   EMPLID
 ) AS (
@@ -299,8 +294,19 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_PERSON (
   UNION
   SELECT emplid
   FROM pure_eligible_employee
-)"""
-    result = session.execute(stmt)
+)'''
+
+def create_pure_eligible_demographics(session):
+    result = session.execute(
+        sqlparse.format(pure_eligible_demographics, reindent=True)
+    )
+    session.commit()
+    return result
+
+def create_pure_eligible_person(session):
+    result = session.execute(
+        sqlparse.format(pure_eligible_person, reindent=True)
+    )
     session.commit()
     return result
 
