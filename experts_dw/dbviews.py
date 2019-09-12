@@ -1,3 +1,4 @@
+import sys
 import sqlparse
 
 employee_columns =  ', '.join([
@@ -296,14 +297,14 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_PERSON (
   FROM pure_eligible_employee
 )'''
 
-def create_pure_eligible_demographics(session):
+def create_view_pure_eligible_demographics(session):
     result = session.execute(
         sqlparse.format(pure_eligible_demographics, reindent=True)
     )
     session.commit()
     return result
 
-def create_pure_eligible_person(session):
+def create_view_pure_eligible_person(session):
     result = session.execute(
         sqlparse.format(pure_eligible_person, reindent=True)
     )
@@ -311,7 +312,7 @@ def create_pure_eligible_person(session):
     return result
 
 # Defines the criteria for an affiliate person to be Pure-eligible.
-def create_pure_eligible_affiliate(session):
+def create_view_pure_eligible_affiliate(session):
     result = session.execute(
         sqlparse.format(pure_eligible_affiliate_view, reindent=True)
     )
@@ -319,7 +320,7 @@ def create_pure_eligible_affiliate(session):
     return result
 
 # Defines the criteria for an employee person to be Pure-eligible.
-def create_pure_eligible_employee(session):
+def create_view_pure_eligible_employee(session):
     result = session.execute(
         sqlparse.format(pure_eligible_employee_view, reindent=True)
     )
@@ -327,7 +328,7 @@ def create_pure_eligible_employee(session):
     return result
 
 # All Pure-eligible jobs ever held by a Pure-eligible affiliate employee.
-def create_pure_eligible_affiliate_job(session):
+def create_view_pure_eligible_affiliate_job(session):
     result = session.execute(
         sqlparse.format(pure_eligible_affiliate_job_view, reindent=True)
     )
@@ -335,9 +336,19 @@ def create_pure_eligible_affiliate_job(session):
     return result
 
 # All Pure-eligible jobs ever held by a Pure-eligible employee.
-def create_pure_eligible_employee_job(session):
+def create_view_pure_eligible_employee_job(session):
     result = session.execute(
         sqlparse.format(pure_eligible_employee_job_view, reindent=True)
     )
     session.commit()
     return result
+# Returns a list of view creation method names (begin with create_)
+def _view_creation_methods():
+    return list(filter((lambda fn: fn.startswith('create_view_')), dir(sys.modules[__name__])))
+
+# Convenience method to call all view creation methods in this module
+def create_all_views(session):
+    results = {}
+    for fn in _view_creation_methods():
+        results[fn] = getattr(sys.modules[__name__], fn)(session)
+    return results
