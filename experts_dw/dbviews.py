@@ -35,12 +35,12 @@ employee_job_columns =  ', '.join([
     'POSITION_NBR',
     'JOBCODE',
     'JOBCODE_DESCR',
-    'JOB_INDICATOR',
+    'JOB_INDICATOR', # Do we even use this? Not in ps_dwhr_poi_uns.
     'EMPL_STATUS',
     'PAYGROUP',
     'DEPTID',
     'DEPTID_DESCR',
-    'UM_JOBCODE_GROUP',
+    'UM_JOBCODE_GROUP', # Do we even use this? Not in ps_dwhr_poi_uns.
     'UM_COLLEGE',
     'UM_COLLEGE_DESCR',
     'UM_CAMPUS',
@@ -49,8 +49,8 @@ employee_job_columns =  ', '.join([
     'UM_ZDEPTID',
     'UM_ZDEPTID_DESCR',
     'STATUS_FLG',
-    'JOB_TERMINATED',
-    'LAST_DATE_WORKED',
+    'JOB_TERMINATED', # Not in ps_dwhr_poi_uns.
+    'LAST_DATE_WORKED', # Not in ps_dwhr_poi_uns.
     'JOB_ENTRY_DT',
     'POSITION_ENTRY_DT',
 ])
@@ -108,12 +108,12 @@ employee_job_ps_dwhr_job_columns = ', '.join([
     'j.position_nbr',
     'j.jobcode',
     'j.jobcode_descr',
-    'j.job_indicator',
+    'j.job_indicator', # Do we even use this? Not in ps_dwhr_poi_uns.
     'j.empl_status',
     'j.paygroup',
     'j.deptid',
     'j.deptid_descr',
-    'j.um_jobcode_group',
+    'j.um_jobcode_group', # Do we even use this? Not in ps_dwhr_poi_uns.
     'j.um_college',
     'j.um_college_descr',
     'j.um_campus',
@@ -122,8 +122,8 @@ employee_job_ps_dwhr_job_columns = ', '.join([
     'j.um_zdeptid',
     'j.um_zdeptid_descr',
     'j.status_flg',
-    'j.job_terminated',
-    'j.last_date_worked',
+    'j.job_terminated', # Not in ps_dwhr_poi_uns.
+    'j.last_date_worked', # Not in ps_dwhr_poi_uns.
     'j.job_entry_dt',
     'j.position_entry_dt',
 ])
@@ -181,7 +181,7 @@ um_colleges_to_exclude = ', '.join(list(map(
 
 employee_common_restrictions = f'''
   AND j.action_reason <> 'EIE' -- Entered in Error
-  AND paygroup != 'PLH'
+  AND paygroup != 'PLH' -- Under 9, Stu Hrly, Short Term
   AND empl_class != 'FTD' -- (Fac - Temp/Duluth Non-Reg)
   AND um_college NOT IN (
     {um_colleges_to_exclude}
@@ -209,7 +209,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_EMPLOYEE (
     JOIN pure_eligible_jobcode jc
       ON j.jobcode = jc.jobcode
   WHERE empl_status IN ('A','L','P','W')
-  AND j.status_flg = 'C'
+  AND j.status_flg = 'C' -- current
   {employee_common_restrictions}
 )'''
 
@@ -219,8 +219,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_AFFILIATE (
 ) AS (
   SELECT DISTINCT {affiliate_ps_dwhr_um_affiliates_columns}
   FROM ps_dwhr_um_affiliates@dweprd.oit a
-  WHERE status = 'A'
-  AND status_flg = 'C'
+  WHERE status = 'A' -- active
+  AND status_flg = 'C' -- current
   {affiliate_common_restrictions}
 )'''
 
@@ -232,7 +232,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_EMPLOYEE_JOB (
   FROM ps_dwhr_job@dweprd.oit j
     JOIN pure_eligible_jobcode jc
       ON j.jobcode = jc.jobcode
-  WHERE j.status_flg IN ('C','H')
+  WHERE j.status_flg IN ('C','H') -- current or historical. We exclude F, future.
   {employee_common_restrictions}
   AND emplid IN (SELECT emplid FROM pure_eligible_person_chng_hst)
 )'''
@@ -342,13 +342,13 @@ def create_view_pure_eligible_employee_job(session):
     )
     session.commit()
     return result
-# Returns a list of view creation method names (begin with create_)
-def _view_creation_methods():
+# Returns a list of view creation function names
+def _view_creation_functions():
     return list(filter((lambda fn: fn.startswith('create_view_')), dir(sys.modules[__name__])))
 
-# Convenience method to call all view creation methods in this module
+# Convenience function to call all view creation functions in this module
 def create_all_views(session):
     results = {}
-    for fn in _view_creation_methods():
+    for fn in _view_creation_functions():
         results[fn] = getattr(sys.modules[__name__], fn)(session)
     return results

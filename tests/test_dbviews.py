@@ -9,13 +9,13 @@ def session():
   with db.session('hotel') as session:
     yield session
 
-def test_list_view_creation_methods():
-  assert len(dbviews._view_creation_methods()) > 0
+def test_list_view_creation_functions():
+  assert len(dbviews._view_creation_functions()) > 0
 
 # Create all views
 def test_create_all_views(session):
   results = dbviews.create_all_views(session)
-  for fn in dbviews._view_creation_methods():
+  for fn in dbviews._view_creation_functions():
     assert isinstance(results[fn], ResultProxy)
 
 # Verify views with backing models return rows
