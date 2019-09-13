@@ -293,7 +293,7 @@ class PubPerson(Base):
       String(1),
       nullable=True,
       comment='"Y" if Pure classified the person as UMN-internal at the time of publication of the research output, "N" otherwise. Note that, because we have not loaded data for all UMN persons into Pure, some UMN persons will be classified as external in Pure.',
-  ) 
+  )
 
   person = relationship('Person', backref="pub_associations")
   pub = relationship('Pub', backref="person_associations")
@@ -446,7 +446,7 @@ class Person(Base):
       String(1),
       nullable=False,
       comment='"Y" if Pure classifies the person as UMN-internal, "N" otherwise. Note that, because we have not loaded data for all UMN persons into Pure, some UMN persons will be classified as external in Pure.',
-  ) 
+  )
 
   # Date the associated record was last modified in Pure.
   pure_modified = Column(DateTime, nullable=True)
@@ -585,7 +585,7 @@ class PureOrg(Base):
       String(1),
       nullable=False,
       comment='"Y" if Pure classifies the organization as UMN-internal, "N" otherwise.',
-  ) 
+  )
   type = Column(
       String(1024),
       nullable=True,
@@ -760,6 +760,12 @@ class PureEligibleJobcode(Base):
 class PureEligibleAffiliateJobcode(Base):
   __tablename__ = 'pure_eligible_affiliate_jobcode'
   jobcode = Column(String(13), primary_key=True)
+  jobcode_descr = Column(String(35), nullable=True)
+  pure_job_description = Column(String(50), nullable=False)
+  default_employed_as = Column(String(50), nullable=False)
+  default_staff_type = Column(String(11), nullable=False)
+  default_visibility = Column(String(10), nullable=False)
+  default_profiled = Column(Boolean(), nullable=False)
 
 class PureEligibleAffiliateDept(Base):
   __tablename__ = 'pure_eligible_affiliate_dept'
