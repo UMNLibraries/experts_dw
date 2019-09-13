@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy import func
 from sqlalchemy.engine import ResultProxy
-from experts_dw import db, dbviews, models
+from experts_dw import db, dbviews
 from experts_dw.models import PureEligibleDemographics, PureEligiblePerson, PureEligibleAffiliateJob, PureEligibleEmployeeJob
 
 @pytest.fixture
