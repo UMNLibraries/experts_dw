@@ -198,6 +198,12 @@ affiliate_common_restrictions = f'''
   AND um_college NOT IN (
     {um_colleges_to_exclude}
   )
+  AND (
+    -- No um_college limit for most job codes
+    um_affil_relation NOT IN ('9401','9402','9403')
+    -- specific jobcodes must be TMED
+    OR (um_affil_relation IN ('9401','9402','9403') AND um_college = 'TMED')
+  )
 '''
 
 pure_eligible_employee_view = f'''
