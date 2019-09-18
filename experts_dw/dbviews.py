@@ -194,7 +194,7 @@ affiliate_common_restrictions = f'''
     {um_colleges_to_exclude}
   )
   AND (
-    (um_affil_relation IN ('9401A','9402A','9403A')
+    (um_affil_relation IN ('9401A','9402A','9403A'))
     OR
     (deptid IN (SELECT deptid FROM pure_eligible_affiliate_dept)
       AND um_affil_relation in (
