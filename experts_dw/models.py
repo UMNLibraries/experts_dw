@@ -746,8 +746,8 @@ class UmnDeptPureOrg(Base):
   def __repr__(self):
     return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_uuid: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_uuid, self.pure_org_id)
 
-class PureEligibleJobcode(Base):
-  __tablename__ = 'pure_eligible_jobcode'
+class PureEligibleEmployeeJobcode(Base):
+  __tablename__ = 'pure_eligible_employee_jobcode'
   jobcode = Column(String(13), primary_key=True)
   jobcode_descr = Column(String(35), nullable=True)
   pure_job_description = Column(String(50), nullable=False)
@@ -771,14 +771,14 @@ class PureEligibleAffiliateDept(Base):
   __tablename__ = 'pure_eligible_affiliate_dept'
   deptid = Column(String(10), primary_key=True)
 
-class PureJobcodeDefaultOverride(Base):
-  __tablename__ = 'pure_jobcode_default_override'
+class PureEmployeeJobcodeDefaultOverride(Base):
+  __tablename__ = 'pure_employee_jobcode_default_override'
   jobcode = Column(String(13), primary_key=True)
   deptid = Column(String(10), primary_key=True)
   profiled = Column(Boolean(), nullable=False)
 
-class KnownOverrideableJobcodeDept(Base):
-  __tablename__ = 'known_overrideable_jobcode_dept'
+class KnownOverrideableEmployeeJobcodeDept(Base):
+  __tablename__ = 'known_overrideable_employee_jobcode_dept'
   jobcode = Column(String(13), primary_key=True)
   deptid = Column(String(10), primary_key=True)
   timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)

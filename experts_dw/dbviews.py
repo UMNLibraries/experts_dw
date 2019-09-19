@@ -206,7 +206,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_EMPLOYEE (
 ) AS (
   SELECT DISTINCT {employee_ps_dwhr_job_columns}
   FROM ps_dwhr_job@dweprd.oit j
-    JOIN pure_eligible_jobcode jc
+    JOIN pure_eligible_employee_jobcode jc
       ON j.jobcode = jc.jobcode
   WHERE empl_status IN ('A','L','P','W')
   AND j.status_flg = 'C' -- current
@@ -230,7 +230,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_EMPLOYEE_JOB (
 ) AS (
   SELECT DISTINCT {employee_job_ps_dwhr_job_columns}
   FROM ps_dwhr_job@dweprd.oit j
-    JOIN pure_eligible_jobcode jc
+    JOIN pure_eligible_employee_jobcode jc
       ON j.jobcode = jc.jobcode
   WHERE j.status_flg IN ('C','H') -- current or historical. We exclude F, future.
   {employee_common_restrictions}
