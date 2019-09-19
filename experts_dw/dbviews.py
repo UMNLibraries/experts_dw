@@ -202,6 +202,7 @@ affiliate_common_restrictions = f'''
         '9702',
         '9743', -- Is this a mistake? Was this meant to be 9703 instead?
         -- David Naughton mistakenly and indirectly added these last three jobcodes. Should we remove these?
+        '9703',
         '9742R6',
         '9742R7',
         '9755'
