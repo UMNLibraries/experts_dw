@@ -190,13 +190,26 @@ employee_common_restrictions = f'''
 
 affiliate_common_restrictions = f'''
   AND poi_type = '00012'
-  AND (
-    (um_affil_relation IN (SELECT jobcode FROM pure_eligible_affiliate_jobcode)) -- Affiliate-specific jobcodes, e.g., 9401A, 9402A, and 9403A
-    OR
-    (deptid IN (SELECT deptid FROM pure_eligible_affiliate_dept)) -- Include jobs only from eligible departments for all other jobcodes.
-  )
   AND um_college NOT IN (
     {um_colleges_to_exclude}
+  )
+  AND (
+    (um_affil_relation IN ('9401A','9402A','9403A'))
+    OR
+    (deptid IN (SELECT deptid FROM pure_eligible_affiliate_dept)
+      AND um_affil_relation in (
+        '9701',
+        '9702',
+        '9743', -- Is this a mistake? Was this meant to be 9703 instead?
+        -- David Naughton mistakenly and indirectly added these last three jobcodes. Should we remove these?
+        '9703',
+        '9742R6',
+        '9742R7',
+        '9755'
+      )
+    )
+    OR
+    (um_affil_relation IN ('9401','9402','9403') AND um_college = 'TMED')
   )
 '''
 
