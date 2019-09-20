@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "experts_dw"
-version = "6.2.0"
+version = "7.0.0"
 description = "Tools for working with the Experts@Minnesota Data Warehouse."
 readme = "README.md"
 authors = ["David Naughton <naughton@umn.edu>"]
