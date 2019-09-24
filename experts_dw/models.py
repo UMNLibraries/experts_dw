@@ -797,6 +797,7 @@ class UmnDataError(Base):
   um_campus = Column(String(10), nullable=True)
   um_campus_descr = Column(String(30), nullable=True)
   emplid = Column(String(11), nullable=True)
+  internet_id = Column(String(15), nullable=True)
   first_seen = Column(DateTime, default=func.current_timestamp(), nullable=False)
   last_seen = Column(DateTime, default=func.current_timestamp(), nullable=False)
   count = Column(Integer, nullable=False)
