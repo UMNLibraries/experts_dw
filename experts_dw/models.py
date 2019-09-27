@@ -767,6 +767,16 @@ class PureEligibleAffiliateJobcode(Base):
   default_visibility = Column(String(10), nullable=False)
   default_profiled = Column(Boolean(), nullable=False)
 
+class PureEligiblePOIJobcode(Base):
+  __tablename__ = 'pure_eligible_poi_jobcode'
+  jobcode = Column(String(13), primary_key=True)
+  jobcode_descr = Column(String(35), nullable=True)
+  pure_job_description = Column(String(50), nullable=False)
+  default_employed_as = Column(String(50), nullable=False)
+  default_staff_type = Column(String(11), nullable=False)
+  default_visibility = Column(String(10), nullable=False)
+  default_profiled = Column(Boolean(), nullable=False)
+
 class PureEligibleAffiliateDept(Base):
   __tablename__ = 'pure_eligible_affiliate_dept'
   deptid = Column(String(10), primary_key=True)
