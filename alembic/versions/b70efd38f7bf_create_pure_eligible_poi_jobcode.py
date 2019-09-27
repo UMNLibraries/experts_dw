@@ -21,11 +21,11 @@ def upgrade():
     op.create_table('pure_eligible_poi_jobcode',
         sa.Column('jobcode', sa.String(13), primary_key=True),
         sa.Column('jobcode_descr', sa.String(length=35), nullable=True),
-        sa.Column('pure_job_description', sa.String(length=50), nullable=True),
-        sa.Column('default_employed_as', sa.String(length=50), nullable=True),
-        sa.Column('default_staff_type', sa.String(length=11), nullable=True),
-        sa.Column('default_visibility', sa.String(length=10), nullable=True),
-        sa.Column('default_profiled', sa.Boolean(), nullable=True)
+        sa.Column('pure_job_description', sa.String(length=50), nullable=False),
+        sa.Column('default_employed_as', sa.String(length=50), nullable=False),
+        sa.Column('default_staff_type', sa.String(length=11), nullable=False),
+        sa.Column('default_visibility', sa.String(length=10), nullable=False),
+        sa.Column('default_profiled', sa.Boolean(), nullable=False)
     )
     seedrows = [
         {'jobcode': '9560', 'jobcode_descr': 'Post-Doctoral Fellow', 'pure_job_description': 'Post-Doctoral Fellow', 'default_employed_as': 'pit', 'default_staff_type': 'nonacademic', 'default_visibility': 'Public', 'default_profiled': 0},
