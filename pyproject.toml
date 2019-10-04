@@ -19,3 +19,4 @@ alembic = "*"
 pytest = "*"
 python_dotenv = "*"
 pureapi = {git = "git://github.com/UMNLibraries/pureapi.git"}
+dotenv_switch = {git = "git://github.com/mberkowski/dotenv_switch.git"}
