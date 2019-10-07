@@ -26,6 +26,19 @@ affiliate_columns =  ', '.join([
     'STATUS_FLG',
 ])
 
+poi_columns =  ', '.join([
+    'EMPLID',
+    'NAME',
+    'JOBCODE',
+    'JOBCODE_DESCR',
+    'EMPL_STATUS',
+    'PAYGROUP',
+    'UM_COLLEGE',
+    'UM_COLLEGE_DESCR',
+    'RRC',
+    'STATUS_FLG',
+])
+
 employee_job_columns =  ', '.join([
     'EMPLID',
     'EMPL_RCDNO',
@@ -74,6 +87,31 @@ affiliate_job_columns =  ', '.join([
     'STATUS_FLG',
 ])
 
+poi_job_columns =  ', '.join([
+    'EMPLID',
+    'EMPL_RCDNO',
+    'EFFDT',
+    'EFFSEQ',
+    'NAME',
+    'POSITION_NBR',
+    'JOBCODE',
+    'JOBCODE_DESCR',
+    'EMPL_STATUS',
+    'PAYGROUP',
+    'DEPTID',
+    'DEPTID_DESCR',
+    'UM_COLLEGE',
+    'UM_COLLEGE_DESCR',
+    'UM_CAMPUS',
+    'UM_CAMPUS_DESCR',
+    'RRC',
+    'UM_ZDEPTID',
+    'UM_ZDEPTID_DESCR',
+    'STATUS_FLG',
+    'JOB_ENTRY_DT',
+    'POSITION_ENTRY_DT',
+])
+
 employee_ps_dwhr_job_columns = ', '.join([
     'j.emplid',
     'j.name', # for testing
@@ -97,6 +135,19 @@ affiliate_ps_dwhr_um_affiliates_columns = ', '.join([
     'um_college_descr',
     'um_campus', # experts_data: as campus
     'status_flg',
+])
+
+poi_ps_dwhr_poi_uns_columns = ', '.join([
+    'j.emplid',
+    'j.name',
+    'j.jobcode',
+    'j.jobcode_descr',
+    'j.empl_status',
+    'j.paygroup',
+    'j.um_college',
+    'j.um_college_descr',
+    'j.rrc',
+    'j.status_flg',
 ])
 
 employee_job_ps_dwhr_job_columns = ', '.join([
@@ -145,6 +196,31 @@ affiliate_job_ps_dwhr_um_affiliates_columns = ', '.join([
     'um_zdeptid',
     'um_zdeptid_descr',
     'status_flg',
+])
+
+poi_job_ps_dwhr_poi_uns_columns = ', '.join([
+    'j.emplid',
+    'to_char(j.empl_rcdno) AS empl_rcdno',
+    'j.effdt',
+    'j.effseq',
+    'j.name',
+    'j.position_nbr',
+    'j.jobcode',
+    'j.jobcode_descr',
+    'j.empl_status',
+    'j.paygroup',
+    'j.deptid',
+    'j.deptid_descr',
+    'j.um_college',
+    'j.um_college_descr',
+    'j.um_campus',
+    'j.um_campus_descr',
+    'j.rrc',
+    'j.um_zdeptid',
+    'j.um_zdeptid_descr',
+    'j.status_flg',
+    'j.job_entry_dt',
+    'j.position_entry_dt',
 ])
 
 um_colleges_to_exclude = ', '.join(list(map(
@@ -213,6 +289,13 @@ affiliate_common_restrictions = f'''
   )
 '''
 
+poi_common_restrictions = f'''
+  AND j.action_reason <> 'EIE' -- Entered in Error
+  AND um_college NOT IN (
+    {um_colleges_to_exclude}
+  )
+'''
+
 pure_eligible_employee_view = f'''
 CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_EMPLOYEE (
   {employee_columns}
@@ -237,6 +320,18 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_AFFILIATE (
   {affiliate_common_restrictions}
 )'''
 
+pure_eligible_poi_view = f'''
+CREATE OR REPLACE EDITIONABLE VIEW EXPERT.PURE_ELIBILIE_POI (
+  {poi_columns}
+) AS (
+  SELECT DISTINCT {poi_ps_dwhr_poi_uns_columns}
+  FROM ps_dwhr_poi_uns@dweprd.oit j
+  JOIN pure_eligible_poi_jobcode jc ON j.jobcode = jc.jobcode
+  WHERE empl_status = 'A'
+  AND j.status_flg = 'C'
+  {poi_common_restrictions}
+)'''
+
 pure_eligible_employee_job_view = f'''
 CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_EMPLOYEE_JOB (
   {employee_job_columns}
@@ -259,6 +354,17 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_AFFILIATE_JOB (
   WHERE status_flg IN ('C','H')
   {affiliate_common_restrictions}
   AND emplid IN (SELECT emplid FROM pure_eligible_person_chng_hst)
+)'''
+
+pure_eligible_poi_job_view = f'''
+CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_POI_JOB (
+  {poi_job_columns}
+) AS (
+  SELECT DISTINCT {poi_job_ps_dwhr_poi_uns_columns}
+  FROM ps_dwhr_poi_uns@dweprd.oit j
+  JOIN pure_eligible_poi_jobcode jc ON j.jobcode = jc.jobcode
+  WHERE status_flg IN ('C','H') -- current or historical. We exclude F, future.
+  {poi_common_restrictions}
 )'''
 
 pure_eligible_demographics = f'''
@@ -332,6 +438,14 @@ def create_view_pure_eligible_affiliate(session):
     session.commit()
     return result
 
+# Defines the criteria for a POI person to be Pure-eligible.
+def create_view_pure_eligible_poi(session):
+    result = session.execute(
+        sqlparse.format(pure_eligible_poi_view, reindent=True)
+    )
+    session.commit()
+    return result
+
 # Defines the criteria for an employee person to be Pure-eligible.
 def create_view_pure_eligible_employee(session):
     result = session.execute(
@@ -344,6 +458,14 @@ def create_view_pure_eligible_employee(session):
 def create_view_pure_eligible_affiliate_job(session):
     result = session.execute(
         sqlparse.format(pure_eligible_affiliate_job_view, reindent=True)
+    )
+    session.commit()
+    return result
+
+# Defines the criteria for a POI person to be Pure-eligible.
+def create_view_pure_eligible_poi_job(session):
+    result = session.execute(
+        sqlparse.format(pure_eligible_poi_job_view, reindent=True)
     )
     session.commit()
     return result
