@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import func
 from sqlalchemy.engine import ResultProxy
 from experts_dw import db, dbviews
-from experts_dw.models import PureEligibleDemographics, PureEligiblePerson, PureEligibleAffiliateJob, PureEligibleEmployeeJob
+from experts_dw.models import PureEligibleDemographics, PureEligiblePerson, PureEligibleAffiliateJob, PureEligibleEmployeeJob, PureEligiblePOIJob
 
 @pytest.fixture
 def session():
@@ -24,7 +24,8 @@ def test_view_rows(session):
       PureEligibleDemographics,
       PureEligiblePerson,
       PureEligibleAffiliateJob,
-      PureEligibleEmployeeJob
+      PureEligibleEmployeeJob,
+      PureEligiblePOIJob,
   ]:
     rows = session.query(func.count(v.emplid)).scalar()
     assert rows > 0
