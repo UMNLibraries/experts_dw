@@ -414,9 +414,9 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_PERSON (
   UNION
   SELECT emplid
   FROM pure_eligible_employee
-  -- UNION
-  -- SELECT emplid
-  -- FROM pure_eligible_poi
+  UNION
+  SELECT emplid
+  FROM pure_eligible_poi
 )'''
 
 def create_view_pure_eligible_demographics(session):
