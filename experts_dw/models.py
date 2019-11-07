@@ -956,6 +956,18 @@ class PureEligibleAffiliateJob(Base):
     autoload_with=engine
  )
 
+class PureEligiblePOIJob(Base):
+  __table__ = Table(
+    'pure_eligible_poi_job',
+    Base.metadata,
+    Column('emplid', String(11), primary_key=True),
+    Column('position_nbr', String(8), primary_key=True),
+    Column('effdt', DateTime, primary_key=True),
+    Column('deptid', String(10), primary_key=True),
+    autoload=True,
+    autoload_with=engine
+ )
+
 ## Snapshot tables for the views above:
 
 class PureEligiblePersonNew(Base):
