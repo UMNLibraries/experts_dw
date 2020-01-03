@@ -9,9 +9,8 @@ from . import db
 
 engine = db.engine('hotel')
 
-#from . import common
-#Base = declarative_base(metadata=common.metadata)
-Base = declarative_base()
+from . import common
+Base = declarative_base(metadata=common.metadata)
 
 class PureJsonResearchOutput(Base):
   __tablename__ = 'pure_json_research_output'
