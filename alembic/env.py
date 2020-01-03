@@ -41,7 +41,7 @@ def get_url():
 
 exclude_tables = config.get_section('alembic:exclude').get('tables', '').split(',')
 
-def include_object(object, name, type_, reflected, compare_to):    
+def include_object(object, name, type_, reflected, compare_to):
   if type_ == "table" and name in exclude_tables:
     return False
   else:
@@ -82,7 +82,7 @@ def run_migrations_online():
   """
 
   # Modified for Experts@Minnesota to support config via env vars.
-  connectable = create_engine(get_url())
+  connectable = create_engine(get_url(),max_identifier_length=128)
 
   with connectable.connect() as connection:
     context.configure(
