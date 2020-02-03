@@ -196,7 +196,7 @@ class Pub(Base):
       comment='Issue holding the item (e.g. “5” when citing a journal article from journal volume 2, issue 5).',
   )
   pages = Column(
-      String(50),
+      String(100),
       nullable=True,
       comment='Range of pages the item (e.g. a journal article) covers in a container (e.g. a journal issue).',
   )
