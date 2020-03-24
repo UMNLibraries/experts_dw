@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Boolean, DateTime, Integer, String, Text, create_engine, func, ForeignKey
+from sqlalchemy import Table, Column, Boolean, DateTime, Integer, String, Text, create_engine, func, ForeignKey, CheckConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import backref, relationship
@@ -14,6 +14,7 @@ Base = declarative_base(metadata=common.metadata)
 
 class PureJsonResearchOutput(Base):
   __tablename__ = 'pure_json_research_output'
+  __tableargs__ = (CheckConstraint('json IS JSON', name='ck_pure_json_research_output_json'))
   uuid = Column(String(36), primary_key=True)
   json = Column(Text(), nullable=False)
   modified = Column(DateTime(), nullable=False)
@@ -21,6 +22,7 @@ class PureJsonResearchOutput(Base):
 
 class PureJsonPerson(Base):
   __tablename__ = 'pure_json_person'
+  __tableargs__ = (CheckConstraint('json IS JSON', name='ck_pure_json_person_json'))
   uuid = Column(String(36), primary_key=True)
   json = Column(Text(), nullable=False)
   modified = Column(DateTime(), nullable=False)
@@ -28,6 +30,7 @@ class PureJsonPerson(Base):
 
 class PureJsonOrganisation(Base):
   __tablename__ = 'pure_json_organisation'
+  __tableargs__ = (CheckConstraint('json IS JSON', name='ck_pure_json_organisation_json'))
   uuid = Column(String(36), primary_key=True)
   json = Column(Text(), nullable=False)
   modified = Column(DateTime(), nullable=False)
