@@ -8,8 +8,7 @@ from logging.config import fileConfig
 
 # Added for Experts@Minnesota to support config via env vars.
 import os
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+import dotenv_switch.auto
 
 # Seems silly that I have to add this--probably a better way:
 import sys

@@ -13,7 +13,7 @@ to some of the data, as well as to maintain a vendor-independent, UMN-local copy
 Read-only direct SQL access is available to anyone with a UMN internet ID. This database is on the OIT Oracle Hotel,
 currently only on the tst instance, with access granted via the `oit_expert_rd_all` role, managed by OIT. Each role
 member must be an Oracle Hotel account, or "schema" in Oracle-speak. These accounts can be personal internet IDs or
-departmental/functional accounts. Note that personal internet IDs must use Duo two-factor authentication, so a 
+departmental/functional accounts. Note that personal internet IDs must use Duo two-factor authentication, so a
 functional/departmental account will be better for non-interactive, automated access. For access to the role and
 database connection information, and to optionally create an Oracle Hotel account, send email to: dbrequests@umn.edu
 The DBAs at that address will probably tell you to go to the
@@ -41,7 +41,7 @@ the instructions above.
 
 ## Data Model Design
 
-Of course the Pure data model heavily influenced the design of this data model, but 
+Of course the Pure data model heavily influenced the design of this data model, but
 [Citation Style Language (CSL)](http://docs.citationstyles.org/en/stable/index.html) was at least as big an influence.
 Again, one goal was vendor-independence. CSL is a popular standard used by many citation managers. Another goal
 was to find a robust data model already implemented in popular web services APIs.
@@ -52,9 +52,9 @@ we could find. Our upcoming web services will adhere to it as closely as possibl
 
 As the diagrams and documentation below should make painfully obvious, the data model is most complex
 wherever organizations are involved. We especially welcome feedback from users about these parts of the
-data model. There are likely many improvements we could make to allow for more convenient and performant 
+data model. There are likely many improvements we could make to allow for more convenient and performant
 queries, as well as conceptual clarity and simplicity.
- 
+
 ## Entity Relationship Diagram (ERD)
 
 The following diagrams are exports from [Oracle SQL Developer](http://www.oracle.com/technetwork/developer-tools/sql-developer/overview/index-097090.html).
@@ -204,3 +204,36 @@ Associates with persons with their organization affiliations at the time of publ
 | PERSON_UUID | Foreign key to PERSON. |
 | PURE_ORG_UUID | Foreign key to PURE_ORG. |
 
+## Running Migrations
+This project uses [SQLAlchemy](https://www.sqlalchemy.org/) with [Alembic](https://alembic.sqlalchemy.org/en/latest/) to track database schema changes in migrations.
+
+
+### Required environment variables
+SQLAlchemy expects certain environment variables identifying Oracle connection information:
+
+| Variable | Description |
+|----------|-------------|
+| EXPERTS_DB_USER | Database connection username |
+| EXPERTS_DB_PASS | Database connection password |
+| EXPERTS_DB_SERVICE_NAME | Oracle database service name (e.g. TNSNAMES definition) |
+
+Alembic has been configured to read those variables from the environment if already present, or to load them automatically from Dotenv files using [`dotenv_switch`](https://github.com/UMNLibraries/dotenv_switch). Create dotenv files in the project directory `.env.test` and `.env.prod` as needed.
+
+`dotenv_switch` will use the `test` environment by default; instruct it to load a different environment by setting the `APP_ENV` variable. For instance `APP_ENV=prod` will cause `dotenv_switch` to load `.env.prod`.
+
+### Using Alembic
+Alembic should be invoked by `poetry run`, and will load environment variables from the file defined by `APP_ENV`.
+
+```shell
+# Run migrations against test environment (default)
+$ poetry run alembic upgrade head
+
+# Run migrations against prod environment
+$ APP_ENV=prod poetry run alembic upgrade head
+
+# Upgrade to a specific revision from alembic/versions
+$ poetry run alembic upgrade fd1239632c06
+
+# Downgrade to a previous revision
+$ poetry run alembic downgrade fd1239632c06
+```
