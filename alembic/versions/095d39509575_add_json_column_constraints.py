@@ -17,12 +17,12 @@ depends_on = None
 
 
 def upgrade():
-    op.create_check_constraint('ck_pure_json_organisation_json', 'pure_json_organisation', 'JSON IS JSON')
-    op.create_check_constraint('ck_pure_json_person_json', 'pure_json_person', 'JSON IS JSON')
-    op.create_check_constraint('ck_pure_json_research_output_json', 'pure_json_research_output', 'JSON IS JSON')
+    op.create_check_constraint('json', 'pure_json_organisation', 'JSON IS JSON')
+    op.create_check_constraint('json', 'pure_json_person', 'JSON IS JSON')
+    op.create_check_constraint('json', 'pure_json_research_output', 'JSON IS JSON')
 
 
 def downgrade():
-    op.drop_constraint('ck_pure_json_organisation_json')
-    op.drop_constraint('ck_pure_json_person_json')
-    op.drop_constraint('ck_pure_json_research_output_json')
+    op.drop_constraint('ck_pure_json_person_json', 'pure_json_person')
+    op.drop_constraint('ck_pure_json_organisation_json', 'pure_json_organisation')
+    op.drop_constraint('ck_pure_json_research_output_json', 'pure_json_research_output')
