@@ -14,7 +14,7 @@ Base = declarative_base(metadata=common.metadata)
 
 class PureJsonResearchOutput(Base):
   __tablename__ = 'pure_json_research_output'
-  __tableargs__ = (CheckConstraint('json IS JSON', name='ck_pure_json_research_output_json'))
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'))
   uuid = Column(String(36), primary_key=True)
   json = Column(Text(), nullable=False)
   modified = Column(DateTime(), nullable=False)
@@ -22,7 +22,7 @@ class PureJsonResearchOutput(Base):
 
 class PureJsonPerson(Base):
   __tablename__ = 'pure_json_person'
-  __tableargs__ = (CheckConstraint('json IS JSON', name='ck_pure_json_person_json'))
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'))
   uuid = Column(String(36), primary_key=True)
   json = Column(Text(), nullable=False)
   modified = Column(DateTime(), nullable=False)
@@ -30,7 +30,7 @@ class PureJsonPerson(Base):
 
 class PureJsonOrganisation(Base):
   __tablename__ = 'pure_json_organisation'
-  __tableargs__ = (CheckConstraint('json IS JSON', name='ck_pure_json_organisation_json'))
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'))
   uuid = Column(String(36), primary_key=True)
   json = Column(Text(), nullable=False)
   modified = Column(DateTime(), nullable=False)
