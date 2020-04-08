@@ -831,13 +831,16 @@ class PureSyncPersonData(Base):
   last_name = Column(String(1024), nullable=False)
   # Pure allows the remaining columns to be null, but UMN does not:
   visibility = Column(String(1024), nullable=False) # 'Public', 'Campus', or 'Restricted'
-  profiled = Column(Boolean(), nullable=False)
+  profiled = Column(Boolean(name='profiled_bool'), nullable=False)
+  #profiled = Column(Boolean(), nullable=False)
 
   # Added by UMN:
   emplid = Column(String(11), nullable=False)
   internet_id = Column(String(15), nullable=True)
   # We use this instead of the Pure PERSON_TITLES table, because this is the only title we use:
   postnominal = Column(String(255), nullable=True)
+  created = Column(DateTime, nullable=True)
+  modified = Column(DateTime, nullable=True)
 
   staff_org_associations = relationship('PureSyncStaffOrgAssociation', backref='person')
   user = relationship('PureSyncUserData', backref='person')
@@ -864,6 +867,24 @@ class PureSyncPersonData(Base):
 #  user_id = Column(String(1024), nullable=True)
 #  managed_in_pure = Column(Boolean(), nullable=True) # We always set this to 'false'.
 
+class PureSyncPersonDataScratch(Base):
+  __tablename__ = 'pure_sync_person_data_scratch'
+  __table_args__ = {'comment': 'Scratch table for pure_sync_person_data.'}
+  person_id = Column(String(1024), primary_key=True)
+  first_name = Column(String(1024), nullable=True)
+  last_name = Column(String(1024), nullable=False)
+  visibility = Column(String(1024), nullable=False)
+  profiled = Column(Boolean(name='profiled_bool'), nullable=False)
+  #profiled = Column(Boolean(), nullable=False)
+  emplid = Column(String(11), nullable=False)
+  internet_id = Column(String(15), nullable=True)
+  postnominal = Column(String(255), nullable=True)
+  staff_org_associations = relationship('PureSyncStaffOrgAssociation', backref='person')
+  user = relationship('PureSyncUserData', backref='person')
+
+  staff_org_associations = relationship('PureSyncStaffOrgAssociationScratch', backref='person')
+  user = relationship('PureSyncUserDataScratch', backref='person')
+
 # Based on STAFF_ORG_RELATION in:
 # https://doc.pure.elsevier.com/download/attachments/28412327/oracle_person_view_create_statements.sql?version=5&modificationDate=1529322570793&api=v2
 class PureSyncStaffOrgAssociation(Base):
@@ -877,13 +898,16 @@ class PureSyncStaffOrgAssociation(Base):
   employment_type = Column(String(1024), nullable=False)
   staff_type = Column(String(1024), nullable=False) # 'academic' or 'nonacademic'
   visibility = Column(String(1024), nullable=False) # 'Public', 'Campus', or 'Restricted'
-  primary_association = Column(Boolean(), nullable=False)
+  primary_association = Column(Boolean(name='primary_association_bool'), nullable=False)
+  #primary_association = Column(Boolean(), nullable=False)
   job_description = Column(String(1024), nullable=False)
 
   # Added by UMN:
   # person.xsd can include affiliationId, but there seems to be no column for it in Pure's
   # STAFF_ORG_RELATION spec. We use this for jobcode.
   affiliation_id = Column(String(30), nullable=True)
+  created = Column(DateTime, nullable=True)
+  modified = Column(DateTime, nullable=True)
 
   # Unused columns from Pure's STAFF_ORG_RELATION spec.
 #  org_pure_id = Column(Integer, nullable=True)
@@ -895,11 +919,40 @@ class PureSyncStaffOrgAssociation(Base):
 #  fte = Column(Integer, nullable=True)
 #  managed_in_pure = Column(Boolean(), nullable=True) # We always set this to 'false'.
 
+class PureSyncStaffOrgAssociationScratch(Base):
+  __tablename__ = 'pure_sync_staff_org_association_scratch'
+  __table_args__ = {'comment': 'Scratch table for pure_sync_staff_org_association.'}
+  staff_org_association_id = Column(String(1024), primary_key=True)
+  person_id = Column(ForeignKey('pure_sync_person_data_scratch.person_id'), nullable=False)
+  period_start_date = Column(DateTime, nullable=False)
+  period_end_date = Column(DateTime, nullable=True)
+  org_id = Column(String(1024), nullable=False)
+  employment_type = Column(String(1024), nullable=False)
+  staff_type = Column(String(1024), nullable=False) # 'academic' or 'nonacademic'
+  visibility = Column(String(1024), nullable=False) # 'Public', 'Campus', or 'Restricted'
+  primary_association = Column(Boolean(name='primary_association_bool'), nullable=False)
+  #primary_association = Column(Boolean(), nullable=False)
+  job_description = Column(String(1024), nullable=False)
+  affiliation_id = Column(String(30), nullable=True)
+
 # Based on:
 # https://doc.pure.elsevier.com/download/attachments/28412333/oracle_user_view_create_statements.sql?version=1&modificationDate=1424698361313&api=v2
 class PureSyncUserData(Base):
   __tablename__ = 'pure_sync_user_data'
   person_id = Column(ForeignKey('pure_sync_person_data.person_id'), primary_key=True) # 'id' in Pure's USER_DATA spec
+  first_name = Column(String(1024), nullable=True)
+  last_name = Column(String(1024), nullable=True)
+  user_name = Column(String(1024), nullable=False) # umn internet id
+  email = Column(String(1024), nullable=False)
+
+  # Added by UMN:
+  created = Column(DateTime, nullable=True)
+  modified = Column(DateTime, nullable=True)
+
+class PureSyncUserDataScratch(Base):
+  __tablename__ = 'pure_sync_user_data_scratch'
+  __table_args__ = {'comment': 'Scratch table for pure_sync_user_data.'}
+  person_id = Column(ForeignKey('pure_sync_person_data_scratch.person_id'), primary_key=True) # 'id' in Pure's USER_DATA spec
   first_name = Column(String(1024), nullable=True)
   last_name = Column(String(1024), nullable=True)
   user_name = Column(String(1024), nullable=False) # umn internet id
