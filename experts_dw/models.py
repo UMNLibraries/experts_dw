@@ -14,7 +14,7 @@ Base = declarative_base(metadata=common.metadata)
 
 class PureJsonResearchOutput(Base):
   __tablename__ = 'pure_json_research_output'
-  __table_args__ = (CheckConstraint('json IS JSON', name='json'))
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
   uuid = Column(String(36), primary_key=True)
   json = Column(Text(), nullable=False)
   modified = Column(DateTime(), nullable=False)
@@ -22,7 +22,7 @@ class PureJsonResearchOutput(Base):
 
 class PureJsonPerson(Base):
   __tablename__ = 'pure_json_person'
-  __table_args__ = (CheckConstraint('json IS JSON', name='json'))
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
   uuid = Column(String(36), primary_key=True)
   json = Column(Text(), nullable=False)
   modified = Column(DateTime(), nullable=False)
@@ -30,7 +30,7 @@ class PureJsonPerson(Base):
 
 class PureJsonOrganisation(Base):
   __tablename__ = 'pure_json_organisation'
-  __table_args__ = (CheckConstraint('json IS JSON', name='json'))
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
   uuid = Column(String(36), primary_key=True)
   json = Column(Text(), nullable=False)
   modified = Column(DateTime(), nullable=False)
@@ -1095,6 +1095,7 @@ class PureApiChangeHst(Base):
 
 class PureApiPub(Base):
   __tablename__ = 'pure_api_pub'
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
   uuid = Column(String(36), primary_key=True)
   json = Column(Text, nullable=False)
   modified = Column(DateTime, nullable=False, primary_key=True)
@@ -1115,6 +1116,7 @@ class PureApiPubHst(Base):
 
 class PureApiInternalPerson(Base):
   __tablename__ = 'pure_api_internal_person'
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
   uuid = Column(String(36), primary_key=True)
   json = Column(Text, nullable=False)
   modified = Column(DateTime, nullable=False, primary_key=True)
@@ -1135,6 +1137,7 @@ class PureApiInternalPersonHst(Base):
 
 class PureApiExternalPerson(Base):
   __tablename__ = 'pure_api_external_person'
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
   uuid = Column(String(36), primary_key=True)
   json = Column(Text, nullable=False)
   modified = Column(DateTime, nullable=False, primary_key=True)
@@ -1155,6 +1158,7 @@ class PureApiExternalPersonHst(Base):
 
 class PureApiInternalOrg(Base):
   __tablename__ = 'pure_api_internal_org'
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
   uuid = Column(String(36), primary_key=True)
   json = Column(Text, nullable=False)
   modified = Column(DateTime, nullable=False, primary_key=True)
@@ -1175,6 +1179,7 @@ class PureApiInternalOrgHst(Base):
 
 class PureApiExternalOrg(Base):
   __tablename__ = 'pure_api_external_org'
+  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
   uuid = Column(String(36), primary_key=True)
   json = Column(Text, nullable=False)
   modified = Column(DateTime, nullable=False, primary_key=True)
