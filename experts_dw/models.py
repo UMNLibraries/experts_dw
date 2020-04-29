@@ -879,8 +879,6 @@ class PureSyncPersonDataScratch(Base):
   emplid = Column(String(11), nullable=False)
   internet_id = Column(String(15), nullable=True)
   postnominal = Column(String(255), nullable=True)
-  staff_org_associations = relationship('PureSyncStaffOrgAssociation', backref='person')
-  user = relationship('PureSyncUserData', backref='person')
 
   staff_org_associations = relationship('PureSyncStaffOrgAssociationScratch', backref='person')
   user = relationship('PureSyncUserDataScratch', backref='person')
