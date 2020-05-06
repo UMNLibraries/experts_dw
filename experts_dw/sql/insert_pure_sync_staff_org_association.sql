@@ -1,4 +1,4 @@
--- :name insert_pure_sync_staff_org_association :insert
+-- :name insert_pure_sync_staff_org_association
 INSERT INTO pure_sync_staff_org_association ps
 (
   ps.staff_org_association_id,
@@ -30,6 +30,6 @@ SELECT
   SYSDATE,
   SYSDATE
 FROM pure_sync_staff_org_association_scratch pss
-lEFT OUTER JOIN pure_sync_staff_org_association ps
+LEFT OUTER JOIN pure_sync_staff_org_association ps
 ON pss.staff_org_association_id = ps.staff_org_association_id
-WHERE ps.staff_org_association_id IS NULL;
+WHERE ps.staff_org_association_id IS NULL

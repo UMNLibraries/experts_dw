@@ -4,7 +4,6 @@ USING pure_sync_staff_org_association_scratch pss
 ON (pss.staff_org_association_id = ps.staff_org_association_id)
 WHEN MATCHED
   THEN UPDATE SET
-    ps.staff_org_association_id = pss.staff_org_association_id,
     ps.person_id = pss.person_id,
     ps.period_start_date = pss.period_start_date,
     ps.period_end_date = pss.period_end_date,
@@ -27,4 +26,4 @@ WHEN MATCHED
 --WHEN NOT MATCHED
 --  THEN INSERT (
 --  ) VALUES (
---  );
+--  )

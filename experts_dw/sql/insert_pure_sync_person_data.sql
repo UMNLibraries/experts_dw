@@ -1,4 +1,4 @@
--- :name insert_pure_sync_person_data :insert
+-- :name insert_pure_sync_person_data
 INSERT INTO pure_sync_person_data ps
 (
   ps.person_id,
@@ -24,6 +24,6 @@ SELECT
   SYSDATE,
   SYSDATE
 FROM pure_sync_person_data_scratch pss
-lEFT OUTER JOIN pure_sync_person_data ps
+LEFT OUTER JOIN pure_sync_person_data ps
 ON pss.person_id = ps.person_id
-WHERE ps.person_id IS NULL;
+WHERE ps.person_id IS NULL

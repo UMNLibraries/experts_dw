@@ -12,7 +12,7 @@ WHEN MATCHED
   WHERE
     ORA_HASH(ps.first_name || ps.last_name || ps.user_name || ps.email)
     <>
-    ORA_HASH(pss.first_name || pss.last_name || pss.user_name || pss.email);
+    ORA_HASH(pss.first_name || pss.last_name || pss.user_name || pss.email)
 
 -- Can't use the following, because Oracle will attempt to insert nulls if
 -- there are rows in the target table not matched by the source table.
@@ -34,4 +34,4 @@ WHEN MATCHED
 --    pss.email,
 --    SYSDATE,
 --    SYSDATE
---  );
+--  )
