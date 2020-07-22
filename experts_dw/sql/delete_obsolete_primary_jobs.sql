@@ -1,3 +1,4 @@
+-- :name delete_obsolete_primary_jobs
 DELETE FROM pure_sync_staff_org_association ps
 WHERE ps.primary_association = 1
 AND ps.modified < (
