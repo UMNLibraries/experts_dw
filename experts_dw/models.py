@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column, Boolean, DateTime, Integer, String, Text, create_engine, func, ForeignKey, CheckConstraint
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy_mptt.mixins import BaseNestedSets
@@ -12,29 +12,49 @@ engine = db.engine('hotel')
 from . import common
 Base = declarative_base(metadata=common.metadata)
 
-class PureJsonResearchOutput(Base):
-  __tablename__ = 'pure_json_research_output'
-  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
-  uuid = Column(String(36), primary_key=True)
-  json = Column(Text(), nullable=False)
-  modified = Column(DateTime(), nullable=False)
-  downloaded = Column(DateTime(), default=func.current_timestamp(), nullable=True)
+class PureJsonChangeCommon:
+    uuid = Column(String(36), primary_key=True)
+    api_version = Column(String(10), primary_key=True)
+    family_system_name = Column(String(150), nullable=False)
+    change_type = Column(String(10), nullable=False)
+    version = Column(Integer, nullable=False, primary_key=True)
+    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
-class PureJsonPerson(Base):
-  __tablename__ = 'pure_json_person'
-  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
-  uuid = Column(String(36), primary_key=True)
-  json = Column(Text(), nullable=False)
-  modified = Column(DateTime(), nullable=False)
-  downloaded = Column(DateTime(), default=func.current_timestamp(), nullable=True)
+class JsonRecord:
+    record = Column(Text, nullable=False)
+    @declared_attr
+    def __table_args__(cls):
+        return (CheckConstraint('record IS JSON', name='record'),)
 
-class PureJsonOrganisation(Base):
-  __tablename__ = 'pure_json_organisation'
-  __table_args__ = (CheckConstraint('json IS JSON', name='json'),)
-  uuid = Column(String(36), primary_key=True)
-  json = Column(Text(), nullable=False)
-  modified = Column(DateTime(), nullable=False)
-  downloaded = Column(DateTime(), default=func.current_timestamp(), nullable=True)
+class PureJsonChange(Base, PureJsonChangeCommon, JsonRecord):
+    __tablename__ = 'pure_json_change'
+
+class PureJsonChangeHistory(Base, PureJsonChangeCommon):
+    __tablename__ = 'pure_json_change_history'
+    processed = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+class PureJsonCommon(JsonRecord):
+    uuid = Column(String(36), primary_key=True)
+    api_version = Column(String(10), primary_key=True)
+    modified = Column(DateTime(), nullable=False)
+    inserted = Column(DateTime(), default=func.current_timestamp(), nullable=True)
+
+class PureJsonPerson(Base, PureJsonCommon):
+    __tablename__ = 'pure_json_person'
+
+class PureJsonPersonStaging(Base, PureJsonCommon):
+    __tablename__ = 'pure_json_person_staging'
+
+class PureJsonResearchOutput(Base, PureJsonCommon):
+    __tablename__ = 'pure_json_research_output'
+
+class PureJsonResearchOutputPreviousUuid(Base):
+    __tablename__ = 'pure_json_research_output_previous_uuid'
+    uuid = Column(String(36), primary_key=True)
+    previous_uuid = Column(String(36), primary_key=True)
+
+class PureJsonResearchOutputStaging(Base, PureJsonCommon):
+    __tablename__ = 'pure_json_research_output_staging'
 
 # Would like to use a longer name, like "research_output", but
 # Oracle's stupid 30-character limit for names makes that difficult.
@@ -89,7 +109,7 @@ class Pub(Base):
       comment='Date the item was/will be issued/published.',
   )
   issued_current = Column(
-      Boolean(),
+      Boolean(name='issued_current_bool'),
       nullable=True,
       comment='True or false depending on whether this is a current state.',
   )
@@ -104,7 +124,7 @@ class Pub(Base):
       comment='Date the item was/will be electronically issued/published, possibly ahead of print.',
   )
   eissued_current = Column(
-      Boolean(),
+      Boolean(name='eissued_current_bool'),
       nullable=True,
       comment='True or false depending on whether this is a current state.',
   )
@@ -119,7 +139,7 @@ class Pub(Base):
       comment='Date the item was/will be unissued/unpublished.',
   )
   unissued_current = Column(
-      Boolean(),
+      Boolean(name='unissued_current_bool'),
       nullable=True,
       comment='True or false depending on whether this is a current state.',
   )
@@ -134,7 +154,7 @@ class Pub(Base):
       comment='Date the item was/will be in preparation to be issued/published.',
   )
   inprep_current = Column(
-      Boolean(),
+      Boolean(name='inprep_current_bool'),
       nullable=True,
       comment='True or false depending on whether this is a current state.',
   )
@@ -149,7 +169,7 @@ class Pub(Base):
       comment='Date the item was/will be submitted to be issued/published.',
   )
   submitted_current = Column(
-      Boolean(),
+      Boolean(name='submitted_current_bool'),
       nullable=True,
       comment='True or false depending on whether this is a current state.',
   )
@@ -164,7 +184,7 @@ class Pub(Base):
       comment='Date the item was/will be accepted/in press.',
   )
   inpress_current = Column(
-      Boolean(),
+      Boolean(name='inpress_current_bool'),
       nullable=True,
       comment='True or false depending on whether this is a current state.',
   )
@@ -756,8 +776,8 @@ class PureEligibleEmployeeJobcode(Base):
   default_employed_as = Column(String(50), nullable=False)
   default_staff_type = Column(String(11), nullable=False)
   default_visibility = Column(String(10), nullable=False)
-  default_profiled = Column(Boolean(), nullable=False)
-  default_profiled_overrideable = Column(Boolean(), nullable=False)
+  default_profiled = Column(Boolean(name='default_profiled_bool'), nullable=False)
+  default_profiled_overrideable = Column(Boolean(name='default_profiled_overrideable_bool'), nullable=False)
 
 class PureEligibleAffiliateJobcode(Base):
   __tablename__ = 'pure_eligible_affiliate_jobcode'
@@ -767,7 +787,7 @@ class PureEligibleAffiliateJobcode(Base):
   default_employed_as = Column(String(50), nullable=False)
   default_staff_type = Column(String(11), nullable=False)
   default_visibility = Column(String(10), nullable=False)
-  default_profiled = Column(Boolean(), nullable=False)
+  default_profiled = Column(Boolean(name='default_profiled_bool'), nullable=False)
 
 class PureEligiblePOIJobcode(Base):
   __tablename__ = 'pure_eligible_poi_jobcode'
@@ -777,7 +797,7 @@ class PureEligiblePOIJobcode(Base):
   default_employed_as = Column(String(50), nullable=False)
   default_staff_type = Column(String(11), nullable=False)
   default_visibility = Column(String(10), nullable=False)
-  default_profiled = Column(Boolean(), nullable=False)
+  default_profiled = Column(Boolean(name='default_profiled_bool'), nullable=False)
 
 class PureEligibleAffiliateDept(Base):
   __tablename__ = 'pure_eligible_affiliate_dept'
@@ -787,7 +807,7 @@ class PureEmployeeJobcodeDefaultOverride(Base):
   __tablename__ = 'pure_employee_jobcode_default_override'
   jobcode = Column(String(13), primary_key=True)
   deptid = Column(String(10), primary_key=True)
-  profiled = Column(Boolean(), nullable=False)
+  profiled = Column(Boolean(name='profiled_bool'), nullable=False)
 
 class KnownOverrideableEmployeeJobcodeDept(Base):
   __tablename__ = 'known_overrideable_employee_jobcode_dept'
