@@ -39,9 +39,16 @@ def get_url():
     return db.url('hotel')
 
 exclude_tables = config.get_section('alembic:exclude').get('tables', '').split(',')
+exclude_columns = config.get_section('alembic:exclude').get('columns', '').split(',')
+exclude_indexes = config.get_section('alembic:exclude').get('indexes', '').split(',')
 
 def include_object(object, name, type_, reflected, compare_to):
+    #print(f'object: {object}, name: {name}, type_: {type_}, reflected: {reflected}')
     if type_ == "table" and name in exclude_tables:
+        return False
+    elif type_ == "column" and str(object) in exclude_columns:
+        return False
+    elif type_ == "index" and name in exclude_indexes:
         return False
     else:
         return True
