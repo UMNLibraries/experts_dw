@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "experts_dw"
-version = "7.6.1"
+version = "7.6.2"
 description = "Tools for working with the Experts@Minnesota Data Warehouse."
 readme = "README.md"
 authors = ["David Naughton <naughton@umn.edu>"]
@@ -8,8 +8,8 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.6.3"
-cx_oracle = "*"
-pugsql = "*"
+cx_oracle = "^8.0.1"
+pugsql = "^0.2.3"
 sqlalchemy = "*"
 sqlalchemy_mptt = "*"
 sqlparse = "*"
