@@ -33,6 +33,30 @@ class PureJsonResearchOutput516(Base, PureJson):
 class PureJsonResearchOutput516Staging(Base, PureJson):
     __tablename__ = 'pure_json_research_output_516_staging'
 
+class PureJsonPerson516(Base, PureJson):
+    __tablename__ = 'pure_json_person_516'
+
+class PureJsonPerson516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_person_516_staging'
+
+class PureJsonExternalPerson516(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_516'
+
+class PureJsonExternalPerson516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_516_staging'
+
+class PureJsonOrganisationalUnit516(Base, PureJson):
+    __tablename__ = 'pure_json_organisational_unit_516'
+
+class PureJsonOrganisationalUnit516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_organisational_unit_516_staging'
+
+class PureJsonExternalOrganisation516(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_516'
+
+class PureJsonExternalOrganisation516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_516_staging'
+
 class PureJsonChangeCommon(SodaMetadata):
     family_system_name = Column(String(150), nullable=False)
     change_type = Column(String(10), nullable=False)
