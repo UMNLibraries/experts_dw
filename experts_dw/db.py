@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+import cx_Oracle
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -20,6 +21,15 @@ def engine(db_name=default_db_name):
     return create_engine(
         url(db_name),
         max_identifier_length=128
+    )
+
+@contextmanager
+def cx_oracle_connection():
+    yield cx_Oracle.connect(
+        os.environ.get('EXPERTS_DB_USER'),
+        os.environ.get('EXPERTS_DB_PASS'),
+        f'{os.environ.get("EXPERTS_DB_DOMAIN")}/{os.environ.get("EXPERTS_DB_SERVICE_NAME")}',
+        encoding='UTF-8'
     )
 
 @contextmanager
