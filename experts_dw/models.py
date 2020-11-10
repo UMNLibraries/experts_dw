@@ -12,6 +12,30 @@ engine = db.engine('hotel')
 from . import common
 Base = declarative_base(metadata=common.metadata)
 
+class PureJsonCollectionMeta(Base):
+  __tablename__ = 'pure_json_collection_meta'
+  __table_args__ = {'comment': 'Maps Pure API collection names, family system names, and versions to local table names.'}
+  api_name = Column(
+      String(255),
+      primary_key=True,
+      comment='Name of the collection in the Pure API, i.e., in URL endpoints.',
+  )
+  api_version = Column(
+      String(15),
+      primary_key=True,
+      comment='The Pure API version, without the decimal point, i.e., 516 for version 5.16.',
+  )
+  family_system_name = Column(
+      String(255),
+      primary_key=True,
+      comment='Name of the collection in API change records, where it is called familySystemName.',
+  )
+  local_name = Column(
+      String(255),
+      primary_key=True,
+      comment='Name of the collection as it appears in local table names.',
+  )
+
 class SodaMetadata:
     uuid = Column(String(36), primary_key=True)
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
