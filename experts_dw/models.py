@@ -69,11 +69,11 @@ class PureJsonExternalPerson516(Base, PureJson):
 class PureJsonExternalPerson516Staging(Base, PureJson):
     __tablename__ = 'pure_json_external_person_516_staging'
 
-class PureJsonOrganisationalUnit516(Base, PureJson):
-    __tablename__ = 'pure_json_organisational_unit_516'
+class PureJsonOrganisation516(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_516'
 
-class PureJsonOrganisationalUnit516Staging(Base, PureJson):
-    __tablename__ = 'pure_json_organisational_unit_516_staging'
+class PureJsonOrganisation516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_516_staging'
 
 class PureJsonExternalOrganisation516(Base, PureJson):
     __tablename__ = 'pure_json_external_organisation_516'
