@@ -13,6 +13,7 @@ pugsql = "^0.2.3"
 sqlalchemy = "*"
 sqlalchemy_mptt = "*"
 sqlparse = "*"
+Jinja2 = "^2.11"
 
 [tool.poetry.dev-dependencies]
 alembic = "*"
