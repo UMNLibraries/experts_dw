@@ -326,6 +326,43 @@ def max_change_history_inserted_date(
     return cursor.fetchone()[0] # Result will be a tuple
 
 @validate_api_version
+def max_change_inserted_date(
+    cursor,
+    *,
+    api_version
+):
+    cursor.execute(
+        f'SELECT MAX(inserted) FROM pure_json_change_{api_version}'
+    )
+    return cursor.fetchone()[0] # Result will be a tuple
+
+@validate_api_version
+def max_pure_version_for_change_history_uuid(
+    cursor,
+    *,
+    uuid,
+    api_version
+):
+    cursor.execute(
+        f'SELECT MAX(pure_version) FROM pure_json_change_{api_version}_history WHERE uuid = :uuid',
+        {'uuid': uuid}
+    )
+    return cursor.fetchone()[0] # Result will be a tuple
+
+@validate_api_version
+def max_pure_version_for_change_uuid(
+    cursor,
+    *,
+    uuid,
+    api_version
+):
+    cursor.execute(
+        f'SELECT MAX(pure_version) FROM pure_json_change_{api_version} WHERE uuid = :uuid',
+        {'uuid': uuid}
+    )
+    return cursor.fetchone()[0] # Result will be a tuple
+
+@validate_api_version
 def change_document_exists(
     cursor,
     *,
