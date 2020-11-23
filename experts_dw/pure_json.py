@@ -81,6 +81,15 @@ def collection_family_system_names_for_api_version(cursor, *, api_version):
 
 @functools.lru_cache(maxsize=None)
 @validate_api_version
+def collection_api_names_for_api_version(cursor, *, api_version):
+    cursor.execute(
+        'SELECT DISTINCT(api_name) FROM pure_json_collection_meta where api_version = :api_version',
+        {'api_version': api_version}
+    )
+    return [row[0] for row in cursor.fetchall()]
+
+@functools.lru_cache(maxsize=None)
+@validate_api_version
 def collection_local_name_for_api_name(cursor, *, collection_api_name, api_version):
     cursor.execute(
         'SELECT local_name FROM pure_json_collection_meta WHERE api_name = :api_name AND api_version = :api_version',
