@@ -204,25 +204,40 @@ Associates with persons with their organization affiliations at the time of publ
 | PERSON_UUID | Foreign key to PERSON. |
 | PURE_ORG_UUID | Foreign key to PURE_ORG. |
 
-## Running Migrations
-This project uses [SQLAlchemy](https://www.sqlalchemy.org/) with [Alembic](https://alembic.sqlalchemy.org/en/latest/) to track database schema changes in migrations.
-
+## Python API
 
 ### Required environment variables
-SQLAlchemy expects certain environment variables identifying Oracle connection information:
+
+This package uses these environment variables to configure Oracle connections:
 
 | Variable | Description |
 |----------|-------------|
 | EXPERTS_DB_USER | Database connection username |
 | EXPERTS_DB_PASS | Database connection password |
 | EXPERTS_DB_SERVICE_NAME | Oracle database service name (e.g. TNSNAMES definition) |
+| EXPERTS_DB_DOMAIN | Oracle database domain name. Necessary for making cx_Oracle connections. |
 
-Alembic has been configured to read those variables from the environment if already present, or to load them automatically from Dotenv files using [`dotenv_switch`](https://github.com/UMNLibraries/dotenv_switch). Create dotenv files in the project directory `.env.test` and `.env.prod` as needed.
+## Contributing
 
-`dotenv_switch` will use the `test` environment by default; instruct it to load a different environment by setting the `APP_ENV` variable. For instance `APP_ENV=prod` will cause `dotenv_switch` to load `.env.prod`.
+### Running Migrations
 
-### Using Alembic
-Alembic should be invoked by `poetry run`, and will load environment variables from the file defined by `APP_ENV`.
+This project uses [SQLAlchemy](https://www.sqlalchemy.org/) with [Alembic](https://alembic.sqlalchemy.org/en/latest/)
+to track database schema changes in migrations.
+
+Alembic has been configured to read the [required environment variables](#required-environment-variables)
+from the environment if already present, or to load them automatically from dotenv files using
+[`dotenv_switch`](https://github.com/UMNLibraries/dotenv_switch). Create dotenv files in the
+project directory, e.g., `.env.test`, `.env.prod`, as needed.
+
+`dotenv_switch` will use the `test` environment by default; instruct it to load a different
+environment by setting the `APP_ENV` variable. For instance `APP_ENV=prod` will cause
+`dotenv_switch` to load `.env.prod`.
+
+#### Using Alembic with poetry and dotenv_switch
+
+This project uses [poetry](https://python-poetry.org/) to manage dependencies, so Alembic must be
+invoked within a poetry-created virtual environment. One way to do that is by preceding commands
+with `poetry run`. Examples, including the use of the `APP_ENV` variable described above:
 
 ```shell
 # Run migrations against test environment (default)
