@@ -8,14 +8,14 @@ from experts_dw import db
 from experts_dw.exceptions import ExpertsDwException
 #from .sqlapi import sqlapi
 
-api_collection_to_table_collection = {
-    'changes': 'change',
-    'external-persons': 'external_person',
-    'external-organisations': 'external_organisation',
-    'organisational-units': 'organisation',
-    'persons': 'person',
-    'research-outputs': 'research_output',
-}
+#api_collection_to_table_collection = {
+#    'changes': 'change',
+#    'external-persons': 'external_person',
+#    'external-organisations': 'external_organisation',
+#    'organisational-units': 'organisation',
+#    'persons': 'person',
+#    'research-outputs': 'research_output',
+#}
 iso_8601_format = '%Y-%m-%dT%H:%M:%S.%f%z'
 
 @functools.lru_cache(maxsize=None)
