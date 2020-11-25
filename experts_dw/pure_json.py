@@ -4,10 +4,9 @@ from jinja2 import Template
 import json
 from typing import Any, Callable, MutableMapping, Tuple, TypeVar, cast
 
+from experts_dw import db
 from experts_dw.exceptions import ExpertsDwException
-
-from . import db
-from .sqlapi import sqlapi
+#from .sqlapi import sqlapi
 
 api_collection_to_table_collection = {
     'changes': 'change',
