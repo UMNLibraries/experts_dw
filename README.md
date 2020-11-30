@@ -215,7 +215,7 @@ This package uses these environment variables to configure Oracle connections:
 | EXPERTS_DB_USER | Database connection username |
 | EXPERTS_DB_PASS | Database connection password |
 | EXPERTS_DB_SERVICE_NAME | Oracle database service name (e.g. TNSNAMES definition) |
-| EXPERTS_DB_DOMAIN | Oracle database domain name. Necessary for making cx_Oracle connections. |
+| EXPERTS_DB_HOSTNAME | Oracle database domain name. Necessary for making cx_Oracle connections. |
 
 ## Contributing
 

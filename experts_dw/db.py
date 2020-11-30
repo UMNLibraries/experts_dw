@@ -30,7 +30,7 @@ def cx_oracle_connection():
     yield cx_Oracle.connect(
         os.environ.get('EXPERTS_DB_USER'),
         os.environ.get('EXPERTS_DB_PASS'),
-        f'{os.environ.get("EXPERTS_DB_DOMAIN")}/{os.environ.get("EXPERTS_DB_SERVICE_NAME")}',
+        f'{os.environ.get("EXPERTS_DB_HOSTNAME")}/{os.environ.get("EXPERTS_DB_SERVICE_NAME")}',
         encoding='UTF-8'
     )
 
