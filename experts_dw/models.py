@@ -12,49 +12,91 @@ engine = db.engine('hotel')
 from . import common
 Base = declarative_base(metadata=common.metadata)
 
-class PureJsonChangeCommon:
+class PureJsonCollectionMeta(Base):
+  __tablename__ = 'pure_json_collection_meta'
+  __table_args__ = {'comment': 'Maps Pure API collection names, family system names, and versions to local table names.'}
+  api_name = Column(
+      String(255),
+      primary_key=True,
+      comment='Name of the collection in the Pure API, i.e., in URL endpoints.',
+  )
+  api_version = Column(
+      String(15),
+      primary_key=True,
+      comment='The Pure API version, without the decimal point, i.e., 516 for version 5.16.',
+  )
+  family_system_name = Column(
+      String(255),
+      primary_key=True,
+      comment='Name of the collection in API change records, where it is called familySystemName.',
+  )
+  local_name = Column(
+      String(255),
+      primary_key=True,
+      comment='Name of the collection as it appears in local table names.',
+  )
+
+class SodaMetadata:
     uuid = Column(String(36), primary_key=True)
-    api_version = Column(String(10), primary_key=True)
-    family_system_name = Column(String(150), nullable=False)
-    change_type = Column(String(10), nullable=False)
-    version = Column(Integer, nullable=False, primary_key=True)
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
-class JsonRecord:
-    record = Column(Text, nullable=False)
+class SodaDocument:
+    json_document = Column(Text, nullable=False)
     @declared_attr
     def __table_args__(cls):
-        return (CheckConstraint('record IS JSON', name='record'),)
+        return (CheckConstraint('json_document IS JSON', name='json_document'),)
 
-class PureJsonChange(Base, PureJsonChangeCommon, JsonRecord):
-    __tablename__ = 'pure_json_change'
+class PureJson(SodaMetadata, SodaDocument):
+    updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
+    pure_created = Column(DateTime(), nullable=False)
+    pure_modified = Column(DateTime(), nullable=False)
 
-class PureJsonChangeHistory(Base, PureJsonChangeCommon):
-    __tablename__ = 'pure_json_change_history'
-    processed = Column(DateTime, default=func.current_timestamp(), nullable=False)
+class PureJsonResearchOutput516(Base, PureJson):
+    __tablename__ = 'pure_json_research_output_516'
 
-class PureJsonCommon(JsonRecord):
-    uuid = Column(String(36), primary_key=True)
-    api_version = Column(String(10), primary_key=True)
-    modified = Column(DateTime(), nullable=False)
-    inserted = Column(DateTime(), default=func.current_timestamp(), nullable=True)
+class PureJsonResearchOutput516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_research_output_516_staging'
 
-class PureJsonPerson(Base, PureJsonCommon):
-    __tablename__ = 'pure_json_person'
+class PureJsonPerson516(Base, PureJson):
+    __tablename__ = 'pure_json_person_516'
 
-class PureJsonPersonStaging(Base, PureJsonCommon):
-    __tablename__ = 'pure_json_person_staging'
+class PureJsonPerson516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_person_516_staging'
 
-class PureJsonResearchOutput(Base, PureJsonCommon):
-    __tablename__ = 'pure_json_research_output'
+class PureJsonExternalPerson516(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_516'
 
-class PureJsonResearchOutputPreviousUuid(Base):
-    __tablename__ = 'pure_json_research_output_previous_uuid'
-    uuid = Column(String(36), primary_key=True)
-    previous_uuid = Column(String(36), primary_key=True)
+class PureJsonExternalPerson516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_516_staging'
 
-class PureJsonResearchOutputStaging(Base, PureJsonCommon):
-    __tablename__ = 'pure_json_research_output_staging'
+class PureJsonOrganisation516(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_516'
+
+class PureJsonOrganisation516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_516_staging'
+
+class PureJsonExternalOrganisation516(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_516'
+
+class PureJsonExternalOrganisation516Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_516_staging'
+
+class PureJsonChangeCommon(SodaMetadata):
+    family_system_name = Column(String(150), nullable=False)
+    change_type = Column(String(10), nullable=False)
+    pure_version = Column(Integer, nullable=False, primary_key=True)
+
+class PureJsonChange(PureJsonChangeCommon, SodaDocument):
+    pass
+
+class PureJsonChangeHistory(PureJsonChangeCommon):
+    pass
+
+class PureJsonChange516(Base, PureJsonChange):
+    __tablename__ = 'pure_json_change_516'
+
+class PureJsonChange516History(Base, PureJsonChangeHistory):
+    __tablename__ = 'pure_json_change_516_history'
 
 # Would like to use a longer name, like "research_output", but
 # Oracle's stupid 30-character limit for names makes that difficult.

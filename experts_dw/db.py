@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+import cx_Oracle
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -23,6 +24,17 @@ def engine(db_name=default_db_name):
     )
 
 @contextmanager
+def cx_oracle_connection():
+    # Note that this approach to making a connection should not
+    # require a tnsnames.ora config file.
+    yield cx_Oracle.connect(
+        os.environ.get('EXPERTS_DB_USER'),
+        os.environ.get('EXPERTS_DB_PASS'),
+        f'{os.environ.get("EXPERTS_DB_HOSTNAME")}/{os.environ.get("EXPERTS_DB_SERVICE_NAME")}',
+        encoding='UTF-8'
+    )
+
+@contextmanager
 def session(db_name=default_db_name):
     # Original:
     #Session = sessionmaker()
@@ -32,7 +44,6 @@ def session(db_name=default_db_name):
     #Session = mptt_sessionmaker(sessionmaker())
 
     Session = mptt_sessionmaker(sessionmaker(bind=engine(db_name)))
-    #return Session()
     session = Session()
     try:
         yield session

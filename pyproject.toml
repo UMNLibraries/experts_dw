@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "experts_dw"
-version = "7.6.2"
+version = "7.7.0-beta"
 description = "Tools for working with the Experts@Minnesota Data Warehouse."
 readme = "README.md"
 authors = ["David Naughton <naughton@umn.edu>"]
@@ -13,6 +13,7 @@ pugsql = "^0.2.3"
 sqlalchemy = "*"
 sqlalchemy_mptt = "*"
 sqlparse = "*"
+Jinja2 = "^2.11"
 
 [tool.poetry.dev-dependencies]
 alembic = "*"
