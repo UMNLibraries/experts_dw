@@ -3,6 +3,9 @@
 
 -- DEPENDENTS:
 -- no views
+
+-- REFRESH TIME (tst): 2s
+-- RUN ORDER: 11
 DROP MATERIALIZED VIEW jsonview_umn_dept_pure_org;
 CREATE MATERIALIZED VIEW jsonview_umn_dept_pure_org
   BUILD DEFERRED

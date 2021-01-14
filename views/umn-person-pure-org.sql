@@ -1,10 +1,11 @@
 -- DEPEDNDS ON:
--- pure_person_internal
 -- pure_org
 
 -- DEPENDENTS:
 -- person_pure_org
 
+-- REFRESH TIME (tst): 32s
+-- RUN ORDER: 8
 DROP MATERIALIZED VIEW jsonview_umn_person_pure_org; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_umn_person_pure_org
   BUILD DEFERRED

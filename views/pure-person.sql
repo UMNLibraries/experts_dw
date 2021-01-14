@@ -1,6 +1,8 @@
 -- DEPENDS ON:
 -- unified_pure_json
 
+-- REFRESH TIME (tst): 369s
+-- RUN ORDER: 6
 DROP MATERIALIZED VIEW jsonview_pure_person;
 CREATE MATERIALIZED VIEW jsonview_pure_person
   BUILD DEFERRED

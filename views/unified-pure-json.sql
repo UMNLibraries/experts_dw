@@ -1,6 +1,9 @@
 -- DEPENDS ON:
 -- no views, all pure_json_* tables
 
+-- REFRESH TIME (tst): 1170s
+-- RUN ORDER: 1
+
 DROP MATERIALIZED VIEW jsonview_unified_pure_json;
 CREATE MATERIALIZED VIEW jsonview_unified_pure_json
   BUILD DEFERRED

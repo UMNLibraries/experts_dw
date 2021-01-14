@@ -6,6 +6,9 @@
 
 -- DEPENDENTS VIEWS:
 -- pure_research_output_pub
+
+-- REFRESH TIME (tst): 320s
+-- RUN ORDER: 2
 DROP MATERIALIZED VIEW jsonview_pure_research_output_pubdates; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_pure_research_output_pubdates
   BUILD DEFERRED
@@ -60,7 +63,7 @@ FROM
       -- You can pivot on 2 columns, and Oracle will append the supplied alias with an underscore
       -- therefore these come out as issued, issued_is_current, issued_precision, eissued, eissued_is_current, eissued_precision....
       -- (but "current" is a keyword and quoting makes it behave weirdly, so we can just fix the aliases
-      -- ini the outer SELECT to be issued_current without the _is
+      -- in the outer SELECT to be issued_current without the _is
       -- example https://stackoverflow.com/a/23939719/541091
       MAX(pubdate), MAX(is_current) as is_current, MAX(precision) AS precision
       -- Provide aliases inside PIVOT or the columns come out as string names with quotes

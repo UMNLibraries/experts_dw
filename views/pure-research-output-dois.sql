@@ -6,6 +6,9 @@
 
 -- DEPENDENTS VIEWS:
 -- pure_research_output_pub
+
+-- REFRESH TIME (tst): 304s
+-- RUN ORDER: 4
 DROP MATERIALIZED VIEW jsonview_pure_research_output_doi; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_pure_research_output_doi
   BUILD DEFERRED

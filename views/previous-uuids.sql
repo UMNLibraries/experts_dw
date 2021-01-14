@@ -1,6 +1,9 @@
 -- DEPENDS ON:
 -- unified_pure_json
 
+-- REFRESH TIME (tst): 491s
+-- RUN ORDER: 10
+
 DROP MATERIALIZED VIEW jsonview_previous_uuid; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_previous_uuid
   BUILD DEFERRED

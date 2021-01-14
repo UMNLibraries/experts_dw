@@ -3,6 +3,9 @@
 
 -- DEPENDENTS:
 -- no views
+
+-- REFRESH TIME (tst): 738s
+-- RUN ORDER: 12
 DROP MATERIALIZED VIEW jsonview_pub_person;
 CREATE MATERIALIZED VIEW jsonview_pub_person
   BUILD DEFERRED

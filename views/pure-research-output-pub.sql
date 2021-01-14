@@ -7,6 +7,9 @@
 -- DEPENDENTS:
 -- no views
 
+-- REFRESH TIME (tst): 335s
+-- RUN ORDER: 5
+
 DROP MATERIALIZED VIEW jsonview_pub; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_pub
   BUILD DEFERRED
@@ -82,7 +85,7 @@ FROM
     )
   ) jt ON 1=1
   -- Hook up all the other dependent views which flattened various nested JSON array structures
-  LEFT OUTER JOIN jsonview_pure_research_output_pubdates d ON p.uuid = d.uuid
+  LEFT OUTER JOIN jsonview_pure_research_output_pubdates dates ON p.uuid = dates.uuid
   LEFT OUTER JOIN jsonview_pure_research_output_external_ids ids ON p.uuid = ids.uuid
   LEFT OUTER JOIN jsonview_pure_research_output_doi doi ON p.uuid = doi.uuid
 ;
