@@ -1,0 +1,21 @@
+-- DEPENDS ON:
+-- no views, all pure_json_* tables
+
+DROP MATERIALIZED VIEW jsonview_unified_pure_json;
+CREATE MATERIALIZED VIEW jsonview_unified_pure_json
+  BUILD DEFERRED
+  REFRESH ON DEMAND
+AS
+SELECT uuid, pure_modified, 'pure_json_research_output' AS source, json_document FROM pure_json_research_output_516
+UNION ALL
+SELECT uuid, pure_modified, 'pure_json_person' AS source, json_document FROM pure_json_person_516
+UNION ALL
+SELECT uuid, pure_modified, 'pure_json_external_person' AS source, json_document FROM pure_json_external_person_516
+UNION ALL 
+SELECT uuid, pure_modified, 'pure_json_organisation' AS source, json_document FROM pure_json_organisation_516
+UNION ALL
+SELECT uuid, pure_modified, 'pure_json_external_organisation' AS source, json_document FROM pure_json_external_organisation_516
+;
+CREATE INDEX idx_jsonview_unified_pure_json_uuid ON jsonview_unified_pure_json (uuid);
+CREATE INDEX idx_jsonview_unified_pure_json_source ON jsonview_unified_pure_json (source);
+EXECUTE DBMS_MVIEW.REFRESH('jsonview_unified_pure_json');
