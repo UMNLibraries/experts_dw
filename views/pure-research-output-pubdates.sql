@@ -6,12 +6,12 @@
 
 -- DEPENDENTS VIEWS:
 -- pure_research_output_pub
-DROP MATERIALIZED VIEW jsonview_pure_research_output_pubdates; COMMIT; 
+DROP MATERIALIZED VIEW jsonview_pure_research_output_pubdates; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_pure_research_output_pubdates
   BUILD DEFERRED
   REFRESH ON DEMAND
 AS
-SELECT 
+SELECT
   uuid,
   issued,
   issued_is_current AS issued_current,
@@ -31,7 +31,7 @@ SELECT
   COALESCE(in_press, inpress) AS inpress,
   COALESCE(in_press_is_current, inpress_is_current) AS inpress_current,
   COALESCE(in_press_precision, inpress_precision) AS inpress_precision
-FROM 
+FROM
 (
   SELECT pi.uuid,
   REVERSE(REGEXP_SUBSTR(REVERSE(jval.pubstatus), '[^/]+', 1, 1)) AS publication_status,

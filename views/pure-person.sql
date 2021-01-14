@@ -21,7 +21,7 @@ WITH ids AS (
       JSON_TABLE(p.JSON_DOCUMENT, '$.ids[*]'
         -- Identifiers are denoted by type.uri with a string value
         -- Without PIVOT these would come out as separate rows
-        COLUMNS ( 
+        COLUMNS (
           idSource PATH '$.type.uri',
           idValue PATH '$.value.value'
         )) jval

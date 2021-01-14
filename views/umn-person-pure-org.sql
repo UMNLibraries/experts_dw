@@ -40,7 +40,7 @@ FROM
     -- Only include associations with orgs that are already in Pure
     -- Comment in experts_etl pure_api_internal_person.py:
     -- # If a person has an association with on org not in EDW yet, skip that person...
-    INNER JOIN jsonview_pure_org po ON jt.org_uuid = po.uuid 
+    INNER JOIN jsonview_pure_org po ON jt.org_uuid = po.uuid
 ;
 CREATE INDEX idx_jsonview_umn_person_pure_org_pure_person_uuid ON jsonview_umn_person_pure_org (person_uuid);
 CREATE INDEX idx_jsonview_umn_person_pure_org_pure_org_uuid ON jsonview_umn_person_pure_org (pure_org_uuid);

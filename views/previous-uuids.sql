@@ -18,5 +18,5 @@ FROM
   WHERE JSON_EXISTS(p.JSON_DOCUMENT, '$.info.previousUuids[*]')
 
 ;
-ALTER TABLE jsonview_previous_uuid ADD CONSTRAINT pk_uuid_previous_uuid PRIMARY KEY (uuid, previous_uuid); 
+ALTER TABLE jsonview_previous_uuid ADD CONSTRAINT pk_uuid_previous_uuid PRIMARY KEY (uuid, previous_uuid);
 EXECUTE DBMS_MVIEW.REFRESH('jsonview_previous_uuid');

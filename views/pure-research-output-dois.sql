@@ -6,7 +6,7 @@
 
 -- DEPENDENTS VIEWS:
 -- pure_research_output_pub
-DROP MATERIALIZED VIEW jsonview_pure_research_output_doi; COMMIT; 
+DROP MATERIALIZED VIEW jsonview_pure_research_output_doi; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_pure_research_output_doi
   BUILD DEFERRED
   REFRESH ON DEMAND

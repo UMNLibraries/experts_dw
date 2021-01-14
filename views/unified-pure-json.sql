@@ -11,7 +11,7 @@ UNION ALL
 SELECT uuid, pure_modified, 'pure_json_person' AS source, json_document FROM pure_json_person_516
 UNION ALL
 SELECT uuid, pure_modified, 'pure_json_external_person' AS source, json_document FROM pure_json_external_person_516
-UNION ALL 
+UNION ALL
 SELECT uuid, pure_modified, 'pure_json_organisation' AS source, json_document FROM pure_json_organisation_516
 UNION ALL
 SELECT uuid, pure_modified, 'pure_json_external_organisation' AS source, json_document FROM pure_json_external_organisation_516
