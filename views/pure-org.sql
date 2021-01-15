@@ -5,6 +5,7 @@
 -- umn_person_pure_org
 
 -- REFRESH TIME (tst): 32s
+-- REFRESH TIME (prd): 38s
 -- RUN ORDER: 7
 DROP MATERIALIZED VIEW jsonview_pure_org; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_pure_org

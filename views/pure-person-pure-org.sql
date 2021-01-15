@@ -5,6 +5,7 @@
 -- no views
 
 -- REFRESH TIME (tst): 293s
+-- REFRESH TIME (prd): 351s
 -- RUN ORDER: 9
 
 DROP MATERIALIZED VIEW jsonview_person_pure_org; COMMIT;

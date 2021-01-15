@@ -2,6 +2,7 @@
 -- unified_pure_json
 
 -- REFRESH TIME (tst): 491s
+-- REFRESH TIME (prd): 526s
 -- RUN ORDER: 10
 
 DROP MATERIALIZED VIEW jsonview_previous_uuid; COMMIT;

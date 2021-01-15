@@ -8,6 +8,7 @@
 -- pure_research_output_pub
 
 -- REFRESH TIME (tst): 320s
+-- REFRESH TIME (prd): 574s
 -- RUN ORDER: 2
 DROP MATERIALIZED VIEW jsonview_pure_research_output_pubdates; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_pure_research_output_pubdates
