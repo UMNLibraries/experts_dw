@@ -1,5 +1,6 @@
 -- DEPEDNDS ON:
 -- pure_org
+-- pure_person
 
 -- DEPENDENTS:
 -- person_pure_org
@@ -25,17 +26,20 @@ SELECT
   pi.pure_id AS pure_person_id
 FROM
   pure_json_person_516 p
-  LEFT OUTER JOIN JSON_TABLE(p.JSON_DOCUMENT, '$.staffOrganisationAssociations[*]'
+  LEFT OUTER JOIN JSON_TABLE(p.JSON_DOCUMENT, '$'
     COLUMNS(
-      org_uuid PATH '$.organisationalUnit.uuid',
-      staff_type_uri PATH '$.staffType.uri',
-      job_description PATH '$.jobDescription[0].text.value',
-      -- Technically these should only be the en_US ones, we can drag those out
-      -- if really needed. Again XPATH would help here because of JSON_TABLE limitations
-      -- Currently ALL are en_US, other locales do not exist in our employmentType data
-      employed_as PATH '$.employmentType.term.text[0].value',
-      start_date PATH '$.period.startDate',
-      end_date PATH '$.period.endDate'
+      NESTED PATH '$.staffOrganisationAssociations[*]'
+        COLUMNS(
+          org_uuid PATH '$.organisationalUnit.uuid',
+          staff_type_uri PATH '$.staffType.uri',
+          job_description PATH '$.jobDescription[0].text.value',
+          -- Technically these should only be the en_US ones, we can drag those out
+          -- if really needed. Again XPATH would help here because of JSON_TABLE limitations
+          -- Currently ALL are en_US, other locales do not exist in our employmentType data
+          employed_as PATH '$.employmentType.term.text[0].value',
+          start_date PATH '$.period.startDate',
+          end_date PATH '$.period.endDate'
+        )
     )) jt ON 1=1
     LEFT OUTER JOIN jsonview_pure_person pi ON p.uuid = pi.uuid AND pi.pure_internal = 'Y'
     -- Only include associations with orgs that are already in Pure

@@ -2,6 +2,7 @@
 -- unified_pure_json
 
 -- REFRESH TIME (tst): 369s
+-- REFRESH TIME (prd): 145s
 -- RUN ORDER: 6
 DROP MATERIALIZED VIEW jsonview_pure_person;
 CREATE MATERIALIZED VIEW jsonview_pure_person

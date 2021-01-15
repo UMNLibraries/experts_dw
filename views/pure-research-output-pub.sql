@@ -1,13 +1,14 @@
 -- DEPEDNDS ON:
 -- pure_research_output_pubdates
 -- pure_research_output_doi
--- pure_research_output_external_ds
+-- pure_research_output_external_ids
 -- PURE_JSON_RESEARCH_OUTPUT_516
 
 -- DEPENDENTS:
 -- no views
 
 -- REFRESH TIME (tst): 335s
+-- REFRESH TIME (prd): 475s
 -- RUN ORDER: 5
 
 DROP MATERIALIZED VIEW jsonview_pub; COMMIT;
@@ -38,24 +39,24 @@ SELECT
   REVERSE(REGEXP_SUBSTR(REVERSE(jt.types_uri), '[^/]+', 1, 2)) AS pure_type,
   -- Same, but with the last (first) component as subtype
   REVERSE(REGEXP_SUBSTR(REVERSE(jt.types_uri), '[^/]+', 1, 1)) AS pure_subtype,
-  d.issued,
-  d.issued_current,
-  d.issued_precision,
-  d.eissued,
-  d.eissued_current,
-  d.eissued_precision,
-  d.unissued,
-  d.unissued_current,
-  d.unissued_precision,
-  d.inprep,
-  d.inprep_current,
-  d.inprep_precision,
-  d.submitted,
-  d.submitted_current,
-  d.submitted_precision,
-  d.inpress,
-  d.inpress_current,
-  d.inpress_precision,
+  dates.issued,
+  dates.issued_current,
+  dates.issued_precision,
+  dates.eissued,
+  dates.eissued_current,
+  dates.eissued_precision,
+  dates.unissued,
+  dates.unissued_current,
+  dates.unissued_precision,
+  dates.inprep,
+  dates.inprep_current,
+  dates.inprep_precision,
+  dates.submitted,
+  dates.submitted_current,
+  dates.submitted_precision,
+  dates.inpress,
+  dates.inpress_current,
+  dates.inpress_precision,
   doi.doi,
   doi.doi_openaccess,
   ids.qabo_id,

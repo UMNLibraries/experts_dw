@@ -5,6 +5,7 @@
 -- no views
 
 -- REFRESH TIME (tst): 738s
+-- REFRESH TIME (prd): 786s
 -- RUN ORDER: 12
 DROP MATERIALIZED VIEW jsonview_pub_person;
 CREATE MATERIALIZED VIEW jsonview_pub_person

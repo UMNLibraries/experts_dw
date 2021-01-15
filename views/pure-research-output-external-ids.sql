@@ -8,6 +8,7 @@
 -- pure_research_output_pub
 
 -- REFRESH TIME (tst): 303s
+-- REFRESH TIME (prd): 572s
 -- RUN ORDER: 3
 DROP MATERIALIZED VIEW jsonview_pure_research_output_external_ids; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_pure_research_output_external_ids
