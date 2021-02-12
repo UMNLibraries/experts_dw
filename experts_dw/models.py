@@ -81,6 +81,36 @@ class PureJsonExternalOrganisation516(Base, PureJson):
 class PureJsonExternalOrganisation516Staging(Base, PureJson):
     __tablename__ = 'pure_json_external_organisation_516_staging'
 
+class PureJsonResearchOutput517(Base, PureJson):
+    __tablename__ = 'pure_json_research_output_517'
+
+class PureJsonResearchOutput517Staging(Base, PureJson):
+    __tablename__ = 'pure_json_research_output_517_staging'
+
+class PureJsonPerson517(Base, PureJson):
+    __tablename__ = 'pure_json_person_517'
+
+class PureJsonPerson517Staging(Base, PureJson):
+    __tablename__ = 'pure_json_person_517_staging'
+
+class PureJsonExternalPerson517(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_517'
+
+class PureJsonExternalPerson517Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_517_staging'
+
+class PureJsonOrganisation517(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_517'
+
+class PureJsonOrganisation517Staging(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_517_staging'
+
+class PureJsonExternalOrganisation517(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_517'
+
+class PureJsonExternalOrganisation517Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_517_staging'
+
 class PureJsonChangeCommon(SodaMetadata):
     family_system_name = Column(String(150), nullable=False)
     change_type = Column(String(10), nullable=False)
@@ -97,6 +127,12 @@ class PureJsonChange516(Base, PureJsonChange):
 
 class PureJsonChange516History(Base, PureJsonChangeHistory):
     __tablename__ = 'pure_json_change_516_history'
+
+class PureJsonChange517(Base, PureJsonChange):
+    __tablename__ = 'pure_json_change_517'
+
+class PureJsonChange517History(Base, PureJsonChangeHistory):
+    __tablename__ = 'pure_json_change_517_history'
 
 # Would like to use a longer name, like "research_output", but
 # Oracle's stupid 30-character limit for names makes that difficult.
