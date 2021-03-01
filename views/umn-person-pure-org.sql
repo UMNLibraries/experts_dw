@@ -6,7 +6,7 @@
 -- person_pure_org
 
 -- REFRESH TIME (tst): 32s
--- REFRESH TIME (prd): 62s
+-- REFRESH TIME (prd): 42s
 -- RUN ORDER: 8
 DROP MATERIALIZED VIEW jsonview_umn_person_pure_org; COMMIT;
 CREATE MATERIALIZED VIEW jsonview_umn_person_pure_org
@@ -26,7 +26,7 @@ SELECT
   pi.emplid,
   pi.pure_id AS pure_person_id
 FROM
-  pure_json_person_516 p
+  pure_json_person_517 p
   LEFT OUTER JOIN JSON_TABLE(p.JSON_DOCUMENT, '$'
     COLUMNS(
       NESTED PATH '$.staffOrganisationAssociations[*]'

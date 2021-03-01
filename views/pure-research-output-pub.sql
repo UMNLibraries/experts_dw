@@ -2,7 +2,7 @@
 -- pure_research_output_pubdates
 -- pure_research_output_doi
 -- pure_research_output_external_ids
--- PURE_JSON_RESEARCH_OUTPUT_516
+-- PURE_JSON_RESEARCH_OUTPUT_517
 
 -- DEPENDENTS:
 -- no views
@@ -64,7 +64,7 @@ SELECT
   ids.pmcid,
   ids.orcid
 FROM
-  PURE_JSON_RESEARCH_OUTPUT_516 p
+  PURE_JSON_RESEARCH_OUTPUT_517 p
   -- Instead of the implicit join behavior, to join additional tables it has to be explicit
   -- inner joins here. Cannot use the simple comma-separated "tablename t, JSON_TABLE(t.json_doc....) jt"
   -- syntax if we have other joins to make
