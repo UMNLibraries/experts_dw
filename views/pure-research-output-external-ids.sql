@@ -25,7 +25,7 @@ SELECT
 FROM (
   SELECT pi.uuid, jval.*
   FROM
-    PURE_JSON_RESEARCH_OUTPUT_516 pi,
+    PURE_JSON_RESEARCH_OUTPUT_517 pi,
     JSON_TABLE(pi.JSON_DOCUMENT, '$'
       COLUMNS(
         NESTED PATH '$.info.additionalExternalIds[*]'

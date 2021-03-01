@@ -24,7 +24,7 @@ SELECT DISTINCT
   jt.first_name,
   jt.last_name,
   jt.person_ordinal
-FROM PURE_JSON_RESEARCH_OUTPUT_516 p,
+FROM PURE_JSON_RESEARCH_OUTPUT_517 p,
     JSON_TABLE(p.JSON_DOCUMENT, '$'
       COLUMNS(
         -- Strangely, using NESTED PATH here instead of just starting with $.personAssociations[*]

@@ -19,7 +19,7 @@ SELECT
   jt.deptid,
   deptid_uri
 FROM
-  pure_json_organisation_516 po,
+  pure_json_organisation_517 po,
   JSON_TABLE(po.JSON_DOCUMENT, '$'
     COLUMNS(
       pure_org_id VARCHAR2(1024) PATH '$.externalId',

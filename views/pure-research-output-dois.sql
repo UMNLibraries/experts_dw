@@ -27,7 +27,7 @@ FROM (
     -- COALESCE(REVERSE(REGEXP_SUBSTR(REVERSE(jval.doi_type), '[^/]+', 1, 1)), 'unspecified') AS doi_type,
     REVERSE(REGEXP_SUBSTR(REVERSE(jval.doi_openaccess_permission), '[^/]+', 1, 1)) AS doi_openaccess_permission
   FROM
-    PURE_JSON_RESEARCH_OUTPUT_516 pi,
+    PURE_JSON_RESEARCH_OUTPUT_517 pi,
     JSON_TABLE(pi.JSON_DOCUMENT, '$'
       COLUMNS (
         NESTED PATH '$.electronicVersions[*]'
