@@ -304,6 +304,26 @@ def insert_sql(
 
 @validate_api_version
 @validate_collection_names
+def insert_document(
+    cursor,
+    *,
+    document,
+    api_version,
+    collection_local_name=None,
+    collection_api_name=None,
+    collection_family_system_name=None,
+    staging=False
+):
+    sql = insert_sql(
+        cursor,
+        collection_local_name=collection_local_name,
+        api_version=api_version,
+        staging=staging
+    )
+    cursor.execute(sql, document)
+
+@validate_api_version
+@validate_collection_names
 def insert_documents(
     cursor,
     *,
