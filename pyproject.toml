@@ -8,12 +8,12 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.6.3"
-cx_oracle = "^8.0.1"
 pugsql = "^0.2.3"
 sqlalchemy = "*"
 sqlalchemy_mptt = "*"
 sqlparse = "*"
 Jinja2 = "^2.11"
+cx-oracle = "8.1.0"
 
 [tool.poetry.dev-dependencies]
 alembic = "*"
