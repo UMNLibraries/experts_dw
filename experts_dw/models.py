@@ -1002,6 +1002,10 @@ class PureSyncStaffOrgAssociation(Base):
   # person.xsd can include affiliationId, but there seems to be no column for it in Pure's
   # STAFF_ORG_RELATION spec. We use this for jobcode.
   affiliation_id = Column(String(30), nullable=True)
+  # Pure puts email address in a separate ORG_RELATION_EMAILS table, to allow
+  # for multiple email addresses for each job. We only ever have one, so we
+  # put it in this table.
+  email_address = Column(String(255), nullable=True)
   created = Column(DateTime, nullable=True)
   modified = Column(DateTime, nullable=True)
 
@@ -1030,6 +1034,7 @@ class PureSyncStaffOrgAssociationScratch(Base):
   #primary_association = Column(Boolean(), nullable=False)
   job_description = Column(String(1024), nullable=False)
   affiliation_id = Column(String(30), nullable=True)
+  email_address = Column(String(255), nullable=True)
 
 # Based on:
 # https://doc.pure.elsevier.com/download/attachments/28412333/oracle_user_view_create_statements.sql?version=1&modificationDate=1424698361313&api=v2
