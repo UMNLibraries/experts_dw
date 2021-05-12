@@ -1,7 +1,8 @@
 # Read-only role management
 
 How to manage members and access for the `oit_expert_rd_all` role, which
-provides read-only access to Experts Data Warehouse.
+provides read-only access to Experts Data Warehouse. Adapted from
+[OIT Data Dictionary and Functions](https://sites.google.com/a/umn.edu/dbcentral/home/oracle/oit-data-dictionary-and-functions).
 
 ## List members
 
