@@ -380,7 +380,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_DEMOGRAPHICS (
   TENURE_FLAG,
   TENURE_TRACK_FLAG,
   PRIMARY_EMPL_RCDNO
-) AS select distinct
+) AS SELECT DISTINCT
   da.emplid,
   da.internet_id,
   da.name, -- for testing
@@ -396,13 +396,21 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_DEMOGRAPHICS (
     WHEN da.name_suffix LIKE 'V%' THEN 'V'
     ELSE ''
   END AS name_suffix,
-  da.instl_email_addr,
+  CASE
+    -- For students who have directory suppression enabled,
+    -- set their email addresses to NULL, so they won't be
+    -- publicly displayed.
+    WHEN sa.um_dirc_exclude = 6 THEN NULL -- 6 = directory suppression
+    ELSE da.instl_email_addr
+  END AS instl_email_addr,
   da.tenure_flag,
   da.tenure_track_flag,
   da.primary_empl_rcdno
 FROM pure_eligible_person_chng_hst p
   JOIN ps_dwhr_demo_addr_vw@dweprd.oit da
     ON p.emplid = da.emplid
+  LEFT JOIN ps_dwsa_demo_addr_rt@dweprd.oit sa
+    ON p.emplid = sa.emplid
 '''
 
 pure_eligible_person = f'''
