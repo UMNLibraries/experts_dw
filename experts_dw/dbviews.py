@@ -397,7 +397,10 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_DEMOGRAPHICS (
     ELSE ''
   END AS name_suffix,
   CASE
-    WHEN sa.um_dirc_exclude = 6 THEN NULL
+    -- For students who have directory suppression enabled,
+    -- set their email addresses to NULL, so they won't be
+    -- publicly displayed.
+    WHEN sa.um_dirc_exclude = 6 THEN NULL -- 6 = directory suppression
     ELSE da.instl_email_addr
   END AS instl_email_addr,
   da.tenure_flag,
