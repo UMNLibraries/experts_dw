@@ -51,6 +51,8 @@ class PureJson(SodaMetadata, SodaDocument):
     pure_created = Column(DateTime(), nullable=False)
     pure_modified = Column(DateTime(), nullable=False)
 
+# 516
+
 class PureJsonResearchOutput516(Base, PureJson):
     __tablename__ = 'pure_json_research_output_516'
 
@@ -80,6 +82,8 @@ class PureJsonExternalOrganisation516(Base, PureJson):
 
 class PureJsonExternalOrganisation516Staging(Base, PureJson):
     __tablename__ = 'pure_json_external_organisation_516_staging'
+
+# 517
 
 class PureJsonResearchOutput517(Base, PureJson):
     __tablename__ = 'pure_json_research_output_517'
@@ -111,6 +115,38 @@ class PureJsonExternalOrganisation517(Base, PureJson):
 class PureJsonExternalOrganisation517Staging(Base, PureJson):
     __tablename__ = 'pure_json_external_organisation_517_staging'
 
+# 518
+
+class PureJsonResearchOutput518(Base, PureJson):
+    __tablename__ = 'pure_json_research_output_518'
+
+class PureJsonResearchOutput518Staging(Base, PureJson):
+    __tablename__ = 'pure_json_research_output_518_staging'
+
+class PureJsonPerson518(Base, PureJson):
+    __tablename__ = 'pure_json_person_518'
+
+class PureJsonPerson518Staging(Base, PureJson):
+    __tablename__ = 'pure_json_person_518_staging'
+
+class PureJsonExternalPerson518(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_518'
+
+class PureJsonExternalPerson518Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_518_staging'
+
+class PureJsonOrganisation518(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_518'
+
+class PureJsonOrganisation518Staging(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_518_staging'
+
+class PureJsonExternalOrganisation518(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_518'
+
+class PureJsonExternalOrganisation518Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_518_staging'
+
 class PureJsonChangeCommon(SodaMetadata):
     family_system_name = Column(String(150), nullable=False)
     change_type = Column(String(10), nullable=False)
@@ -122,17 +158,29 @@ class PureJsonChange(PureJsonChangeCommon, SodaDocument):
 class PureJsonChangeHistory(PureJsonChangeCommon):
     pass
 
+# 516
+
 class PureJsonChange516(Base, PureJsonChange):
     __tablename__ = 'pure_json_change_516'
 
 class PureJsonChange516History(Base, PureJsonChangeHistory):
     __tablename__ = 'pure_json_change_516_history'
 
+# 517
+
 class PureJsonChange517(Base, PureJsonChange):
     __tablename__ = 'pure_json_change_517'
 
 class PureJsonChange517History(Base, PureJsonChangeHistory):
     __tablename__ = 'pure_json_change_517_history'
+
+# 518
+
+class PureJsonChange518(Base, PureJsonChange):
+    __tablename__ = 'pure_json_change_518'
+
+class PureJsonChange518History(Base, PureJsonChangeHistory):
+    __tablename__ = 'pure_json_change_518_history'
 
 # Would like to use a longer name, like "research_output", but
 # Oracle's stupid 30-character limit for names makes that difficult.
