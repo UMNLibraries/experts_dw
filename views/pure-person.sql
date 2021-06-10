@@ -20,7 +20,7 @@ WITH ids AS (
   FROM (
     SELECT p.uuid, jval.*
     FROM
-      pure_json_person_517 p,
+      pure_json_person_518 p,
       JSON_TABLE(p.JSON_DOCUMENT, '$.ids[*]'
         -- Identifiers are denoted by type.uri with a string value
         -- Without PIVOT these would come out as separate rows

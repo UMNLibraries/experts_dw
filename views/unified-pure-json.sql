@@ -10,15 +10,15 @@ CREATE MATERIALIZED VIEW jsonview_unified_pure_json
   BUILD DEFERRED
   REFRESH ON DEMAND
 AS
-SELECT uuid, pure_modified, 'pure_json_research_output' AS source, json_document FROM pure_json_research_output_517
+SELECT uuid, pure_modified, 'pure_json_research_output' AS source, json_document FROM pure_json_research_output_518
 UNION ALL
-SELECT uuid, pure_modified, 'pure_json_person' AS source, json_document FROM pure_json_person_517
+SELECT uuid, pure_modified, 'pure_json_person' AS source, json_document FROM pure_json_person_518
 UNION ALL
-SELECT uuid, pure_modified, 'pure_json_external_person' AS source, json_document FROM pure_json_external_person_517
+SELECT uuid, pure_modified, 'pure_json_external_person' AS source, json_document FROM pure_json_external_person_518
 UNION ALL
-SELECT uuid, pure_modified, 'pure_json_organisation' AS source, json_document FROM pure_json_organisation_517
+SELECT uuid, pure_modified, 'pure_json_organisation' AS source, json_document FROM pure_json_organisation_518
 UNION ALL
-SELECT uuid, pure_modified, 'pure_json_external_organisation' AS source, json_document FROM pure_json_external_organisation_517
+SELECT uuid, pure_modified, 'pure_json_external_organisation' AS source, json_document FROM pure_json_external_organisation_518
 ;
 CREATE INDEX idx_jsonview_unified_pure_json_uuid ON jsonview_unified_pure_json (uuid);
 CREATE INDEX idx_jsonview_unified_pure_json_source ON jsonview_unified_pure_json (source);

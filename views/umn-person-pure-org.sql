@@ -26,7 +26,7 @@ SELECT
   pi.emplid,
   pi.pure_id AS pure_person_id
 FROM
-  pure_json_person_517 p
+  pure_json_person_518 p
   LEFT OUTER JOIN JSON_TABLE(p.JSON_DOCUMENT, '$'
     COLUMNS(
       NESTED PATH '$.staffOrganisationAssociations[*]'
