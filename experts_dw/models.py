@@ -23,7 +23,7 @@ class PureJsonCollectionMeta(Base):
   api_version = Column(
       String(15),
       primary_key=True,
-      comment='The Pure API version, without the decimal point, i.e., 516 for version 5.16.',
+      comment='The Pure API version, without the decimal point, i.e., 518 for version 5.18.',
   )
   family_system_name = Column(
       String(255),
@@ -50,38 +50,6 @@ class PureJson(SodaMetadata, SodaDocument):
     updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
     pure_created = Column(DateTime(), nullable=False)
     pure_modified = Column(DateTime(), nullable=False)
-
-# 516
-
-class PureJsonResearchOutput516(Base, PureJson):
-    __tablename__ = 'pure_json_research_output_516'
-
-class PureJsonResearchOutput516Staging(Base, PureJson):
-    __tablename__ = 'pure_json_research_output_516_staging'
-
-class PureJsonPerson516(Base, PureJson):
-    __tablename__ = 'pure_json_person_516'
-
-class PureJsonPerson516Staging(Base, PureJson):
-    __tablename__ = 'pure_json_person_516_staging'
-
-class PureJsonExternalPerson516(Base, PureJson):
-    __tablename__ = 'pure_json_external_person_516'
-
-class PureJsonExternalPerson516Staging(Base, PureJson):
-    __tablename__ = 'pure_json_external_person_516_staging'
-
-class PureJsonOrganisation516(Base, PureJson):
-    __tablename__ = 'pure_json_organisation_516'
-
-class PureJsonOrganisation516Staging(Base, PureJson):
-    __tablename__ = 'pure_json_organisation_516_staging'
-
-class PureJsonExternalOrganisation516(Base, PureJson):
-    __tablename__ = 'pure_json_external_organisation_516'
-
-class PureJsonExternalOrganisation516Staging(Base, PureJson):
-    __tablename__ = 'pure_json_external_organisation_516_staging'
 
 # 517
 
@@ -157,14 +125,6 @@ class PureJsonChange(PureJsonChangeCommon, SodaDocument):
 
 class PureJsonChangeHistory(PureJsonChangeCommon):
     pass
-
-# 516
-
-class PureJsonChange516(Base, PureJsonChange):
-    __tablename__ = 'pure_json_change_516'
-
-class PureJsonChange516History(Base, PureJsonChangeHistory):
-    __tablename__ = 'pure_json_change_516_history'
 
 # 517
 
