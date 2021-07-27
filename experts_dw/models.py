@@ -857,7 +857,7 @@ class UmnDeptPureOrg(Base):
 class PureEligibleEmployeeJobcode(Base):
   __tablename__ = 'pure_eligible_employee_jobcode'
   jobcode = Column(String(13), primary_key=True)
-  jobcode_descr = Column(String(35), nullable=True)
+  jobcode_descr = Column(String(120), nullable=True)
   pure_job_description = Column(String(50), nullable=False)
   default_employed_as = Column(String(50), nullable=False)
   default_staff_type = Column(String(11), nullable=False)
@@ -868,7 +868,7 @@ class PureEligibleEmployeeJobcode(Base):
 class PureEligibleAffiliateJobcode(Base):
   __tablename__ = 'pure_eligible_affiliate_jobcode'
   jobcode = Column(String(13), primary_key=True)
-  jobcode_descr = Column(String(35), nullable=True)
+  jobcode_descr = Column(String(120), nullable=True)
   pure_job_description = Column(String(50), nullable=False)
   default_employed_as = Column(String(50), nullable=False)
   default_staff_type = Column(String(11), nullable=False)
@@ -878,7 +878,7 @@ class PureEligibleAffiliateJobcode(Base):
 class PureEligiblePOIJobcode(Base):
   __tablename__ = 'pure_eligible_poi_jobcode'
   jobcode = Column(String(13), primary_key=True)
-  jobcode_descr = Column(String(35), nullable=True)
+  jobcode_descr = Column(String(120), nullable=True)
   pure_job_description = Column(String(50), nullable=False)
   default_employed_as = Column(String(50), nullable=False)
   default_staff_type = Column(String(11), nullable=False)
@@ -906,7 +906,7 @@ class UmnDataError(Base):
   error_id = Column(String(40), primary_key=True)
   message = Column(String(255), nullable=False)
   jobcode = Column(String(13), nullable=True)
-  jobcode_descr = Column(String(35), nullable=True)
+  jobcode_descr = Column(String(120), nullable=True)
   deptid = Column(String(10), nullable=True)
   deptid_descr = Column(String(30), nullable=True)
   persons_in_dept = Column(Integer, nullable=True)
