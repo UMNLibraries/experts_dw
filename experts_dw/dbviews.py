@@ -245,7 +245,6 @@ um_colleges_to_exclude = ', '.join(list(map(
         'TFAC', # Facilities Management
         'THSM', # University Health and Safety
         'TINS', # University Relations, Office of
-        'TINF', # Information Technology
         'TOBR', # Board of Regents, Office of
         'TOGC', # General Counsel, Office of the
         'TOHR', # Human Resources, Office of
