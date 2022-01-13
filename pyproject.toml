@@ -19,4 +19,4 @@ cx-oracle = "8.0.1"
 alembic = "*"
 pytest = "*"
 dotenv_switch = {git = "git://github.com/UMNLibraries/dotenv_switch.git"}
-pureapi = {git = "git://github.com/UMNLibraries/pureapi.git"}
+pureapi = {git = "git://github.com/UMNLibraries/pureapi.git", tag="4.2.0"}
