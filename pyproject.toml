@@ -13,7 +13,7 @@ sqlalchemy = "*"
 sqlalchemy_mptt = "*"
 sqlparse = "*"
 Jinja2 = "^2.11"
-cx-oracle = "8.0.1"
+cx-oracle = "^8.0.1"
 
 [tool.poetry.dev-dependencies]
 alembic = "*"
