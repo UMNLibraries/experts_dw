@@ -5,6 +5,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_mptt import mptt_sessionmaker
 
+# If a path to the Oracle client libraries was defined, pass to cx_Oracle with init method
+oracle_libs_path = os.environ.get('ORACLE_CLIENT_LIBRARIES_PATH')
+if oracle_libs_path:
+     cx_Oracle.init_oracle_client(lib_dir=oracle_libs_path)
+
 default_db_name = 'hotel'
 
 def url(db_name=default_db_name):
