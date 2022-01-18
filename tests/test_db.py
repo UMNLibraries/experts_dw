@@ -1,6 +1,7 @@
 from experts_dw import db
 from sqlalchemy.orm.session import Session
 from sqlalchemy.engine import Engine
+from experts_dw.models import PureJsonCollectionMeta
 
 def test_engine():
   engine = db.engine('hotel')
@@ -17,3 +18,7 @@ def test_session():
 def test_session_with_no_args():
   with db.session() as session:
     assert isinstance(session, Session)
+    # Exectue a statement to test that we can connect to the db
+    # and get results:
+    metadata = session.query(PureJsonCollectionMeta).all()
+    assert metadata
