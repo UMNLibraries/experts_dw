@@ -81,7 +81,7 @@ with db.cx_oracle_connection() as session:
             prepped.headers['api-key'] = 'a4fb1bc8-94fd-42a3-918f-e7348a666918'
             resp = s.send(prepped)
 
-            if resp.status_code != "200":
+            if resp.status_code != 200:
                 print(resp.status_code)
                 print(resp.text)
                 print(org)
