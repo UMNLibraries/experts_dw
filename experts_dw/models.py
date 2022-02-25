@@ -51,6 +51,38 @@ class PureJson(SodaMetadata, SodaDocument):
     pure_created = Column(DateTime(), nullable=False)
     pure_modified = Column(DateTime(), nullable=False)
 
+# 523
+
+class PureJsonResearchOutput523(Base, PureJson):
+    __tablename__ = 'pure_json_research_output_523'
+
+class PureJsonResearchOutput523Staging(Base, PureJson):
+    __tablename__ = 'pure_json_research_output_523_staging'
+
+class PureJsonPerson523(Base, PureJson):
+    __tablename__ = 'pure_json_person_523'
+
+class PureJsonPerson523Staging(Base, PureJson):
+    __tablename__ = 'pure_json_person_523_staging'
+
+class PureJsonExternalPerson523(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_523'
+
+class PureJsonExternalPerson523Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_person_523_staging'
+
+class PureJsonOrganisation523(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_523'
+
+class PureJsonOrganisation523Staging(Base, PureJson):
+    __tablename__ = 'pure_json_organisation_523_staging'
+
+class PureJsonExternalOrganisation523(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_523'
+
+class PureJsonExternalOrganisation523Staging(Base, PureJson):
+    __tablename__ = 'pure_json_external_organisation_523_staging'
+
 # 517
 
 class PureJsonResearchOutput517(Base, PureJson):
@@ -125,6 +157,14 @@ class PureJsonChange(PureJsonChangeCommon, SodaDocument):
 
 class PureJsonChangeHistory(PureJsonChangeCommon):
     pass
+
+# 523
+
+class PureJsonChange523(Base, PureJsonChange):
+    __tablename__ = 'pure_json_change_523'
+
+class PureJsonChange523History(Base, PureJsonChangeHistory):
+    __tablename__ = 'pure_json_change_523_history'
 
 # 517
 
