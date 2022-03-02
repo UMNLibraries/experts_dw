@@ -1040,6 +1040,7 @@ class PureSyncStaffOrgAssociation(Base):
   # Pure allows the remaining columns to be null, but UMN does not:
   org_id = Column(String(1024), nullable=False)
   employment_type = Column(String(1024), nullable=False)
+  affiliation_id = Column(String(30), nullable=True)
   staff_type = Column(String(1024), nullable=False) # 'academic' or 'nonacademic'
   visibility = Column(String(1024), nullable=False) # 'Public', 'Campus', or 'Restricted'
   primary_association = Column(Boolean(name='primary_association_bool'), nullable=False)
@@ -1047,9 +1048,6 @@ class PureSyncStaffOrgAssociation(Base):
   job_description = Column(String(1024), nullable=False)
 
   # Added by UMN:
-  # person.xsd can include affiliationId, but there seems to be no column for it in Pure's
-  # STAFF_ORG_RELATION spec. We use this for jobcode.
-  affiliation_id = Column(String(30), nullable=True)
   # Pure puts email address in a separate ORG_RELATION_EMAILS table, to allow
   # for multiple email addresses for each job. We only ever have one, so we
   # put it in this table.
@@ -1082,6 +1080,64 @@ class PureSyncStaffOrgAssociationScratch(Base):
   #primary_association = Column(Boolean(), nullable=False)
   job_description = Column(String(1024), nullable=False)
   affiliation_id = Column(String(30), nullable=True)
+  email_address = Column(String(255), nullable=True)
+
+# Based on STUDENT_ORG_RELATION in:
+# https://doc.pure.elsevier.com/download/attachments/28412327/oracle_person_view_create_statements.sql?version=5&modificationDate=1529322570793&api=v2
+class PureSyncStudentOrgAssociation(Base):
+  __tablename__ = 'pure_sync_student_org_association'
+  student_org_association_id = Column(String(1024), primary_key=True)
+  person_id = Column(ForeignKey('pure_sync_person_data.person_id'), nullable=False)
+  period_start_date = Column(DateTime, nullable=False)
+  period_end_date = Column(DateTime, nullable=True)
+  # Pure allows the remaining columns to be null, but UMN does not:
+  org_id = Column(String(1024), nullable=False)
+  status = Column(String(1024), nullable=False)
+  affiliation_id = Column(String(30), nullable=True)
+  student_type_description = Column(String(1024), nullable=False)
+
+  # Added by UMN:
+  # Pure puts email address in a separate ORG_RELATION_EMAILS table, to allow
+  # for multiple email addresses for each job. We only ever have one, so we
+  # put it in this table.
+  email_address = Column(String(255), nullable=True)
+  created = Column(DateTime, nullable=True)
+  modified = Column(DateTime, nullable=True)
+
+  # Unused columns from Pure's STAFF_ORG_RELATION spec.
+#  org_pure_id = Column(Integer, nullable=True)
+#  org_source_id = Column(String(1024), nullable=True)
+#  org_classified_ids_id = Column(String(1024), nullable=True)
+#  org_classified_ids_type = Column(String(1024), nullable=True)
+#  employment_type = Column(String(1024), nullable=False)
+#  primary_association = Column(Boolean(name='primary_association_bool'), nullable=False)
+#  START_YEAR varchar(30),
+#  PROGRAMME varchar(512),
+#  EXPECTED_STUDY_DURATION number,
+#  MIN_STUDY_DURATION number,
+#  MAX_STUDY_DURATION number,
+#  PROGRAMME_YEAR varchar(65),
+#  student_nationality = Column(String(1024), nullable=False)
+#  STUDENT_RESIDENCY_FLAG varchar(1024),
+#  STUDENT_COUNTRY_OF_DOMICILE varchar(1024),
+#  AWARD_GAINED varchar(256),
+#  PROJECT_TITLE varchar(1024),
+#  AWARD_DATE date,
+#  INITIAL_SUBMISSION_DATE date,
+#  EXPECTED_END_DATE date,
+#  fte = Column(Integer, nullable=True)
+#  managed_in_pure = Column(Boolean(), nullable=True) # We always set this to 'false'.
+
+class PureSyncStudentOrgAssociationScratch(Base):
+  __tablename__ = 'pure_sync_student_org_association_scratch'
+  student_org_association_id = Column(String(1024), primary_key=True)
+  person_id = Column(ForeignKey('pure_sync_person_data.person_id'), nullable=False)
+  period_start_date = Column(DateTime, nullable=False)
+  period_end_date = Column(DateTime, nullable=True)
+  org_id = Column(String(1024), nullable=False)
+  status = Column(String(1024), nullable=False)
+  affiliation_id = Column(String(30), nullable=True)
+  student_type_description = Column(String(1024), nullable=False)
   email_address = Column(String(255), nullable=True)
 
 # Based on:
