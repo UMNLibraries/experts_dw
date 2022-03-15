@@ -15,10 +15,11 @@ default_db_name = 'hotel'
 def url(db_name=default_db_name):
     # db_name must be the generic part of the service name,
     # without the (tst|prd).oit suffix, e.g. 'dwe' or 'hotel'.
-    url = 'oracle+cx_oracle://{}:"{}"@{}/?service_name={}'.format(
+    url = 'oracle+cx_oracle://{}:"{}"@{}:{}/?service_name={}'.format(
         os.environ.get('EXPERTS_DB_USER'),
         os.environ.get('EXPERTS_DB_PASS'),
         os.environ.get('EXPERTS_DB_HOSTNAME'),
+        os.environ.get('EXPERTS_DB_PORT'),
         os.environ.get('EXPERTS_DB_SERVICE_NAME'),
     )
     return url
@@ -36,7 +37,7 @@ def cx_oracle_connection():
     yield cx_Oracle.connect(
         os.environ.get('EXPERTS_DB_USER'),
         os.environ.get('EXPERTS_DB_PASS'),
-        f'{os.environ.get("EXPERTS_DB_HOSTNAME")}/{os.environ.get("EXPERTS_DB_SERVICE_NAME")}',
+        f'{os.environ.get("EXPERTS_DB_HOSTNAME")}:{os.environ.get("EXPERTS_DB_PORT")}/{os.environ.get("EXPERTS_DB_SERVICE_NAME")}',
         encoding='UTF-8'
     )
 
