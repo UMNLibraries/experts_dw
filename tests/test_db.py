@@ -22,3 +22,12 @@ def test_session_with_no_args():
     # and get results:
     metadata = session.query(PureJsonCollectionMeta).all()
     assert metadata
+
+def test_oracle_cx_connect_query():
+    with db.cx_oracle_connection() as connection:
+        # Execute sql to test that we have a connection and get results
+        cur = connection.cursor()
+        result = cur.execute(
+            "SELECT COUNT(*) FROM UMN_DEPT_PURE_ORG"
+        )
+        assert result
