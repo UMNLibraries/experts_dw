@@ -23,7 +23,7 @@ def test_session_with_no_args():
     metadata = session.query(PureJsonCollectionMeta).all()
     assert metadata
 
-def test_oracle_cx_connect_query():
+def test_cx_oracle_connection():
     with db.cx_oracle_connection() as connection:
         # Execute sql to test that we have a connection and get results
         cur = connection.cursor()
