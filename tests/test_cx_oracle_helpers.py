@@ -29,8 +29,21 @@ def test_select_scalar(cursor):
     count = select_scalar(cursor, "SELECT count(*) FROM pub WHERE 1=2")
     assert count == 0
 
+def test_select_list_of_dicts(cursor):
+    rows = select_list_of_dicts(
+        cursor,
+        "SELECT DISTINCT p.um_acad_plan_prima, p.acad_plan_sdesc, \
+        p.acad_plan_ldesc, p.deptid, u.pure_org_uuid \
+        FROM ps_dwsa_stix_1223_pr@dweprd.oit p \
+            JOIN umn_dept_pure_org u \
+            ON p.deptid = u.deptid \
+        WHERE level2 = 'GRAD' OR level2 = 'PRFL'"
+    )
+    assert isinstance(rows, list)
+
+
 #with db.cx_oracle_connection() as connection:
-#    cur = connection.cursor()    
+#    cur = connection.cursor()
 #
 #    cur.execute("SELECT * FROM pub WHERE 1=2")
 #    cur.rowfactory = lambda *args: dict(
@@ -41,11 +54,11 @@ def test_select_scalar(cursor):
 #
 #    cur.execute("SELECT last_name FROM person WHERE pure_uuid='01edf3d8-7e44-4dfa-bec4-8e3472965e1f'")
 #    result = cur.fetchone()
-#    print('    ',result) # 
+#    print('    ',result) #
 #
 #    cur.execute("SELECT title FROM pub WHERE uuid='bogus'")
 #    result = cur.fetchone()
-#    print('    ',result) # 
+#    print('    ',result) #
 #    title = cur.fetchone()[0]
 #    print('    ',title) # NoneType is not subscriptable
 #
@@ -58,5 +71,5 @@ def test_select_scalar(cursor):
 #        zip([col[0] for col in cur.description], args)
 #    )
 #    rows = cur.fetchall()
-#    print('    ',rows) 
+#    print('    ',rows)
 #
