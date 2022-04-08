@@ -6,16 +6,7 @@ from typing import Any, Callable, MutableMapping, Tuple, TypeVar, cast
 
 from experts_dw import db
 from experts_dw.exceptions import ExpertsDwException
-#from .sqlapi import sqlapi
 
-#api_collection_to_table_collection = {
-#    'changes': 'change',
-#    'external-persons': 'external_person',
-#    'external-organisations': 'external_organisation',
-#    'organisational-units': 'organisation',
-#    'persons': 'person',
-#    'research-outputs': 'research_output',
-#}
 iso_8601_format = '%Y-%m-%dT%H:%M:%S.%f%z'
 
 @functools.lru_cache(maxsize=None)
@@ -1316,90 +1307,3 @@ def delete_documents_and_changes_matching_uuids(
         raise e
 
     connection.commit()
-
-# Old sqlapi-based functions. Probably won't use these, but keeping them for now in case there's
-# any functionality we want to move to the cx_Oracle-based functions.
-#
-#def get_document_by_uuid(*, uuid, collection, api_version):
-#    table_collection = api_collection_to_table_collection[collection]
-#    search_function = getattr(sqlapi, f'get_pure_json_{table_collection}_{api_version}_by_uuid')
-#    return search_function(uuid=uuid)
-#
-#def get_record_by_uuid(*, uuid, collection, api_version):
-#    table_collection = api_collection_to_table_collection[collection]
-#    search_function = getattr(sqlapi, f'get_pure_json_{table_collection}_by_uuid')
-#    return search_function(uuid=uuid, api_version=api_version)
-#
-#def get_staging_record_by_uuid(*, uuid, collection, api_version):
-#    table_collection = api_collection_to_table_collection[collection]
-#    search_function = getattr(sqlapi, f'get_pure_json_{table_collection}_staging_by_uuid')
-#    return search_function(uuid=uuid, api_version=api_version)
-#
-#def get_change_record_by_uuid_and_version(*, uuid, version, api_version):
-#    search_function = getattr(sqlapi, f'get_pure_json_change_by_uuid_and_version')
-#    return search_function(uuid=uuid, version=version, api_version=api_version)
-#
-#def all_records(*, collection, api_version):
-#    table_collection = api_collection_to_table_collection[collection]
-#    select_function = getattr(sqlapi, f'select_pure_json_{table_collection}')
-#    #return select_function(api_version=api_version)
-#    return select_function()
-#
-#def load_document(*, document, collection, api_version):
-#    table_collection = api_collection_to_table_collection[collection]
-#    insert_function = getattr(sqlapi, f'insert_pure_json_{table_collection}_{api_version}')
-#    return insert_function(
-#        uuid=document.uuid,
-#        pure_created=datetime.strptime(document.info.createdDate, iso_8601_format),
-#        pure_modified=datetime.strptime(document.info.modifiedDate, iso_8601_format),
-#        inserted=datetime.now(),
-#        updated=datetime.now(),
-#        json_document=bytes(json.dumps(document).encode('utf-8'))
-#    )
-#
-#def load_record(*, record, collection, api_version):
-#    table_collection = api_collection_to_table_collection[collection]
-#    insert_function = getattr(sqlapi, f'insert_pure_json_{table_collection}')
-#    return insert_function(
-#        uuid=record.uuid,
-#        api_version=api_version,
-#        modified=datetime.strptime(record.info.modifiedDate, iso_8601_format),
-#        inserted=datetime.now(),
-#        record=json.dumps(record)
-#    )
-#
-## TODO: May not use api_version columns anymore...
-##def load_previous_uuid(*, uuid, previous_uuid, collection, api_version):
-#def load_previous_uuid(*, uuid, previous_uuid, collection):
-#    table_collection = api_collection_to_table_collection[collection]
-#    insert_function = getattr(sqlapi, f'insert_pure_json_{table_collection}_previous_uuid')
-#    return insert_function(
-#        uuid=uuid,
-#        previous_uuid=previous_uuid,
-#        # Might want one or two of these columns...
-#        #modified=datetime.strptime(record.info.modifiedDate, iso_8601_format),
-#        #inserted=datetime.now(),
-#    )
-#
-#def load_staging_record(*, record, collection, api_version):
-#    table_collection = api_collection_to_table_collection[collection]
-#    insert_function = getattr(sqlapi, f'insert_pure_json_{table_collection}_staging')
-#    return insert_function(
-#        uuid=record.uuid,
-#        api_version=api_version,
-#        modified=datetime.strptime(record.info.modifiedDate, iso_8601_format),
-#        inserted=datetime.now(),
-#        record=json.dumps(record)
-#    )
-#
-#def load_change_record(*, record, api_version):
-#    insert_function = getattr(sqlapi, f'insert_pure_json_change')
-#    return insert_function(
-#        uuid=record.uuid,
-#        api_version=api_version,
-#        family_system_name=record.familySystemName,
-#        change_type=record.changeType,
-#        version=record.version,
-#        inserted=datetime.now(),
-#        record=json.dumps(record)
-#    )
