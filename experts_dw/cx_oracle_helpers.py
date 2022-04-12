@@ -2,31 +2,27 @@ def select_scalar(cursor, sql, params=None):
     if params is None:
         params = {}
     cursor.execute(sql, params)
-    result = cursor.fetchone()
-    if result is None:
-        return result
-    else:
-        return result[0] # Result will be a tuple
+    cursor.rowfactory = lambda *_tuple: _tuple[0]
+    # The rowfactory will be executed only if the query returns results.
+    # Otherwise, the following will return None.
+    return cursor.fetchone()
 
 def select_list_of_dicts(cursor, sql, params=None):
     if params is None:
         params = {}
     cursor.execute(sql, params)
-    cursor.rowfactory = lambda *args: dict(
-        zip([col[0] for col in cursor.description], args)
+    cursor.rowfactory = lambda *_tuple: dict(
+        zip([column[0] for column in cursor.description], _tuple)
     )
-    result = cursor.fetchall() # Result will be a list of dicts
-    if bool(result) is False: # Empty list is False
-        return None
-    else:
-        return result
+    # The rowfactory will be executed only if the query returns results.
+    # Otherwise, the following will return an empty list.
+    return cursor.fetchall()
 
 def select_list_of_scalars(cursor, sql, params=None):
     if params is None:
         params = {}
     cursor.execute(sql, params)
-    result = cursor.fetchall()
-    if bool(result) is False:
-        return None
-    else:
-        return result
+    cursor.rowfactory = lambda *_tuple: _tuple[0]
+    # The rowfactory will be executed only if the query returns results.
+    # Otherwise, the following will return an empty list.
+    return cursor.fetchall()
