@@ -4,7 +4,7 @@ def select_scalar(cursor, sql, params=None):
     cursor.execute(sql, params)
     cursor.rowfactory = lambda *_tuple: _tuple[0]
     # The rowfactory will be executed only if the query returns results.
-    # Otherwise, the the following will return None.
+    # Otherwise, the following will return None.
     return cursor.fetchone()
 
 def select_list_of_dicts(cursor, sql, params=None):
@@ -15,7 +15,7 @@ def select_list_of_dicts(cursor, sql, params=None):
         zip([column[0] for column in cursor.description], _tuple)
     )
     # The rowfactory will be executed only if the query returns results.
-    # Otherwise, the the following will return an empty list.
+    # Otherwise, the following will return an empty list.
     return cursor.fetchall()
 
 def select_list_of_scalars(cursor, sql, params=None):
@@ -24,5 +24,5 @@ def select_list_of_scalars(cursor, sql, params=None):
     cursor.execute(sql, params)
     cursor.rowfactory = lambda *_tuple: _tuple[0]
     # The rowfactory will be executed only if the query returns results.
-    # Otherwise, the the following will return an empty list.
+    # Otherwise, the following will return an empty list.
     return cursor.fetchall()
