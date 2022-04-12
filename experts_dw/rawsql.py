@@ -5,10 +5,10 @@
 # March 2022
 
 count_pure_eligible_persons_in_dept = """
-    select count(distinct emplid) from (
-      select emplid from pure_eligible_employee_job where deptid = :deptid
-      union
-      select emplid from pure_eligible_affiliate_job where deptid = :deptid
+    SELECT COUNT(distinct emplid) FROM (
+      SELECT emplid FROM pure_eligible_employee_job WHERE deptid = :deptid
+      UNION
+      SELECT emplid FROM pure_eligible_affiliate_job WHERE deptid = :deptid
     )
     """
 
@@ -174,11 +174,11 @@ insert_pure_sync_user_data = """
     WHERE ps.person_id IS NULL
     """
 record_reporting_of_umn_data_errors = """
-    update umn_data_error set reported = sysdate where reported is null
+    UPDATE umn_data_error SET reported = sysdate WHERE reported IS NULL
     """
 
 unreported_umn_data_errors = """
-    select * from umn_data_error where reported is null
+    SELECT * FROM umn_data_error WHERE reported IS NULL
     """
 
 update_pure_sync_person_data = """
