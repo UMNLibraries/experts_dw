@@ -1094,7 +1094,6 @@ class PureSyncStudentOrgAssociation(Base):
   org_id = Column(String(1024), nullable=False)
   status = Column(String(1024), nullable=False)
   affiliation_id = Column(String(30), nullable=True)
-  student_type_description = Column(String(1024), nullable=False)
 
   # Added by UMN:
   # Pure puts email address in a separate ORG_RELATION_EMAILS table, to allow
@@ -1137,7 +1136,6 @@ class PureSyncStudentOrgAssociationScratch(Base):
   org_id = Column(String(1024), nullable=False)
   status = Column(String(1024), nullable=False)
   affiliation_id = Column(String(30), nullable=True)
-  student_type_description = Column(String(1024), nullable=False)
   email_address = Column(String(255), nullable=True)
 
 # Based on:
