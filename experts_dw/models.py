@@ -646,7 +646,7 @@ class AuthorCollaboration(Base):
   )
   name = Column(
       String(1024),
-      nullable=False,
+      nullable=True,
       comment='The name of the author collaboration organization.',
   )
 
