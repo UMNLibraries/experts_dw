@@ -521,7 +521,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_DEMOGRAPHICS (
   TENURE_FLAG,
   TENURE_TRACK_FLAG,
   PRIMARY_EMPL_RCDNO
-) AS SELECT DISTINCT
+) AS
+  SELECT DISTINCT
   da.emplid,
   da.internet_id,
   da.name, -- for testing
@@ -547,11 +548,39 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW EXPERT.PURE_ELIGIBLE_DEMOGRAPHICS (
   da.tenure_flag,
   da.tenure_track_flag,
   da.primary_empl_rcdno
-FROM pure_eligible_person_chng_hst p
+  FROM pure_eligible_person_chng_hst p
   JOIN ps_dwhr_demo_addr_vw@dweprd.oit da
     ON p.emplid = da.emplid
   LEFT JOIN ps_dwsa_demo_addr_rt@dweprd.oit sa
     ON p.emplid = sa.emplid
+UNION
+  SELECT
+    sa.emplid,
+    ue.internet_id,
+    sa.name, -- for testing
+    sa.last_name,
+    sa.first_name,
+    SUBSTR(sa.middle_name, 1, 1) AS middle_initial,
+    '' AS name_suffix,
+    CASE
+      WHEN sa.um_dirc_exclude IN (
+        '5', -- Suppress All Information - TOTAL SUPPRESSION
+        '6', -- Suppress Phone, Address, Email - DIRECTORY SUPPRESSION
+        NULL -- Default to NULL if we have no directory suppression value.
+      ) THEN NULL
+      ELSE ue.email_addr
+    END AS inst_email_addr,
+    'N' AS tenure_flag,
+    'N' AS tenure_track_flag,
+    NULL AS primary_empl_rcdno
+  FROM pure_eligible_person_chng_hst p
+  JOIN ps_dwsa_demo_addr_rt@dweprd.oit sa
+    ON sa.emplid = p.emplid
+  JOIN ps_dw_university_email@dweprd.oit ue
+    ON ue.emplid = sa.emplid
+  LEFT JOIN ps_dwhr_demo_addr_vw@dweprd.oit da
+    ON da.emplid = sa.emplid
+  WHERE da.emplid IS NULL
 '''
 
 pure_eligible_person = f'''
