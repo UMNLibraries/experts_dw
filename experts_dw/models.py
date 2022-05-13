@@ -1231,6 +1231,7 @@ class PureEligibleGraduateProgram(Base):
     'pure_eligible_graduate_program',
     Base.metadata,
     Column('student_org_association_id', String(1024), primary_key=True),
+    Column('person_id', String(11)),
     autoload=True,
     autoload_with=engine
  )
