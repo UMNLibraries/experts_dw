@@ -1226,6 +1226,15 @@ class PureEligiblePOIJob(Base):
     autoload_with=engine
  )
 
+class PureEligibleGraduateProgram(Base):
+  __table__ = Table(
+    'pure_eligible_graduate_program',
+    Base.metadata,
+    Column('student_org_association_id', String(1024), primary_key=True),
+    autoload=True,
+    autoload_with=engine
+ )
+
 ## Snapshot tables for the views above:
 
 class PureEligiblePersonNew(Base):
