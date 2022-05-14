@@ -1130,7 +1130,7 @@ class PureSyncStudentOrgAssociation(Base):
 class PureSyncStudentOrgAssociationScratch(Base):
   __tablename__ = 'pure_sync_student_org_association_scratch'
   student_org_association_id = Column(String(1024), primary_key=True)
-  person_id = Column(ForeignKey('pure_sync_person_data.person_id'), nullable=False)
+  person_id = Column(ForeignKey('pure_sync_person_data_scratch.person_id'), nullable=False)
   period_start_date = Column(DateTime, nullable=False)
   period_end_date = Column(DateTime, nullable=True)
   org_id = Column(String(1024), nullable=False)
