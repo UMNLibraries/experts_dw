@@ -503,7 +503,7 @@ WHERE stix.level2 IN ('GRAD','PRFL')
   -- The following are all part of our composite PK, so ensure they're not null:
   AND stix.emplid IS NOT NULL
   AND stix.um_acad_plan_prima IS NOT NULL
-  AND stix.degree IS NOT NULL
+  AND (stix.degree IS NOT NULL AND stix.degree <> ' ')
   AND period_start.start_date IS NOT NULL
 ORDER BY stix.emplid
 '''
