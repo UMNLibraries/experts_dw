@@ -1052,6 +1052,9 @@ class PureSyncStaffOrgAssociation(Base):
   # for multiple email addresses for each job. We only ever have one, so we
   # put it in this table.
   email_address = Column(String(255), nullable=True)
+  # We add deptid (UMN department ID) to allow for joining this table
+  # on OIT Legacy Data Warehouse tables.
+  deptid = Column(String(10), nullable=True)
   created = Column(DateTime, nullable=True)
   modified = Column(DateTime, nullable=True)
 
@@ -1081,6 +1084,7 @@ class PureSyncStaffOrgAssociationScratch(Base):
   job_description = Column(String(1024), nullable=False)
   affiliation_id = Column(String(30), nullable=True)
   email_address = Column(String(255), nullable=True)
+  deptid = Column(String(10), nullable=True)
 
 # Based on STUDENT_ORG_RELATION in:
 # https://doc.pure.elsevier.com/download/attachments/28412327/oracle_person_view_create_statements.sql?version=5&modificationDate=1529322570793&api=v2
