@@ -13,6 +13,7 @@ INSERT INTO pure_sync_staff_org_association ps
   ps.job_description,
   ps.affiliation_id,
   ps.email_address,
+  ps.deptid,
   ps.created,
   ps.modified
 )
@@ -29,6 +30,7 @@ SELECT
   pss.job_description,
   pss.affiliation_id,
   pss.email_address,
+  pss.deptid,
   SYSDATE,
   SYSDATE
 FROM pure_sync_staff_org_association_scratch pss

@@ -15,11 +15,12 @@ WHEN MATCHED
     ps.job_description = pss.job_description,
     ps.affiliation_id = pss.affiliation_id,
     ps.email_address = pss.email_address,
+    ps.deptid = pss.deptid,
     ps.modified = SYSDATE
   WHERE
-    ORA_HASH(ps.person_id || ps.period_start_date || ps.period_end_date || ps.org_id || ps.employment_type || ps.staff_type || ps.visibility || ps.primary_association || ps.job_description || ps.affiliation_id || ps.email_address)
+    ORA_HASH(ps.person_id || ps.period_start_date || ps.period_end_date || ps.org_id || ps.employment_type || ps.staff_type || ps.visibility || ps.primary_association || ps.job_description || ps.affiliation_id || ps.email_address || ps.deptid)
     <>
-    ORA_HASH(pss.person_id || pss.period_start_date || pss.period_end_date || pss.org_id || pss.employment_type || pss.staff_type || pss.visibility || pss.primary_association || pss.job_description || pss.affiliation_id || pss.email_address)
+    ORA_HASH(pss.person_id || pss.period_start_date || pss.period_end_date || pss.org_id || pss.employment_type || pss.staff_type || pss.visibility || pss.primary_association || pss.job_description || pss.affiliation_id || pss.email_address || pss.deptid)
 
 -- Can't use the following, because Oracle will attempt to insert nulls if
 -- there are rows in the target table not matched by the source table.
