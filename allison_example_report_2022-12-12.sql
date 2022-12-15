@@ -15,6 +15,7 @@ person_primary_affiliation_data AS (
   FROM pure_sync_staff_org_association soa
   JOIN pure_sync_person_data pd
   ON pd.person_id = soa.person_id
+  WHERE soa.primary_association = 1 -- We were missing this the first time! Resulted in duplicate rows.
 ),
 person_primary_affiliation_org AS (
   SELECT ppad.person_id, ppad.last_name, ppad.first_name, ppad.internet_id, ppad.employment_status, ppad.employment_type, paop.primary_affiliation, paop.department, paop.college, paop.campus 
@@ -29,10 +30,8 @@ SELECT
   ro.json_document.type.term.text[0].value as pub_type,
   ro.json_document.journalAssociation.issn.value as journal_issn,
   ro.json_document.journalAssociation.title.value as journal_title,
+  ro_publication_state.pub_year AS pub_year,
   ro.json_document.bibliographicalNote.text[0].value as bibliographical_note,
-  --jt.person_id,
-  --jt.last_name,
-  --jt.first_name
   ppao.last_name, 
   ppao.first_name,
   ppao.internet_id,
@@ -44,17 +43,23 @@ SELECT
   ppao.campus
 FROM
   pure_json_research_output_518 ro,
+  JSON_TABLE(ro.json_document, '$.publicationStatuses[*]'
+    COLUMNS (
+      is_published EXISTS PATH '$.publicationStatus?(@.uri == "/dk/atira/pure/researchoutput/status/published")',
+      --is_epublished EXISTS PATH '$.publicationStatus?(@.uri == "/dk/atira/pure/researchoutput/status/epub")',
+      status PATH '$.publicationStatus.term.text[0].value',
+      pub_year PATH '$.publicationDate.year'
+    )) ro_publication_state,
   JSON_TABLE(ro.json_document, '$.personAssociations[*]'
     COLUMNS (
-      has_person EXISTS PATH '$.person',
-      --person_uuid VARCHAR2(36) PATH '$.person.uuid',
+      internal_person EXISTS PATH '$.person', -- external persons have key externalPerson
       person_id PATH '$.person.externalId'
-      --last_name PATH '$.name.lastName',
-      --first_name PATH '$.name.firstName'
-    )) jt
+    )) ro_person
   JOIN person_primary_affiliation_org ppao
-  ON jt.person_id = ppao.person_id
+  ON ro_person.person_id = ppao.person_id
   WHERE JSON_EXISTS(ro.json_document, '$.personAssociations[*]')
-  AND jt.has_person = 'true'
-  --FETCH FIRST 100 ROWS ONLY
+  AND ro_person.internal_person = 'true'
+  AND ro_publication_state.is_published = 'true'
+  --AND ro_publication_state.is_epublished = 'true'
+  FETCH FIRST 100 ROWS ONLY
 ;
