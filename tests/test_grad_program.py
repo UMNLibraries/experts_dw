@@ -3,7 +3,7 @@ import dotenv_switch.auto
 import pytest
 
 from experts_dw import db
-from experts_dw.grad_program import current_year, previous_year, valid_year, term_table_suffixes
+from experts_dw.grad_program import current_year, previous_year, valid_year, term_table_names
 
 @pytest.fixture
 def connection():
@@ -24,12 +24,12 @@ def test_previous_year():
     assert valid_year(prev_year)
     assert (int(current_year()) - int(prev_year)) == 1
 
-def test_term_table_suffixes():
-    assert (term_table_suffixes(year='22') == [
-        '1223_PR',
-        '1225_INT',
-        '1225',
-        '1229_PR',
+def test_term_table_names():
+    assert (term_table_names(year='22') == [
+        'PS_DWSA_STIX_1229_PR',
+        'PS_DWSA_STIX_1225',
+        'PS_DWSA_STIX_1225_INT',
+        'PS_DWSA_STIX_1223_PR',
     ])
 
 

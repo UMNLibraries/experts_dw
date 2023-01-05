@@ -47,5 +47,7 @@ def validate_year(func: F) -> F:
     return cast(F, wrapper_validate_year)
 
 @validate_year
-def term_table_suffixes(*, year : str = None) -> Tuple[str]:
-    return [f'1{year}{suffix}' for suffix in ['3_PR','5_INT','5','9_PR']]
+def term_table_names(*, year : str = None) -> Tuple[str]:
+    prefix = 'PS_DWSA_STIX_1'
+    return [f'{prefix}{year}{suffix}' for suffix in ['9_PR','5','5_INT','3_PR']]
+
