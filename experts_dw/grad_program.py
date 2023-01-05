@@ -1,3 +1,4 @@
+import datetime
 from datetime import date
 import functools
 import re
@@ -12,7 +13,13 @@ def valid_year(year: str) -> bool:
         int(year) <= int(current_year())
 
 def current_year() -> str:
-    return date.today().strftime('%y') # two-digit year
+    # The strftime call returns a two-digit year.
+    return date.today().strftime('%y') 
+
+def previous_year() -> str:
+    # The [-2:] selects the last two elements of the array of characters,
+    # giving us a two-digit year.
+    return str((date.today().year - 1))[-2:]
 
 def validate_year(func: F) -> F:
     '''A decorator wrapper that validates the year component of a STIX table suffix.

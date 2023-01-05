@@ -3,7 +3,7 @@ import dotenv_switch.auto
 import pytest
 
 from experts_dw import db
-from experts_dw.grad_program import valid_year, term_table_suffixes
+from experts_dw.grad_program import current_year, previous_year, valid_year, term_table_suffixes
 
 @pytest.fixture
 def connection():
@@ -19,6 +19,10 @@ def test_valid_year():
     assert valid_year('22')
     assert not valid_year('bogus')
 
+def test_previous_year():
+    prev_year = previous_year()
+    assert valid_year(prev_year)
+    assert (int(current_year()) - int(prev_year)) == 1
 
 def test_term_table_suffixes():
     assert (term_table_suffixes(year='22') == [
