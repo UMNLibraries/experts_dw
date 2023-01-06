@@ -3,7 +3,7 @@ import dotenv_switch.auto
 import pytest
 
 from experts_dw import db
-from experts_dw.grad_program import current_year, previous_year, valid_year, term_table_names
+from experts_dw.grad_program import current_year, previous_year, valid_year, term_table_names, latest_term_table_name
 
 @pytest.fixture
 def connection():
@@ -32,6 +32,9 @@ def test_term_table_names():
         'PS_DWSA_STIX_1223_PR',
     ])
 
+def test_latest_term_table_name(cursor):
+    print(latest_term_table_name(cursor))
+    assert latest_term_table_name(cursor) in term_table_names(year=current_year()) + term_table_names(year=previous_year())
 
 #def test_select_scalar(cursor):
 #    last_name = select_scalar(

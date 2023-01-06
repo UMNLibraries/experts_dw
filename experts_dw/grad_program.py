@@ -4,6 +4,8 @@ import functools
 import re
 from typing import Any, Callable, MutableMapping, Tuple, TypeVar, cast
 
+from experts_dw.cx_oracle_helpers import select_scalar
+
 F = TypeVar('F', bound=Callable[..., Any])
 
 def valid_year(year: str) -> bool:
@@ -51,3 +53,14 @@ def term_table_names(*, year : str = None) -> Tuple[str]:
     prefix = 'PS_DWSA_STIX_1'
     return [f'{prefix}{year}{suffix}' for suffix in ['9_PR','5','5_INT','3_PR']]
 
+def latest_term_table_name(cursor) -> str:
+    return next((table_name
+       for table_name
+       in term_table_names(year=current_year()) + term_table_names(year=previous_year())
+       if select_scalar(
+           cursor,
+           'SELECT table_name FROM all_tables@dweprd.oit WHERE table_name=:table_name',
+           {'table_name': table_name}
+       )),
+       None
+   )
