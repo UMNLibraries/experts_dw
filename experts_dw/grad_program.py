@@ -4,7 +4,10 @@ import functools
 import re
 from typing import Any, Callable, MutableMapping, Tuple, TypeVar, cast
 
-from experts_dw.cx_oracle_helpers import select_scalar
+from experts_dw.cx_oracle_helpers import select_list_of_scalars
+
+term_table_prefix = 'PS_DWSA_STIX_1'
+term_table_suffixes = ['9_PR','5','5_INT','3_PR']
 
 F = TypeVar('F', bound=Callable[..., Any])
 
@@ -50,17 +53,17 @@ def validate_year(func: F) -> F:
 
 @validate_year
 def term_table_names(*, year : str = None) -> Tuple[str]:
-    prefix = 'PS_DWSA_STIX_1'
-    return [f'{prefix}{year}{suffix}' for suffix in ['9_PR','5','5_INT','3_PR']]
+    return [f'{term_table_prefix}{year}{suffix}' for suffix in term_table_suffixes]
 
 def latest_term_table_name(cursor) -> str:
-    return next((table_name
-       for table_name
-       in term_table_names(year=current_year()) + term_table_names(year=previous_year())
-       if select_scalar(
-           cursor,
-           'SELECT table_name FROM all_tables@dweprd.oit WHERE table_name=:table_name',
-           {'table_name': table_name}
-       )),
-       None
-   )
+    existing_db_table_names = select_list_of_scalars(
+       cursor,
+       f"SELECT table_name FROM all_tables@dweprd.oit WHERE table_name LIKE '{term_table_prefix}%'",
+    )
+    return next(
+        (table_name
+            for table_name
+            in term_table_names(year=current_year()) + term_table_names(year=previous_year())
+            if table_name in existing_db_table_names
+        ), None
+    )
