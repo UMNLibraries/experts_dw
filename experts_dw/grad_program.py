@@ -262,5 +262,5 @@ def update_pure_eligible_graduate_program_view(cursor : cx_Oracle.Cursor, term_t
         term_table_name: The name of a student term table. Default: the latest student term table name.
     '''
 
-    term_table_name = latest_term_table_name() if term_table_name is None else term_table_name
+    term_table_name = latest_term_table_name(cursor) if term_table_name is None else term_table_name
     cursor.execute(pure_eligible_graduate_program_view_sql(term_table_name))
