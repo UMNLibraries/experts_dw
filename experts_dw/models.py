@@ -38,27 +38,27 @@ class PureJsonCollectionMeta(Base):
 
 # Defunct Pure UUID tables, for deleted records, merged records (previousUuids), etc
 
-class DefunctUuid:
+class DefunctPureUuid:
     uuid = Column(String(36), primary_key=True)
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
-class DefunctUuidOrganisation(Base, DefunctUuid):
-    __tablename__ = 'defunct_uuid_organisation'
+class DefunctPureUuidOrganisation(Base, DefunctPureUuid):
+    __tablename__ = 'defunct_pure_uuid_organisation'
 
-class DefunctUuidExternalOrganisation(Base, DefunctUuid):
-    __tablename__ = 'defunct_uuid_external_organisation'
+class DefunctPureUuidExternalOrganisation(Base, DefunctPureUuid):
+    __tablename__ = 'defunct_pure_uuid_external_organisation'
 
-class DefunctUuidExternalPerson(Base, DefunctUuid):
-    __tablename__ = 'defunct_uuid_external_person'
+class DefunctPureUuidExternalPerson(Base, DefunctPureUuid):
+    __tablename__ = 'defunct_pure_uuid_external_person'
 
-class DefunctUuidPerson(Base, DefunctUuid):
-    __tablename__ = 'defunct_uuid_person'
+class DefunctPureUuidPerson(Base, DefunctPureUuid):
+    __tablename__ = 'defunct_pure_uuid_person'
 
-class DefunctUuidJournal(Base, DefunctUuid):
-    __tablename__ = 'defunct_uuid_journal'
+class DefunctPureUuidJournal(Base, DefunctPureUuid):
+    __tablename__ = 'defunct_pure_uuid_journal'
 
-class DefunctUuidResearchOutput(Base, DefunctUuid):
-    __tablename__ = 'defunct_uuid_research_output'
+class DefunctPureUuidResearchOutput(Base, DefunctPureUuid):
+    __tablename__ = 'defunct_pure_uuid_research_output'
 
 # Tables that store Pure raw JSON records
 
