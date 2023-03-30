@@ -36,6 +36,32 @@ class PureJsonCollectionMeta(Base):
       comment='Name of the collection as it appears in local table names.',
   )
 
+# Defunct Pure UUID tables, for deleted records, merged records (previousUuids), etc
+
+class DefunctUuid:
+    uuid = Column(String(36), primary_key=True)
+    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+class DefunctUuidOrganisation(Base, DefunctUuid):
+    __tablename__ = 'defunct_uuid_organisation'
+
+class DefunctUuidExternalOrganisation(Base, DefunctUuid):
+    __tablename__ = 'defunct_uuid_external_organisation'
+
+class DefunctUuidExternalPerson(Base, DefunctUuid):
+    __tablename__ = 'defunct_uuid_external_person'
+
+class DefunctUuidPerson(Base, DefunctUuid):
+    __tablename__ = 'defunct_uuid_person'
+
+class DefunctUuidJournal(Base, DefunctUuid):
+    __tablename__ = 'defunct_uuid_journal'
+
+class DefunctUuidResearchOutput(Base, DefunctUuid):
+    __tablename__ = 'defunct_uuid_research_output'
+
+# Tables that store Pure raw JSON records
+
 class SodaMetadata:
     uuid = Column(String(36), primary_key=True)
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
