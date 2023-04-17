@@ -72,47 +72,52 @@ class SodaDocument:
     def __table_args__(cls):
         return (CheckConstraint('json_document IS JSON', name='json_document'),)
 
-class PureJson(SodaMetadata, SodaDocument):
+class PureJsonCommon(SodaMetadata, SodaDocument):
     updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
     pure_created = Column(DateTime(), nullable=False)
+
+class PureJson(PureJsonCommon):
     pure_modified = Column(DateTime(), nullable=False)
+
+class PureJsonStaging(PureJsonCommon):
+    pure_modified = Column(DateTime(), nullable=False, primary_key=True)
 
 # 524
 
 class PureJsonResearchOutput524(Base, PureJson):
     __tablename__ = 'pure_json_research_output_524'
 
-class PureJsonResearchOutput524Staging(Base, PureJson):
+class PureJsonResearchOutput524Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_research_output_524_staging'
 
 class PureJsonPerson524(Base, PureJson):
     __tablename__ = 'pure_json_person_524'
 
-class PureJsonPerson524Staging(Base, PureJson):
+class PureJsonPerson524Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_person_524_staging'
 
 class PureJsonJournal524(Base, PureJson):
     __tablename__ = 'pure_json_journal_524'
 
-class PureJsonJournal524Staging(Base, PureJson):
+class PureJsonJournal524Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_journal_524_staging'
 
 class PureJsonExternalPerson524(Base, PureJson):
     __tablename__ = 'pure_json_external_person_524'
 
-class PureJsonExternalPerson524Staging(Base, PureJson):
+class PureJsonExternalPerson524Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_external_person_524_staging'
 
 class PureJsonOrganisation524(Base, PureJson):
     __tablename__ = 'pure_json_organisation_524'
 
-class PureJsonOrganisation524Staging(Base, PureJson):
+class PureJsonOrganisation524Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_organisation_524_staging'
 
 class PureJsonExternalOrganisation524(Base, PureJson):
     __tablename__ = 'pure_json_external_organisation_524'
 
-class PureJsonExternalOrganisation524Staging(Base, PureJson):
+class PureJsonExternalOrganisation524Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_external_organisation_524_staging'
 
 # 523
@@ -120,31 +125,31 @@ class PureJsonExternalOrganisation524Staging(Base, PureJson):
 class PureJsonResearchOutput523(Base, PureJson):
     __tablename__ = 'pure_json_research_output_523'
 
-class PureJsonResearchOutput523Staging(Base, PureJson):
+class PureJsonResearchOutput523Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_research_output_523_staging'
 
 class PureJsonPerson523(Base, PureJson):
     __tablename__ = 'pure_json_person_523'
 
-class PureJsonPerson523Staging(Base, PureJson):
+class PureJsonPerson523Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_person_523_staging'
 
 class PureJsonExternalPerson523(Base, PureJson):
     __tablename__ = 'pure_json_external_person_523'
 
-class PureJsonExternalPerson523Staging(Base, PureJson):
+class PureJsonExternalPerson523Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_external_person_523_staging'
 
 class PureJsonOrganisation523(Base, PureJson):
     __tablename__ = 'pure_json_organisation_523'
 
-class PureJsonOrganisation523Staging(Base, PureJson):
+class PureJsonOrganisation523Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_organisation_523_staging'
 
 class PureJsonExternalOrganisation523(Base, PureJson):
     __tablename__ = 'pure_json_external_organisation_523'
 
-class PureJsonExternalOrganisation523Staging(Base, PureJson):
+class PureJsonExternalOrganisation523Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_external_organisation_523_staging'
 
 # 517
@@ -152,31 +157,31 @@ class PureJsonExternalOrganisation523Staging(Base, PureJson):
 class PureJsonResearchOutput517(Base, PureJson):
     __tablename__ = 'pure_json_research_output_517'
 
-class PureJsonResearchOutput517Staging(Base, PureJson):
+class PureJsonResearchOutput517Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_research_output_517_staging'
 
 class PureJsonPerson517(Base, PureJson):
     __tablename__ = 'pure_json_person_517'
 
-class PureJsonPerson517Staging(Base, PureJson):
+class PureJsonPerson517Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_person_517_staging'
 
 class PureJsonExternalPerson517(Base, PureJson):
     __tablename__ = 'pure_json_external_person_517'
 
-class PureJsonExternalPerson517Staging(Base, PureJson):
+class PureJsonExternalPerson517Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_external_person_517_staging'
 
 class PureJsonOrganisation517(Base, PureJson):
     __tablename__ = 'pure_json_organisation_517'
 
-class PureJsonOrganisation517Staging(Base, PureJson):
+class PureJsonOrganisation517Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_organisation_517_staging'
 
 class PureJsonExternalOrganisation517(Base, PureJson):
     __tablename__ = 'pure_json_external_organisation_517'
 
-class PureJsonExternalOrganisation517Staging(Base, PureJson):
+class PureJsonExternalOrganisation517Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_external_organisation_517_staging'
 
 # 518
@@ -184,31 +189,31 @@ class PureJsonExternalOrganisation517Staging(Base, PureJson):
 class PureJsonResearchOutput518(Base, PureJson):
     __tablename__ = 'pure_json_research_output_518'
 
-class PureJsonResearchOutput518Staging(Base, PureJson):
+class PureJsonResearchOutput518Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_research_output_518_staging'
 
 class PureJsonPerson518(Base, PureJson):
     __tablename__ = 'pure_json_person_518'
 
-class PureJsonPerson518Staging(Base, PureJson):
+class PureJsonPerson518Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_person_518_staging'
 
 class PureJsonExternalPerson518(Base, PureJson):
     __tablename__ = 'pure_json_external_person_518'
 
-class PureJsonExternalPerson518Staging(Base, PureJson):
+class PureJsonExternalPerson518Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_external_person_518_staging'
 
 class PureJsonOrganisation518(Base, PureJson):
     __tablename__ = 'pure_json_organisation_518'
 
-class PureJsonOrganisation518Staging(Base, PureJson):
+class PureJsonOrganisation518Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_organisation_518_staging'
 
 class PureJsonExternalOrganisation518(Base, PureJson):
     __tablename__ = 'pure_json_external_organisation_518'
 
-class PureJsonExternalOrganisation518Staging(Base, PureJson):
+class PureJsonExternalOrganisation518Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_external_organisation_518_staging'
 
 class PureJsonChangeCommon(SodaMetadata):
