@@ -956,7 +956,7 @@ def delete_changes_matching_staging_sql(
         WHERE uuid IN (
           SELECT uuid FROM {collection_staging_table_name}
         )
-    ''')
+    '''
 
 @validate_api_version
 @validate_collection_names
