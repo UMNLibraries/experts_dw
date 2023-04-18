@@ -1,6 +1,5 @@
 from datetime import datetime
 import functools
-from jinja2 import Template
 import json
 from typing import Any, Callable, MutableMapping, Tuple, TypeVar, cast
 
@@ -235,6 +234,21 @@ def validate_collection_names(func: F) -> F:
     return cast(F, wrapper_validate_collection_names)
 
 @validate_api_version
+def get_change_table_name(*, api_version, history=False):
+    change_table_name = f'pure_json_change_{api_version}'
+    if history:
+        return change_table_name + '_history'
+    return change_table_name
+
+@validate_api_version
+@validate_collection_names
+def get_collection_table_name(*, api_version, collection_local_name, staging=False):
+    collection_table_name = f'pure_json_{collection_local_name}_{api_version}'
+    if staging:
+        return collection_table_name + '_staging'
+    return collection_table_name
+
+@validate_api_version
 @validate_collection_names
 def document_exists(
     cursor,
@@ -246,9 +260,11 @@ def document_exists(
     collection_family_system_name=None,
     staging=False
 ):
-    collection_table_name = f'pure_json_{collection_local_name}_{api_version}'
-    if staging:
-        collection_table_name = collection_table_name + '_staging'
+    collection_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name,
+        staging=staging
+    )
     cursor.execute(
         f'SELECT count(*) FROM {collection_table_name} WHERE uuid = :uuid',
         {'uuid': uuid}
@@ -270,11 +286,17 @@ def insert_sql(
     collection_family_system_name=None,
     staging=False
 ):
-    table_name = f'pure_json_{collection_local_name}_{api_version}'
+    collection_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name,
+        staging=staging
+    )
+    primary_key_column_names = 'uuid'
     if staging:
-        table_name = table_name + '_staging'
-    t = Template('''
-        INSERT INTO {{ table_name }}
+        primary_key_column_names = primary_key_column_names + ', pure_modified'
+    return f'''
+        INSERT /*+ ignore_row_on_dupkey_index({collection_table_name}({primary_key_column_names})) */ 
+        INTO {collection_table_name}
         (
           uuid,
           pure_created,
@@ -290,8 +312,7 @@ def insert_sql(
           :updated,
           :json_document
         )
-    ''')
-    return t.render(table_name=table_name)
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -339,8 +360,12 @@ def max_change_history_inserted_date(
     *,
     api_version
 ):
+    change_history_table_name = get_change_table_name(
+        api_version=api_version,
+        history=True
+    )
     cursor.execute(
-        f'SELECT MAX(inserted) FROM pure_json_change_{api_version}_history'
+        f'SELECT MAX(inserted) FROM {change_history_table_name}'
     )
     return cursor.fetchone()[0] # Result will be a tuple
 
@@ -350,8 +375,11 @@ def max_change_inserted_date(
     *,
     api_version
 ):
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
     cursor.execute(
-        f'SELECT MAX(inserted) FROM pure_json_change_{api_version}'
+        f'SELECT MAX(inserted) FROM {change_table_name}'
     )
     return cursor.fetchone()[0] # Result will be a tuple
 
@@ -362,8 +390,12 @@ def max_pure_version_for_change_history_uuid(
     uuid,
     api_version
 ):
+    change_history_table_name = get_change_table_name(
+        api_version=api_version,
+        history=True
+    )
     cursor.execute(
-        f'SELECT MAX(pure_version) FROM pure_json_change_{api_version}_history WHERE uuid = :uuid',
+        f'SELECT MAX(pure_version) FROM {change_history_table_name} WHERE uuid = :uuid',
         {'uuid': uuid}
     )
     return cursor.fetchone()[0] # Result will be a tuple
@@ -375,8 +407,11 @@ def max_pure_version_for_change_uuid(
     uuid,
     api_version
 ):
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
     cursor.execute(
-        f'SELECT MAX(pure_version) FROM pure_json_change_{api_version} WHERE uuid = :uuid',
+        f'SELECT MAX(pure_version) FROM {change_table_name} WHERE uuid = :uuid',
         {'uuid': uuid}
     )
     return cursor.fetchone()[0] # Result will be a tuple
@@ -389,8 +424,11 @@ def change_document_exists(
     pure_version,
     api_version
 ):
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
     cursor.execute(
-        f'SELECT count(*) FROM pure_json_change_{api_version} WHERE uuid = :uuid AND pure_version = :pure_version',
+        f'SELECT count(*) FROM {change_table_name} WHERE uuid = :uuid AND pure_version = :pure_version',
         {'uuid': uuid, 'pure_version': pure_version}
     )
     document_count = cursor.fetchone()[0] # Result will be a tuple
@@ -407,8 +445,12 @@ def change_history_exists(
     pure_version,
     api_version
 ):
+    change_history_table_name = get_change_table_name(
+        api_version=api_version,
+        history=True
+    )
     cursor.execute(
-        f'SELECT count(*) FROM pure_json_change_{api_version}_history WHERE uuid = :uuid AND pure_version = :pure_version',
+        f'SELECT count(*) FROM {change_history_table_name} WHERE uuid = :uuid AND pure_version = :pure_version',
         {'uuid': uuid, 'pure_version': pure_version}
     )
     history_count = cursor.fetchone()[0] # Result will be a tuple
@@ -423,8 +465,12 @@ def insert_change_sql(
     *,
     api_version
 ):
-    t = Template('''
-        INSERT INTO pure_json_change_{{ api_version }}
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
+    return f'''
+        INSERT /*+ ignore_row_on_dupkey_index({change_table_name}(uuid, pure_version)) */ 
+        INTO {change_table_name}
         (
           uuid,
           pure_version,
@@ -440,8 +486,7 @@ def insert_change_sql(
           :inserted,
           :json_document
         )
-    ''')
-    return t.render(api_version=api_version)
+    '''
 
 @validate_api_version
 def insert_change_documents(
@@ -469,19 +514,21 @@ def delete_documents_based_on_changes_sql(
 ):
     # Not bothering to check for max(pure_version) here because historically
     # DELETEs have always been the max version.
-    t = Template('''
-        DELETE FROM pure_json_{{ collection_local_name }}_{{ api_version }}
-        WHERE uuid IN (
-          SELECT uuid FROM pure_json_change_{{ api_version }}
-          WHERE change_type = 'DELETE'
-          AND family_system_name = '{{ collection_family_system_name }}'
-        )
-    ''')
-    return t.render(
-        collection_local_name=collection_local_name,
-        collection_family_system_name=collection_family_system_name,
+    collection_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name
+    )
+    change_table_name = get_change_table_name(
         api_version=api_version
     )
+    return f'''
+        DELETE FROM {collection_table_name}
+        WHERE uuid IN (
+          SELECT uuid FROM {change_table_name}
+          WHERE change_type = 'DELETE'
+          AND family_system_name = '{collection_family_system_name}'
+        )
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -512,8 +559,16 @@ def insert_change_deletes_history_sql(
     collection_family_system_name=None,
     staging=False
 ):
-    t = Template('''
-        INSERT INTO pure_json_change_{{ api_version }}_history pjh
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
+    change_history_table_name = get_change_table_name(
+        api_version=api_version,
+        history=True
+    )
+    return f'''
+        INSERT /*+ ignore_row_on_dupkey_index({change_history_table_name}(uuid, pure_version)) */ 
+        INTO {change_history_table_name} pjh
         (
           pjh.uuid,
           pjh.pure_version,
@@ -527,20 +582,11 @@ def insert_change_deletes_history_sql(
           pj.family_system_name,
           pj.change_type,
           pj.inserted
-        FROM pure_json_change_{{ api_version }} pj
-        LEFT OUTER JOIN pure_json_change_{{ api_version }}_history pjh
-        ON pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version
-        WHERE pjh.uuid IS NULL AND pjh.pure_version IS NULL
-        AND pj.uuid IN (
-          SELECT uuid FROM pure_json_change_{{ api_version }}
-          WHERE change_type = 'DELETE'
-          AND family_system_name = '{{ collection_family_system_name }}'
-        )
-    ''')
-    return t.render(
-        collection_family_system_name=collection_family_system_name,
-        api_version=api_version
-    )
+        FROM {change_table_name} pj
+        WHERE 
+          pj.change_type = 'DELETE'
+          AND pj.family_system_name = '{collection_family_system_name}'
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -570,23 +616,14 @@ def delete_change_deletes_sql(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    # This seems more complex than necessary:
-#    t = Template('''
-#        DELETE FROM pure_json_change_{{ api_version }} WHERE uuid IN (
-#          SELECT uuid FROM pure_json_change_{{ api_version }}
-#          WHERE change_type = 'DELETE'
-#          AND family_system_name = '{{ collection_family_system_name }}'
-#        )
-#    ''')
-    t = Template('''
-        DELETE FROM pure_json_change_{{ api_version }}
-        WHERE change_type = 'DELETE'
-        AND family_system_name = '{{ collection_family_system_name }}'
-    ''')
-    return t.render(
-        collection_family_system_name=collection_family_system_name,
+    change_table_name = get_change_table_name(
         api_version=api_version
     )
+    return f'''
+        DELETE FROM {change_table_name}
+        WHERE change_type = 'DELETE'
+        AND family_system_name = '{collection_family_system_name}'
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -653,8 +690,20 @@ def insert_change_history_matching_previous_uuids_sql(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    t = Template('''
-        INSERT INTO pure_json_change_{{ api_version }}_history pjh
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
+    change_history_table_name = get_change_table_name(
+        api_version=api_version,
+        history=True
+    )
+    collection_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name
+    )
+    return f'''
+        INSERT /*+ ignore_row_on_dupkey_index({change_history_table_name}(uuid, pure_version)) */ 
+        INTO {change_history_table_name} pjh
         (
           pjh.uuid,
           pjh.pure_version,
@@ -668,13 +717,10 @@ def insert_change_history_matching_previous_uuids_sql(
           pj.family_system_name,
           pj.change_type,
           pj.inserted
-        FROM pure_json_change_{{ api_version }} pj
-        LEFT OUTER JOIN pure_json_change_{{ api_version }}_history pjh
-        ON pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version
-        WHERE pjh.uuid IS NULL AND pjh.pure_version IS NULL
-        AND pj.uuid IN (
+        FROM {change_table_name} pj
+        WHERE pj.uuid IN (
           SELECT jt.previous_uuid
-          FROM pure_json_{{ collection_local_name }}_{{ api_version }},
+          FROM {collection_table_name},
             JSON_TABLE(json_document, '$'
               COLUMNS (
                 uuid VARCHAR2(36) PATH '$.uuid',
@@ -687,8 +733,7 @@ def insert_change_history_matching_previous_uuids_sql(
             AS jt
             WHERE JSON_EXISTS(json_document, '$.info.previousUuids') AND jt.previous_uuid IS NOT NULL
         )
-    ''')
-    return t.render(collection_local_name=collection_local_name, api_version=api_version)
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -717,11 +762,18 @@ def delete_changes_matching_previous_uuids_sql(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    t = Template('''
-        DELETE FROM pure_json_change_{{ api_version }}
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
+    collection_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name
+    )
+    return f'''
+        DELETE FROM {change_table_name}
         WHERE uuid IN (
           SELECT jt.previous_uuid
-          FROM pure_json_{{ collection_local_name }}_{{ api_version }},
+          FROM {collection_table_name},
             JSON_TABLE(json_document, '$'
               COLUMNS (
                 uuid VARCHAR2(36) PATH '$.uuid',
@@ -734,8 +786,7 @@ def delete_changes_matching_previous_uuids_sql(
             AS jt
             WHERE JSON_EXISTS(json_document, '$.info.previousUuids') AND jt.previous_uuid IS NOT NULL
         )
-    ''')
-    return t.render(collection_local_name=collection_local_name, api_version=api_version)
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -795,7 +846,12 @@ def truncate_staging(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    cursor.execute(f'TRUNCATE TABLE pure_json_{collection_local_name}_{api_version}_staging')
+    collection_staging_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name,
+        staging=True
+    )
+    cursor.execute(f'TRUNCATE TABLE {collection_staging_table_name}')
 
 @validate_api_version
 @validate_collection_names
@@ -807,8 +863,11 @@ def distinct_change_uuids_for_collection(
     collection_api_name=None,
     collection_family_system_name=None
 ):
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
     cursor.execute(
-        f'SELECT DISTINCT(uuid) FROM pure_json_change_{api_version} WHERE family_system_name = :family_system_name',
+        f'SELECT DISTINCT(uuid) FROM {change_table_name} WHERE family_system_name = :family_system_name',
         {'family_system_name': collection_family_system_name}
     )
     return [row[0] for row in cursor.fetchall()]
@@ -823,8 +882,21 @@ def insert_change_history_matching_staging_sql(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    t = Template('''
-        INSERT INTO pure_json_change_{{ api_version }}_history pjh
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
+    change_history_table_name = get_change_table_name(
+        api_version=api_version,
+        history=True
+    )
+    collection_staging_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name,
+        staging=True
+    )
+    return f'''
+        INSERT /*+ ignore_row_on_dupkey_index({change_history_table_name}(uuid, pure_version)) */ 
+        INTO {change_history_table_name} pjh
         (
           pjh.uuid,
           pjh.pure_version,
@@ -838,15 +910,11 @@ def insert_change_history_matching_staging_sql(
           pj.family_system_name,
           pj.change_type,
           pj.inserted
-        FROM pure_json_change_{{ api_version }} pj
-        LEFT OUTER JOIN pure_json_change_{{ api_version }}_history pjh
-        ON pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version
-        WHERE pjh.uuid IS NULL AND pjh.pure_version IS NULL
-        AND pj.uuid in (
-          SELECT uuid FROM pure_json_{{ collection_local_name }}_{{ api_version }}_staging
+        FROM {change_table_name} pj
+        WHERE pj.uuid in (
+          SELECT uuid FROM {collection_staging_table_name}
         )
-    ''')
-    return t.render(collection_local_name=collection_local_name, api_version=api_version)
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -875,16 +943,20 @@ def delete_changes_matching_staging_sql(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    t = Template('''
-        DELETE FROM pure_json_change_{{ api_version }}
-        WHERE uuid IN (
-          SELECT uuid FROM pure_json_{{ collection_local_name }}_{{ api_version }}_staging
-        )
-    ''')
-    return t.render(
-        collection_local_name=collection_local_name,
+    change_table_name = get_change_table_name(
         api_version=api_version
     )
+    collection_staging_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name,
+        staging=True
+    )
+    return f'''
+        DELETE FROM {change_table_name}
+        WHERE uuid IN (
+          SELECT uuid FROM {collection_staging_table_name}
+        )
+    ''')
 
 @validate_api_version
 @validate_collection_names
@@ -936,7 +1008,7 @@ def process_changes_matching_staging(
 
 @validate_api_version
 @validate_collection_names
-def insert_documents_from_staging_sql(
+def merge_documents_from_staging_sql(
     cursor,
     *,
     api_version,
@@ -944,67 +1016,24 @@ def insert_documents_from_staging_sql(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    collection_table_name = f'pure_json_{collection_local_name}_{api_version}'
-    collection_staging_table_name = collection_table_name + '_staging'
-    t = Template('''
-        INSERT INTO {{ collection_table_name }} pj
-        (
-          pj.uuid,
-          pj.pure_created,
-          pj.pure_modified,
-          pj.inserted,
-          pj.updated,
-          pj.json_document
-        )
-        SELECT
-          pjs.uuid,
-          pjs.pure_created,
-          pjs.pure_modified,
-          pjs.inserted,
-          pjs.updated,
-          pjs.json_document
-        FROM {{ collection_staging_table_name }} pjs
-        LEFT OUTER JOIN {{ collection_table_name }} pj
-        ON pjs.uuid = pj.uuid
-        WHERE pj.uuid IS NULL
-    ''')
-    return t.render(
-        collection_table_name=collection_table_name,
-        collection_staging_table_name=collection_staging_table_name
+    collection_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name
     )
-
-@validate_api_version
-@validate_collection_names
-def insert_documents_from_staging(
-    cursor,
-    *,
-    api_version,
-    collection_local_name=None,
-    collection_api_name=None,
-    collection_family_system_name=None
-):
-    sql = insert_documents_from_staging_sql(
-        cursor,
+    collection_staging_table_name = get_collection_table_name(
+        api_version=api_version,
         collection_local_name=collection_local_name,
-        api_version=api_version
+        staging=True
     )
-    cursor.execute(sql)
-
-@validate_api_version
-@validate_collection_names
-def update_documents_from_staging_sql(
-    cursor,
-    *,
-    api_version,
-    collection_local_name=None,
-    collection_api_name=None,
-    collection_family_system_name=None
-):
-    collection_table_name = f'pure_json_{collection_local_name}_{api_version}'
-    collection_staging_table_name = collection_table_name + '_staging'
-    t = Template('''
-        MERGE INTO {{ collection_table_name }} pj
-        USING {{ collection_staging_table_name }} pjs
+    return f'''
+        MERGE INTO {collection_table_name} pj
+        USING (
+          SELECT uuid, inserted, json_document, updated, pure_created, pure_modified FROM ( 
+            SELECT uuid, inserted, json_document, updated, pure_created, pure_modified,
+              RANK() OVER (PARTITION BY uuid ORDER BY pure_modified DESC) latest
+              FROM {collection_staging_table_name}
+          ) where latest = 1
+        ) pjs
         ON (pjs.uuid = pj.uuid)
         WHEN MATCHED
           THEN UPDATE SET
@@ -1013,15 +1042,14 @@ def update_documents_from_staging_sql(
             pj.json_document = pjs.json_document
           WHERE
             pjs.pure_modified > pj.pure_modified
-    ''')
-    return t.render(
-        collection_table_name=collection_table_name,
-        collection_staging_table_name=collection_staging_table_name
-    )
+        WHEN NOT MATCHED
+          THEN INSERT (pj.uuid, pj.inserted, pj.json_document, pj.updated, pj.pure_created, pj.pure_modified)
+          VALUES (pjs.uuid, pjs.inserted, pjs.json_document, pjs.updated, pjs.pure_created, pjs.pure_modified)
+    '''
 
 @validate_api_version
 @validate_collection_names
-def update_documents_from_staging(
+def merge_documents_from_staging(
     cursor,
     *,
     api_version,
@@ -1029,7 +1057,7 @@ def update_documents_from_staging(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    sql = update_documents_from_staging_sql(
+    sql = merge_documents_from_staging_sql(
         cursor,
         collection_local_name=collection_local_name,
         api_version=api_version
@@ -1046,12 +1074,15 @@ def delete_documents_matching_previous_uuids_sql(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    collection_table_name = f'pure_json_{collection_local_name}_{api_version}'
-    t = Template('''
-        DELETE FROM {{ collection_table_name }}
+    collection_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name
+    )
+    return f'''
+        DELETE FROM {collection_table_name}
         WHERE uuid IN (
           SELECT jt.previous_uuid
-          FROM {{ collection_table_name }},
+          FROM {collection_table_name},
             JSON_TABLE(json_document, '$'
               COLUMNS (
                 uuid VARCHAR2(36) PATH '$.uuid',
@@ -1064,8 +1095,7 @@ def delete_documents_matching_previous_uuids_sql(
             AS jt
             WHERE JSON_EXISTS(json_document, '$.info.previousUuids') AND jt.previous_uuid IS NOT NULL
         )
-    ''')
-    return t.render(collection_table_name=collection_table_name)
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -1098,13 +1128,7 @@ def load_documents_from_staging(
     connection.begin()
 
     try:
-        insert_documents_from_staging(
-            cursor,
-            collection_local_name=collection_local_name,
-            api_version=api_version
-        )
-
-        update_documents_from_staging(
+        merge_documents_from_staging(
             cursor,
             collection_local_name=collection_local_name,
             api_version=api_version
@@ -1140,16 +1164,15 @@ def delete_documents_matching_uuids_sql(
     collection_family_system_name=None,
     staging=False
 ):
-    t = Template('''
-        DELETE FROM pure_json_{{ collection_local_name }}_{{ api_version }}
-        WHERE uuid IN ({{ bind_vars }})
-    ''')
-    return t.render(
-        collection_local_name=collection_local_name,
-        collection_family_system_name=collection_family_system_name,
+    collection_table_name = get_collection_table_name(
         api_version=api_version,
-        bind_vars = ','.join(f':{i}' for i in range(len(uuids)))
+        collection_local_name=collection_local_name
     )
+    bind_vars = ','.join(f':{i}' for i in range(len(uuids)))
+    return f'''
+        DELETE FROM {collection_table_name}
+        WHERE uuid IN ({bind_vars})
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -1181,8 +1204,17 @@ def insert_change_history_matching_uuids_sql(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    t = Template('''
-        INSERT INTO pure_json_change_{{ api_version }}_history pjh
+    change_table_name = get_change_table_name(
+        api_version=api_version
+    )
+    change_history_table_name = get_change_table_name(
+        api_version=api_version,
+        history=True
+    )
+    bind_vars = ','.join(f':{i}' for i in range(len(uuids)))
+    return f'''
+        INSERT /*+ ignore_row_on_dupkey_index({change_history_table_name}(uuid, pure_version)) */ 
+        INTO {change_history_table_name} pjh
         (
           pjh.uuid,
           pjh.pure_version,
@@ -1196,17 +1228,9 @@ def insert_change_history_matching_uuids_sql(
           pj.family_system_name,
           pj.change_type,
           pj.inserted
-        FROM pure_json_change_{{ api_version }} pj
-        LEFT OUTER JOIN pure_json_change_{{ api_version }}_history pjh
-        ON pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version
-        WHERE pjh.uuid IS NULL AND pjh.pure_version IS NULL
-        AND pj.uuid in ({{ bind_vars }})
-    ''')
-    return t.render(
-        collection_local_name=collection_local_name,
-        api_version=api_version,
-        bind_vars = ','.join(f':{i}' for i in range(len(uuids)))
-    )
+        FROM {change_table_name} pj
+        WHERE pj.uuid in ({bind_vars})
+    '''
 
 @validate_api_version
 @validate_collection_names
@@ -1238,15 +1262,14 @@ def delete_changes_matching_uuids_sql(
     collection_api_name=None,
     collection_family_system_name=None
 ):
-    t = Template('''
-        DELETE FROM pure_json_change_{{ api_version }}
-        WHERE uuid IN ({{ bind_vars }})
-    ''')
-    return t.render(
-        collection_local_name=collection_local_name,
-        api_version=api_version,
-        bind_vars = ','.join(f':{i}' for i in range(len(uuids)))
+    change_table_name = get_change_table_name(
+        api_version=api_version
     )
+    bind_vars = ','.join(f':{i}' for i in range(len(uuids)))
+    return f'''
+        DELETE FROM {change_table_name}
+        WHERE uuid IN ({bind_vars})
+    '''
 
 @validate_api_version
 @validate_collection_names
