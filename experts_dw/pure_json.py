@@ -293,8 +293,10 @@ def insert_sql(
         staging=staging
     )
     primary_key_column_names = 'uuid'
+    primary_key_predicate = 'uuid = :uuid'
     if staging:
         primary_key_column_names = primary_key_column_names + ', pure_modified'
+        primary_key_predicate = primary_key_predicate + ' AND pure_modified = :pure_modified'
     return f'''
         INSERT /*+ ignore_row_on_dupkey_index({collection_table_name}({primary_key_column_names})) */ 
         INTO {collection_table_name}
@@ -312,6 +314,10 @@ def insert_sql(
           :inserted,
           :updated,
           :json_document
+        ) 
+        WHERE NOT EXISTS (
+          SELECT * FROM {collection_table_name}
+          WHERE {primary_key_predicate}
         )
     '''
 
@@ -487,6 +493,10 @@ def insert_change_sql(
           :inserted,
           :json_document
         )
+        WHERE NOT EXISTS (
+          SELECT * FROM {change_table_name}
+          WHERE uuid = :uuid AND pure_version = :pure_version
+        )
     '''
 
 @validate_api_version
@@ -587,6 +597,11 @@ def insert_change_deletes_history_sql(
         WHERE 
           pj.change_type = 'DELETE'
           AND pj.family_system_name = '{collection_family_system_name}'
+          AND NOT EXISTS (
+            SELECT * FROM {change_history_table_name} pjh2
+            WHERE pjh2.uuid = pj.uuid
+            AND pjh2.pure_version = pj.pure_version
+          )
     '''
 
 @validate_api_version
@@ -733,6 +748,10 @@ def insert_change_history_matching_previous_uuids_sql(
             )
             AS jt
             WHERE JSON_EXISTS(json_document, '$.info.previousUuids') AND jt.previous_uuid IS NOT NULL
+        ) AND NOT EXISTS (
+          SELECT * FROM {change_history_table_name} pjh2
+          WHERE pjh2.uuid = pj.uuid
+          AND pjh2.pure_version = pj.pure_version
         )
     '''
 
@@ -914,6 +933,10 @@ def insert_change_history_matching_staging_sql(
         FROM {change_table_name} pj
         WHERE pj.uuid in (
           SELECT uuid FROM {collection_staging_table_name}
+        ) AND NOT EXISTS (
+          SELECT * FROM {change_history_table_name} pjh2
+          WHERE pjh2.uuid = pj.uuid
+          AND pjh2.pure_version = pj.pure_version
         )
     '''
 
@@ -1231,6 +1254,11 @@ def insert_change_history_matching_uuids_sql(
           pj.inserted
         FROM {change_table_name} pj
         WHERE pj.uuid in ({bind_vars})
+        AND NOT EXISTS (
+          SELECT * FROM {change_history_table_name} pjh2
+          WHERE pjh2.uuid = pj.uuid
+          AND pjh2.pure_version = pj.pure_version
+        )
     '''
 
 @validate_api_version
