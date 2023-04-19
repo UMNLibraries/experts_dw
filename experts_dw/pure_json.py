@@ -233,15 +233,16 @@ def validate_collection_names(func: F) -> F:
         return func(*args, **kwargs)
     return cast(F, wrapper_validate_collection_names)
 
-@validate_api_version
+# Notice that this function has no validation. We recommend calling it only
+# from other functions in this module that do have parameter validation.
 def get_change_table_name(*, api_version, history=False):
     change_table_name = f'pure_json_change_{api_version}'
     if history:
         return change_table_name + '_history'
     return change_table_name
 
-@validate_api_version
-@validate_collection_names
+# Notice that this function has no validation. We recommend calling it only
+# from other functions in this module that do have parameter validation.
 def get_collection_table_name(*, api_version, collection_local_name, staging=False):
     collection_table_name = f'pure_json_{collection_local_name}_{api_version}'
     if staging:
