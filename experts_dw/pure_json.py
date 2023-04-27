@@ -314,10 +314,6 @@ def insert_sql(
           :inserted,
           :updated,
           :json_document
-        ) 
-        WHERE NOT EXISTS (
-          SELECT * FROM {collection_table_name}
-          WHERE {primary_key_predicate}
         )
     '''
 
@@ -493,10 +489,6 @@ def insert_change_sql(
           :inserted,
           :json_document
         )
-        WHERE NOT EXISTS (
-          SELECT * FROM {change_table_name}
-          WHERE uuid = :uuid AND pure_version = :pure_version
-        )
     '''
 
 @validate_api_version
@@ -578,30 +570,23 @@ def insert_change_deletes_history_sql(
         history=True
     )
     return f'''
-        INSERT /*+ ignore_row_on_dupkey_index({change_history_table_name}(uuid, pure_version)) */ 
-        INTO {change_history_table_name} pjh
-        (
-          pjh.uuid,
-          pjh.pure_version,
-          pjh.family_system_name,
-          pjh.change_type,
-          pjh.inserted
+        MERGE INTO {change_history_table_name} pjh
+        USING (
+          SELECT
+            uuid,
+            pure_version,
+            family_system_name,
+            change_type,
+            inserted
+          FROM {change_table_name}
+          WHERE
+            change_type = 'DELETE'
+            AND pj.family_system_name = '{collection_family_system_name}'
         )
-        SELECT
-          pj.uuid,
-          pj.pure_version,
-          pj.family_system_name,
-          pj.change_type,
-          pj.inserted
-        FROM {change_table_name} pj
-        WHERE 
-          pj.change_type = 'DELETE'
-          AND pj.family_system_name = '{collection_family_system_name}'
-          AND NOT EXISTS (
-            SELECT * FROM {change_history_table_name} pjh2
-            WHERE pjh2.uuid = pj.uuid
-            AND pjh2.pure_version = pj.pure_version
-          )
+        ON (pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version)
+        WHEN NOT MATCHED THEN
+          INSERT (pjh.uuid, pjh.pure_version, pjh.family_system_name, pjh.change_type, pjh.inserted)
+          VALUES (pj.uuid, pj.pure_version, pj.family_system_name, pj.change_type, pj.inserted)
     '''
 
 @validate_api_version
@@ -718,41 +703,35 @@ def insert_change_history_matching_previous_uuids_sql(
         collection_local_name=collection_local_name
     )
     return f'''
-        INSERT /*+ ignore_row_on_dupkey_index({change_history_table_name}(uuid, pure_version)) */ 
-        INTO {change_history_table_name} pjh
-        (
-          pjh.uuid,
-          pjh.pure_version,
-          pjh.family_system_name,
-          pjh.change_type,
-          pjh.inserted
-        )
-        SELECT
-          pj.uuid,
-          pj.pure_version,
-          pj.family_system_name,
-          pj.change_type,
-          pj.inserted
-        FROM {change_table_name} pj
-        WHERE pj.uuid IN (
-          SELECT jt.previous_uuid
-          FROM {collection_table_name},
-            JSON_TABLE(json_document, '$'
-              COLUMNS (
-                uuid VARCHAR2(36) PATH '$.uuid',
-                NESTED PATH '$.info.previousUuids[*]'
-                  COLUMNS (
-                    previous_uuid VARCHAR2(36) PATH '$'
-                  )
+        MERGE INTO {change_history_table_name} pjh
+        USING (
+          SELECT
+            uuid,
+            pure_version,
+            family_system_name,
+            change_type,
+            inserted
+          FROM {change_table_name}
+          WHERE uuid IN (
+            SELECT jt.previous_uuid
+            FROM {collection_table_name},
+              JSON_TABLE(json_document, '$'
+                COLUMNS (
+                  uuid VARCHAR2(36) PATH '$.uuid',
+                  NESTED PATH '$.info.previousUuids[*]'
+                    COLUMNS (
+                      previous_uuid VARCHAR2(36) PATH '$'
+                    )
+                )
               )
-            )
-            AS jt
-            WHERE JSON_EXISTS(json_document, '$.info.previousUuids') AND jt.previous_uuid IS NOT NULL
-        ) AND NOT EXISTS (
-          SELECT * FROM {change_history_table_name} pjh2
-          WHERE pjh2.uuid = pj.uuid
-          AND pjh2.pure_version = pj.pure_version
-        )
+              AS jt
+              WHERE JSON_EXISTS(json_document, '$.info.previousUuids') AND jt.previous_uuid IS NOT NULL
+          )
+        ) pj
+        ON (pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version)
+        WHEN NOT MATCHED THEN
+          INSERT (pjh.uuid, pjh.pure_version, pjh.family_system_name, pjh.change_type, pjh.inserted)
+          VALUES (pj.uuid, pj.pure_version, pj.family_system_name, pj.change_type, pj.inserted)
     '''
 
 @validate_api_version
@@ -915,29 +894,23 @@ def insert_change_history_matching_staging_sql(
         staging=True
     )
     return f'''
-        INSERT /*+ ignore_row_on_dupkey_index({change_history_table_name}(uuid, pure_version)) */ 
-        INTO {change_history_table_name} pjh
-        (
-          pjh.uuid,
-          pjh.pure_version,
-          pjh.family_system_name,
-          pjh.change_type,
-          pjh.inserted
-        )
-        SELECT
-          pj.uuid,
-          pj.pure_version,
-          pj.family_system_name,
-          pj.change_type,
-          pj.inserted
-        FROM {change_table_name} pj
-        WHERE pj.uuid in (
-          SELECT uuid FROM {collection_staging_table_name}
-        ) AND NOT EXISTS (
-          SELECT * FROM {change_history_table_name} pjh2
-          WHERE pjh2.uuid = pj.uuid
-          AND pjh2.pure_version = pj.pure_version
-        )
+        MERGE INTO {change_history_table_name} pjh
+        USING (
+          SELECT
+            uuid,
+            pure_version,
+            family_system_name,
+            change_type,
+            inserted
+          FROM {change_table_name}
+          WHERE uuid IN (
+            SELECT uuid FROM {collection_staging_table_name}
+          )
+        ) pj
+        ON (pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version)
+        WHEN NOT MATCHED THEN
+          INSERT (pjh.uuid, pjh.pure_version, pjh.family_system_name, pjh.change_type, pjh.inserted)
+          VALUES (pj.uuid, pj.pure_version, pj.family_system_name, pj.change_type, pj.inserted)
     '''
 
 @validate_api_version
@@ -1237,28 +1210,21 @@ def insert_change_history_matching_uuids_sql(
     )
     bind_vars = ','.join(f':{i}' for i in range(len(uuids)))
     return f'''
-        INSERT /*+ ignore_row_on_dupkey_index({change_history_table_name}(uuid, pure_version)) */ 
-        INTO {change_history_table_name} pjh
-        (
-          pjh.uuid,
-          pjh.pure_version,
-          pjh.family_system_name,
-          pjh.change_type,
-          pjh.inserted
-        )
-        SELECT
-          pj.uuid,
-          pj.pure_version,
-          pj.family_system_name,
-          pj.change_type,
-          pj.inserted
-        FROM {change_table_name} pj
-        WHERE pj.uuid in ({bind_vars})
-        AND NOT EXISTS (
-          SELECT * FROM {change_history_table_name} pjh2
-          WHERE pjh2.uuid = pj.uuid
-          AND pjh2.pure_version = pj.pure_version
-        )
+        MERGE INTO {change_history_table_name} pjh
+        USING (
+          SELECT
+            uuid,
+            pure_version,
+            family_system_name,
+            change_type,
+            inserted
+          FROM {change_table_name}
+          WHERE uuid in ({bind_vars})
+        ) pj
+        ON (pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version)
+        WHEN NOT MATCHED THEN
+          INSERT (pjh.uuid, pjh.pure_version, pjh.family_system_name, pjh.change_type, pjh.inserted)
+          VALUES (pj.uuid, pj.pure_version, pj.family_system_name, pj.change_type, pj.inserted)
     '''
 
 @validate_api_version
