@@ -773,7 +773,7 @@ class PureInternalOrg(Base, BaseNestedSets):
       comment='See the description in PURE_ORG.',
   )
   name_en = Column(
-      String(512),
+      String(1024),
       comment='See the description in PURE_ORG.',
   )
 
@@ -817,7 +817,7 @@ class PureOrg(Base):
       comment='"academic", "college", "corporate", "department", "government", "initiative", "institute", "medical", "private non-profit", "university", or "unknown"',
   )
   name_en = Column(
-      String(512),
+      String(1024),
       nullable=False,
       comment='Name of the organization. Called "name_en" to be consistent with Pure naming, and to indicate that this is an English name.',
   )
