@@ -60,10 +60,10 @@ class DefunctPureUuidJournal(Base, DefunctPureUuid):
 class DefunctPureUuidResearchOutput(Base, DefunctPureUuid):
     __tablename__ = 'defunct_pure_uuid_research_output'
 
-# Tables that store Pure raw JSON records
+# Base classes for Tables that store raw json records
+# See: https://docs.oracle.com/en/database/oracle/simple-oracle-document-access/adsdi/overview-soda.html
 
 class SodaMetadata:
-    uuid = Column(String(36), primary_key=True)
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
 class SodaDocument:
@@ -72,7 +72,34 @@ class SodaDocument:
     def __table_args__(cls):
         return (CheckConstraint('json_document IS JSON', name='json_document'),)
 
-class PureJsonCommon(SodaMetadata, SodaDocument):
+# Tables that store Scopus raw JSON records
+
+class ScopusSodaMetadata(SodaMetadata):
+    scopus_id = Column(Integer, primary_key=True)
+
+class ScopusJsonCommon(ScopusSodaMetadata, SodaDocument):
+    updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
+    scopus_created = Column(DateTime(), nullable=False)
+
+class ScopusJson(ScopusJsonCommon):
+    scopus_modified = Column(DateTime(), nullable=False)
+
+class ScopusJsonStaging(ScopusJsonCommon):
+    scopus_modified = Column(DateTime(), nullable=False, primary_key=True)
+
+class ScopusJsonAbstract(Base, ScopusJson):
+    __tablename__ = 'scopus_json_abstract'
+
+class ScopusJsonAbstractStaging(Base, ScopusJsonStaging):
+    __tablename__ = 'scopus_json_abstract_staging'
+
+# Tables that store Pure raw JSON records
+
+class PureSodaMetadata(SodaMetadata):
+    uuid = Column(String(36), primary_key=True)
+
+
+class PureJsonCommon(PureSodaMetadata, SodaDocument):
     updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
     pure_created = Column(DateTime(), nullable=False)
 
