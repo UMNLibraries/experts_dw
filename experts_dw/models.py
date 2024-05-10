@@ -60,8 +60,8 @@ class DefunctPureUuidJournal(Base, DefunctPureUuid):
 class DefunctPureUuidResearchOutput(Base, DefunctPureUuid):
     __tablename__ = 'defunct_pure_uuid_research_output'
 
-# Base classes for Tables that store raw json records
-# See: https://docs.oracle.com/en/database/oracle/simple-oracle-document-access/adsdi/overview-soda.html
+# Base classes for tables that store raw JSON records, designed to support
+# Oracle SODA: https://docs.oracle.com/en/database/oracle/simple-oracle-document-access/
 
 class SodaMetadata:
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
@@ -97,7 +97,6 @@ class ScopusJsonAbstractStaging(Base, ScopusJsonStaging):
 
 class PureSodaMetadata(SodaMetadata):
     uuid = Column(String(36), primary_key=True)
-
 
 class PureJsonCommon(PureSodaMetadata, SodaDocument):
     updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
