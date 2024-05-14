@@ -36,6 +36,25 @@ class PureJsonCollectionMeta(Base):
       comment='Name of the collection as it appears in local table names.',
   )
 
+class ScopusJsonCollectionMeta(Base):
+  __tablename__ = 'scopus_json_collection_meta'
+  __table_args__ = {'comment': 'Maps Scopus API collection names and JSON schema record names to local table names.'}
+  api_name = Column(
+      String(255),
+      primary_key=True,
+      comment='Name of the collection in the Scoppus API, i.e., in URL endpoints.',
+  )
+  schema_record_name = Column(
+      String(255),
+      primary_key=True,
+      comment='Name of the collection in API response records.',
+  )
+  local_name = Column(
+      String(255),
+      primary_key=True,
+      comment='Name of the collection as it appears in local table names.',
+  )
+
 # Defunct Pure UUID tables, for deleted records, merged records (previousUuids), etc
 
 class DefunctPureUuid:
