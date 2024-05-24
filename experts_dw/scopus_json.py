@@ -203,7 +203,7 @@ def insert_sql(
         collection_local_name=collection_local_name,
         staging=staging
     )
-    primary_key_column_names = 'scopud_id'
+    primary_key_column_names = 'scopus_id'
     primary_key_predicate = 'scopus_id = :scopus_id'
     if staging:
         primary_key_column_names = primary_key_column_names + ', scopus_modified'
