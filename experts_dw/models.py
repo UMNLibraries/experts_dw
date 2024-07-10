@@ -1025,7 +1025,6 @@ class PureEligibleEmployeeJobcode(Base):
   default_staff_type = Column(String(11), nullable=False)
   default_visibility = Column(String(10), nullable=False)
   default_profiled = Column(Boolean(name='default_profiled_bool'), nullable=False)
-  default_profiled_overrideable = Column(Boolean(name='default_profiled_overrideable_bool'), nullable=False)
 
 class PureEligibleAffiliateJobcode(Base):
   __tablename__ = 'pure_eligible_affiliate_jobcode'
@@ -1050,18 +1049,6 @@ class PureEligiblePOIJobcode(Base):
 class PureEligibleAffiliateDept(Base):
   __tablename__ = 'pure_eligible_affiliate_dept'
   deptid = Column(String(10), primary_key=True)
-
-class PureEmployeeJobcodeDefaultOverride(Base):
-  __tablename__ = 'pure_employee_jobcode_default_override'
-  jobcode = Column(String(13), primary_key=True)
-  deptid = Column(String(10), primary_key=True)
-  profiled = Column(Boolean(name='profiled_bool'), nullable=False)
-
-class KnownOverrideableEmployeeJobcodeDept(Base):
-  __tablename__ = 'known_overrideable_employee_jobcode_dept'
-  jobcode = Column(String(13), primary_key=True)
-  deptid = Column(String(10), primary_key=True)
-  timestamp = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
 class UmnDataError(Base):
   __tablename__ = 'umn_data_error'
