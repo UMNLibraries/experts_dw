@@ -158,15 +158,65 @@ def validate_collection_names(func: F) -> F:
         return func(*args, **kwargs)
     return cast(F, wrapper_validate_collection_names)
 
+class MissingRelation(ValueError, ExpertsDwException):
+    '''Raised when a relation is expected but missing.'''
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            'No relation found in kwargs',
+            *args,
+            **kwargs
+        )
+
+class InvalidRelation(ValueError, ExpertsDwException):
+    '''Raised when a relation is invalid.'''
+    def __init__(self, *args, relation, **kwargs):
+        super().__init__(
+            f'Invalid relation "{relation}"',
+            *args,
+            **kwargs
+        )
+
+def validate_relation(func: F) -> F:
+    '''A decorator wrapper that ensures that relation has a valid value.
+
+    Args:
+        func: The function to be wrapped.
+
+    Return:
+        The wrapped function.
+
+    Raises:
+        InvalidRelation: If the ``relation`` is invalid
+        MissingRelation: If the ``relation`` is missing
+    '''
+    @functools.wraps(func)
+    def wrapper_validate_relation(*args, **kwargs):
+        if 'relation' in kwargs:
+            kwargs['relation'] = kwargs['relation'].lower()
+            if kwargs['relation'] not in ['authored', 'cited']:
+                raise InvalidRelation(
+                    relation=kwargs['relation']
+                )
+        else:
+            raise MissingRelation()
+        return func(*args, **kwargs)
+    return cast(F, wrapper_validate_relation)
+
 # Notice that this function has no validation. We recommend calling it only
 # from other functions in this module that do have parameter validation.
-def get_collection_table_name(*, collection_local_name, staging=False):
-    collection_table_name = f'scopus_json_{collection_local_name}'
+def get_collection_table_name(
+    *,
+    collection_local_name,
+    relation='authored',
+    staging=False
+):
+    collection_table_name = f'scopus_json_{collection_local_name}_{relation}'
     if staging:
         return collection_table_name + '_staging'
     return collection_table_name
 
 @validate_collection_names
+@validate_relation
 def document_exists(
     cursor,
     *,
@@ -174,10 +224,12 @@ def document_exists(
     collection_local_name=None,
     collection_api_name=None,
     collection_schema_record_name=None,
+    relation='authored',
     staging=False
 ):
     collection_table_name = get_collection_table_name(
         collection_local_name=collection_local_name,
+        relation=relation,
         staging=staging
     )
     cursor.execute(
@@ -191,16 +243,19 @@ def document_exists(
         return False
 
 @validate_collection_names
+@validate_relation
 def insert_sql(
     cursor,
     *,
     collection_local_name=None,
     collection_api_name=None,
     collection_schema_record_name=None,
+    relation='authored',
     staging=False
 ):
     collection_table_name = get_collection_table_name(
         collection_local_name=collection_local_name,
+        relation=relation,
         staging=staging
     )
     primary_key_column_names = 'scopus_id'
@@ -229,6 +284,7 @@ def insert_sql(
     '''
 
 @validate_collection_names
+@validate_relation
 def insert_document(
     cursor,
     *,
@@ -236,6 +292,7 @@ def insert_document(
     collection_local_name=None,
     collection_api_name=None,
     collection_schema_record_name=None,
+    relation='authored',
     staging=False
 ):
     sql = insert_sql(
@@ -246,6 +303,7 @@ def insert_document(
     cursor.execute(sql, document)
 
 @validate_collection_names
+@validate_relation
 def insert_documents(
     cursor,
     *,
@@ -253,6 +311,7 @@ def insert_documents(
     collection_local_name=None,
     collection_api_name=None,
     collection_schema_record_name=None,
+    relation='authored',
     staging=False
 ):
     sql = insert_sql(
@@ -263,33 +322,40 @@ def insert_documents(
     cursor.executemany(sql, documents)
 
 @validate_collection_names
+@validate_relation
 def truncate_staging(
     cursor,
     *,
     collection_local_name=None,
     collection_api_name=None,
-    collection_schema_record_name=None
+    collection_schema_record_name=None,
+    relation='authored',
 ):
     collection_staging_table_name = get_collection_table_name(
         collection_local_name=collection_local_name,
+        relation=relation,
         staging=True
     )
     cursor.execute(f'TRUNCATE TABLE {collection_staging_table_name}')
 
 @validate_collection_names
+@validate_relation
 def merge_documents_from_staging_sql(
     cursor,
     *,
     collection_local_name=None,
     collection_api_name=None,
-    collection_schema_record_name=None
+    collection_schema_record_name=None,
+    relation='authored',
 ):
     collection_table_name = get_collection_table_name(
-        collection_local_name=collection_local_name
+        collection_local_name=collection_local_name,
+        relation=relation,
     )
     collection_staging_table_name = get_collection_table_name(
         collection_local_name=collection_local_name,
-        staging=True
+        relation=relation,
+        staging=True,
     )
     return f'''
         MERGE INTO {collection_table_name} sj
@@ -314,12 +380,14 @@ def merge_documents_from_staging_sql(
     '''
 
 @validate_collection_names
+@validate_relation
 def merge_documents_from_staging(
     cursor,
     *,
     collection_local_name=None,
     collection_api_name=None,
-    collection_schema_record_name=None
+    collection_schema_record_name=None,
+    relation='authored',
 ):
     sql = merge_documents_from_staging_sql(
         cursor,
@@ -328,12 +396,14 @@ def merge_documents_from_staging(
     cursor.execute(sql)
 
 @validate_collection_names
+@validate_relation
 def load_documents_from_staging(
     cursor,
     *,
     collection_local_name=None,
     collection_api_name=None,
-    collection_schema_record_name=None
+    collection_schema_record_name=None,
+    relation='authored',
 ):
     connection = cursor.connection
     connection.begin()
@@ -356,6 +426,7 @@ def load_documents_from_staging(
     connection.commit()
 
 @validate_collection_names
+@validate_relation
 def delete_documents_matching_scopus_ids_sql(
     cursor,
     *,
@@ -363,9 +434,11 @@ def delete_documents_matching_scopus_ids_sql(
     collection_local_name=None,
     collection_api_name=None,
     collection_schema_record_name=None,
+    relation='authored',
 ):
     collection_table_name = get_collection_table_name(
-        collection_local_name=collection_local_name
+        collection_local_name=collection_local_name,
+        relation=relation,
     )
     bind_vars = ','.join(f':{i}' for i in range(len(scopus_ids)))
     return f'''
@@ -374,13 +447,15 @@ def delete_documents_matching_scopus_ids_sql(
     '''
 
 @validate_collection_names
+@validate_relation
 def delete_documents_matching_scopus_ids(
     cursor,
     *,
     scopus_ids,
     collection_local_name=None,
     collection_api_name=None,
-    collection_schema_record_name=None
+    collection_schema_record_name=None,
+    relation='authored',
 ):
     sql = delete_documents_matching_scopus_ids_sql(
         cursor,
