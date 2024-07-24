@@ -112,6 +112,18 @@ class ScopusJsonAbstract(Base, ScopusJson):
 class ScopusJsonAbstractStaging(Base, ScopusJsonStaging):
     __tablename__ = 'scopus_json_abstract_staging'
 
+class ScopusJsonAbstractAuthored(Base, ScopusJson):
+    __tablename__ = 'scopus_json_abstract_authored'
+
+class ScopusJsonAbstractStagingAuthored(Base, ScopusJsonStaging):
+    __tablename__ = 'scopus_json_abstract_authored_staging'
+
+class ScopusJsonAbstractCited(Base, ScopusJson):
+    __tablename__ = 'scopus_json_abstract_cited'
+
+class ScopusJsonAbstractStagingCited(Base, ScopusJsonStaging):
+    __tablename__ = 'scopus_json_abstract_cited_staging'
+
 # Tables that store Pure raw JSON records
 
 class PureSodaMetadata(SodaMetadata):
