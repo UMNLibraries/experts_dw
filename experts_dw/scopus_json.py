@@ -177,7 +177,7 @@ class InvalidRelation(ValueError, ExpertsDwException):
         )
 
 def validate_relation(func: F) -> F:
-    '''A decorator wrapper that ensures that relation has a valid value.
+    '''A decorator wrapper that ensures that relation has a valid value, either ``authored`` or ``cited``.
 
     Args:
         func: The function to be wrapped.
@@ -298,6 +298,7 @@ def insert_document(
     sql = insert_sql(
         cursor,
         collection_local_name=collection_local_name,
+        relation=relation,
         staging=staging
     )
     cursor.execute(sql, document)
@@ -317,6 +318,7 @@ def insert_documents(
     sql = insert_sql(
         cursor,
         collection_local_name=collection_local_name,
+        relation=relation,
         staging=staging
     )
     cursor.executemany(sql, documents)
@@ -391,7 +393,8 @@ def merge_documents_from_staging(
 ):
     sql = merge_documents_from_staging_sql(
         cursor,
-        collection_local_name=collection_local_name
+        collection_local_name=collection_local_name,
+        relation=relation,
     )
     cursor.execute(sql)
 
@@ -460,6 +463,7 @@ def delete_documents_matching_scopus_ids(
     sql = delete_documents_matching_scopus_ids_sql(
         cursor,
         scopus_ids=scopus_ids,
-        collection_local_name=collection_local_name
+        collection_local_name=collection_local_name,
+        relation=relation,
     )
     cursor.execute(sql, scopus_ids)
