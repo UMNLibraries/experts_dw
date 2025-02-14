@@ -1325,3 +1325,75 @@ def delete_documents_and_changes_matching_uuids(
         raise e
 
     connection.commit()
+
+@validate_api_version
+@validate_collection_names
+def research_output_scopus_ids_since_sql(
+    cursor,
+    *,
+    api_version,
+    collection_local_name='research_output',
+    collection_api_name=None,
+    collection_family_system_name=None
+):
+    collection_table_name = get_collection_table_name(
+        api_version=api_version,
+        collection_local_name=collection_local_name
+    )
+    return f'''
+        SELECT
+          pjro.scopus_id
+        FROM
+          {collection_table_name} ro,
+          JSON_TABLE(ro.json_document, '$'
+            COLUMNS (
+              scopus_id        PATH '$.externalId',
+              uuid             PATH '$.uuid',
+              external_source  PATH '$.externalIdSource',
+              ro_title         PATH '$.title.value',
+              ro_type          PATH '$.type.uri',
+              NESTED PATH '$.publicationStatuses[*]'
+                COLUMNS (
+                  ro_year PATH '$.publicationDate.year',
+                  ro_current PATH '$.current',
+                  ro_status PATH '$.publicationStatus.uri'
+                )
+            )) pjro
+        WHERE JSON_EXISTS(ro.json_document, '$.uuid')
+          AND pjro.external_source = 'Scopus'
+          AND pjro.ro_type LIKE '/dk/atira/pure/researchoutput/researchoutputtypes/contributiontojournal/%'
+          AND pjro.ro_current = 'true'
+          AND pjro.ro_status = '/dk/atira/pure/researchoutput/status/published'
+          AND TO_DATE(pjro.ro_year, 'YYYY') > :published_datetime
+          AND (
+            ro.pure_created >= :created_modified_datetime OR
+            ro.pure_modified >= :created_modified_datetime
+          )
+    '''
+
+@validate_api_version
+@validate_collection_names
+def research_output_scopus_ids_since(
+    cursor,
+    *,
+    published_datetime,
+    created_modified_datetime,
+    api_version,
+    collection_local_name='research_output',
+    collection_api_name=None,
+    collection_family_system_name=None
+):
+    sql = research_output_scopus_ids_since_sql(
+        cursor,
+        collection_local_name=collection_local_name,
+        api_version=api_version
+    )
+    columns = [col[0] for col in cursor.description]
+    cursor.rowfactory = lambda *args: dict(zip(columns, args))
+    cursor.execute(
+        sql,
+        published_datetime=published_datetime,
+        created_modified_datetime=created_modified_datetime
+    )
+    return cursor.fetchall()
+
