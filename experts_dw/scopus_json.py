@@ -414,12 +414,14 @@ def load_documents_from_staging(
     try:
         merge_documents_from_staging(
             cursor,
-            collection_local_name=collection_local_name
+            collection_local_name=collection_local_name,
+            relation=relation,
         )
 
         truncate_staging(
             cursor,
-            collection_local_name=collection_local_name
+            collection_local_name=collection_local_name,
+            relation=relation,
         )
 
     except Exception as e:
