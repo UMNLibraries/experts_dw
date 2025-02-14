@@ -78,7 +78,7 @@ with db.cx_oracle_connection() as session:
                 json=org,
             )
             prepped = req.prepare()
-            prepped.headers['api-key'] = 'a4fb1bc8-94fd-42a3-918f-e7348a666918'
+            prepped.headers['api-key'] = ''
             resp = s.send(prepped)
 
             if resp.status_code != 200:
