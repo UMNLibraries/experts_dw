@@ -8,22 +8,19 @@
 
 CREATE TABLE umn_author_citations_temp
 AS
-WITH 
+WITH
 citation_issns AS (
 -- List of distinct citations with journal issn and title
     SELECT DISTINCT
         sjc.scopus_id as CITATION_SCOPUS_ID,
-        sjson.issn as ISSN,
-        sjson.source_title as TITLE
+        sjson.issn as ISSN
     FROM
         scopus_json_abstract_cited sjc,
         JSON_TABLE(sjc.json_document, '$."abstracts-retrieval-response".item.bibrecord.head'
             COLUMNS (
-                issn    PATH '$.source.issn[0]."$"',
-                source_title  PATH '$.source.sourcetitle'
+                issn    PATH '$.source.issn[0]."$"'
             )) sjson
 ),
---select * from abstract_citations order by citation_scopus_id;
 citation_scopus_ids AS (
 -- List of author/reference scopus id pairs
     SELECT DISTINCT
@@ -38,10 +35,9 @@ citation_scopus_ids AS (
                     citation_scopus_id_type PATH '$."@idtype"',
                     citation_scopus_id PATH '$."$"'))
             )) sjson
-    WHERE sjson.citation_scopus_id_type = 'SGR'
+    WHERE sjson.citation_scopus_id_type = 'SGR' -- SGR is an identifier of a scopus id. We originally discovered this in old SciVerse documentation.
     ORDER BY sja.scopus_id
 ),
---select * from reference_scopus_ids;
 
 author_scopus_ids AS (
     SELECT DISTINCT
@@ -56,8 +52,7 @@ author_scopus_ids AS (
             )) sjson
     ORDER BY sja.scopus_id
 ),
---select * from author_scopus_ids;
---select * from reference_scopus_ids where reference_scopus_id = '85163509067';
+
 umn_pure_person_scopus_ids AS (
     -- List of the scopus id of every umn affiliated person in pure_json_person_LATEST_VERSION
     -- Count: 18,174
@@ -85,9 +80,9 @@ umn_author_scopus_ids AS (
     SELECT
         asi.abstract_scopus_id,
         asi.author_scopus_id
-    FROM 
+    FROM
         author_scopus_ids asi
-    JOIN umn_pure_person_scopus_ids uppsi 
+    JOIN umn_pure_person_scopus_ids uppsi
     ON asi.author_scopus_id = uppsi.person_scopus_id
     ORDER BY asi.abstract_scopus_id
 ),
@@ -106,27 +101,9 @@ umn_author_citations AS (
     ON csi.citation_scopus_id = ci.citation_scopus_id
     ORDER BY uasi.abstract_scopus_id
 )
-select * from umn_author_citations
+--select * from umn_author_citations
 
--- This cte is no longer necessary but it does show how to get a list of issns and titles 
--- out of Pure.
 
-WITH
-pure_issn_title AS (
-    SELECT
-        REGEXP_REPLACE(sjson.issn, '-', '') as issn,
-        listagg(distinct sjson.title, ',' ON OVERFLOW TRUNCATE) as journal_title     
-    FROM
-        pure_json_journal_524 pjj,
-        JSON_TABLE(pjj.json_document, '$'
-        COLUMNS (
-            title PATH '$.titles[0].value',
-            NESTED PATH '$.issns[*]' COLUMNS (
-                issn PATH '$.value')
-        )) sjson
-GROUP BY sjson.issn
-ORDER BY sjson.issn   
-)
 --select * from pure_issn_title;
 
 -- The final query of the temp table. Select distinct author scopus ids and group by issn. This shows
