@@ -118,6 +118,18 @@ class ScopusJsonAbstractCited(Base, ScopusJson):
 class ScopusJsonAbstractCitedStaging(Base, ScopusJsonStaging):
     __tablename__ = 'scopus_json_abstract_cited_staging'
 
+class ScopusAuthoredAbstractsToDownload(Base):
+    __tablename__ = 'scopus_authored_abstracts_to_download'
+    scopus_id = Column(Integer, primary_key=True)
+    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
+    updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+class ScopusCitedAbstractsToDownload(Base):
+    __tablename__ = 'scopus_cited_abstracts_to_download'
+    scopus_id = Column(Integer, primary_key=True)
+    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
+    updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
 # Tables that store Pure raw JSON records
 
 class PureSodaMetadata(SodaMetadata):
