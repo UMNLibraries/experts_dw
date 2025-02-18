@@ -27,7 +27,7 @@ CREATE TABLE umn_cited_abstract_ids AS
       ) sjson
 ;
 
--- Temp Table 2 
+-- Temp Table 2
 -- umn_authored_abstract_cited_scopus_ids
 -- Two column table matching the authored_abstract to its cited_abstracts
 --DROP TABLE umn_authored_abstract_cited_scopus_ids;
@@ -49,7 +49,7 @@ SELECT
             )
           )
       ) sjson
-    WHERE sjson.cited_abstract_scopus_id_type = 'SGR' 
+    WHERE sjson.cited_abstract_scopus_id_type = 'SGR'
 ;
 
 -- Temp Table 3
@@ -78,7 +78,7 @@ CREATE TABLE umn_authored_abstract_author_scopus_ids AS
 -- Matches author scopus id to emplid, internet_id, first_name, last_name
 --DROP TABLE UMN_PURE_PERSON_IDS;
 
-CREATE TABLE UMN_PURE_PERSON_IDS AS 
+CREATE TABLE UMN_PURE_PERSON_IDS AS
  SELECT DISTINCT
     pspd.emplid,
     pspd.internet_id,
@@ -103,7 +103,7 @@ CREATE TABLE UMN_PURE_PERSON_IDS AS
   ON sjson.external_id = pspd.person_id
   WHERE sjson.author_id_type = 'Scopus Author ID'
   ;
-  
+
 -- Temp Table 5
 -- umn_author_ids
 -- Matches the authored abstract scopus id to author scopus id and author metadata (emplid, internet_id, f/l name)
@@ -123,23 +123,25 @@ CREATE TABLE umn_author_ids AS
 ;
 
 -- Collection Analysis Report 1
--- U of MN Authored Abstracts by ISSN 
+-- U of MN Authored Abstracts by ISSN
 -- This code needs updating to reflect new metadata and temp tables.
 CREATE TABLE umn_scopus_articles_authors_by_issn
 AS
 WITH
 scopus_ids AS (
     SELECT
-        sjson.doi,
+        sjson.doi as DOI,
         sjson.issn as ISSN,
-        sja.scopus_id as ARTICLE_SCOPUS_ID,
-        sjson.author_scopus_id
+        sja.scopus_id as ABSTRACT_SCOPUS_ID,
+        sjson.author_scopus_id as AUTHOR_SCOPUS_ID,
+        sjson.abstract_year AS ABSTRACT_YEAR
     FROM
         scopus_json_abstract_authored sja,
         JSON_TABLE(sja.json_document, '$."abstracts-retrieval-response"'
             COLUMNS (
                 doi PATH '$.coredata."prism:doi"',
                 issn    PATH '$.item.bibrecord.head.source.issn[0]."$"',
+                abstract_year PATH '$.item.bibrecord.head.source.publicationyear."@first"',
                 NESTED PATH '$.item.bibrecord.head."author-group"[*]' COLUMNS(
                     NESTED PATH '$.author[*]' COLUMNS(author_scopus_id PATH '$."@auid"'))
             )) sjson
@@ -148,18 +150,22 @@ scopus_ids AS (
 
 SELECT
   si.issn as ISSN,
-  si.article_scopus_id,
-  si.author_scopus_id,
   si.doi as ARTICLE_DOI,
-  uppi.emplid as EMPLID
+  si.abstract_scopus_id,
+  si.abstract_year,
+  si.author_scopus_id,
+  uai.emplid as EMPLID.
+  uai.internet_id,
+  uai.last_name,
+  uai.first_name
 FROM scopus_ids si
-JOIN umn_pure_person_ids uppi
-ON si.author_scopus_id = uppi.author_scopus_id
+JOIN umn_author_ids uai
+ON si.author_scopus_id = uai.author_scopus_id
 ORDER BY si.issn
 ;
 
 -- Collection Analysis Report 2
--- U of MN Cited Abstracts by ISSN 
+-- U of MN Cited Abstracts by ISSN
 --drop table umn_scopus_cited_articles_authors_by_issn;
 
 CREATE TABLE umn_scopus_cited_articles_authors_by_issn AS
