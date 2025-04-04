@@ -125,6 +125,8 @@ CREATE TABLE umn_author_ids AS
 -- Collection Analysis Report 1
 -- U of MN Authored Abstracts by ISSN
 -- This code needs updating to reflect new metadata and temp tables.
+--DROP TABLE umn_scopus_articles_authors_by_issn;
+
 CREATE TABLE umn_scopus_articles_authors_by_issn
 AS
 WITH
@@ -154,19 +156,22 @@ SELECT
   si.abstract_scopus_id,
   si.abstract_year,
   si.author_scopus_id,
-  uai.emplid as EMPLID.
+  uai.emplid as EMPLID,
   uai.internet_id,
   uai.last_name,
   uai.first_name
 FROM scopus_ids si
 JOIN umn_author_ids uai
-ON si.author_scopus_id = uai.author_scopus_id
+ON (
+  si.author_scopus_id = uai.author_scopus_id AND
+  si.abstract_scopus_id = uai.authored_abstract_scopus_id
+)
 ORDER BY si.issn
 ;
 
 -- Collection Analysis Report 2
 -- U of MN Cited Abstracts by ISSN
---drop table umn_scopus_cited_articles_authors_by_issn;
+--DROP TABLE umn_scopus_cited_articles_authors_by_issn;
 
 CREATE TABLE umn_scopus_cited_articles_authors_by_issn AS
 
