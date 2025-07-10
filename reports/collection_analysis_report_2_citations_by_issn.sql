@@ -27,7 +27,7 @@ citation_scopus_ids AS (
         sja.scopus_id as abstract_scopus_id,
         sjson.citation_scopus_id
     FROM
-        scopus_json_abstract_authored sja,
+        scopus_json_abstract sja,
         JSON_TABLE(sja.json_document, '$."abstracts-retrieval-response"'
             COLUMNS (
                 NESTED PATH '$.item.bibrecord.tail.bibliography.reference[*]' COLUMNS(
@@ -44,7 +44,7 @@ author_scopus_ids AS (
         sja.scopus_id as abstract_scopus_id,
         sjson.author_scopus_id
     FROM
-        scopus_json_abstract_authored sja,
+        scopus_json_abstract sja,
         JSON_TABLE(sja.json_document, '$."abstracts-retrieval-response"'
             COLUMNS (
                 NESTED PATH '$.authors.author[*]' COLUMNS(

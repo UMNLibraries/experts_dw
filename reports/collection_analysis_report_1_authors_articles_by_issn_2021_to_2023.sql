@@ -9,7 +9,7 @@ scopus_ids AS (
         listagg(distinct sja.scopus_id, ',') as article_scopus_ids,
         listagg(distinct sjson.author_id, ',') as author_scopus_ids
     FROM
-        scopus_json_abstract_authored sja,
+        scopus_json_abstract sja,
         JSON_TABLE(sja.json_document, '$."abstracts-retrieval-response".item.bibrecord.head'
             COLUMNS (
                 issn    PATH '$.source.issn[0]."$"',
@@ -28,7 +28,7 @@ abstract_authors AS (
         sjson.issn as ISSN,
         sjson.author_id
     FROM
-        scopus_json_abstract_authored sja,
+        scopus_json_abstract sja,
         JSON_TABLE(sja.json_document, '$."abstracts-retrieval-response".item.bibrecord.head'
             COLUMNS (
                 issn    PATH '$.source.issn[0]."$"',

@@ -106,14 +106,8 @@ class ScopusJson(ScopusJsonCommon):
 class ScopusJsonStaging(ScopusJsonCommon):
     scopus_modified = Column(DateTime(), nullable=False, primary_key=True)
 
-class ScopusJsonAbstractAuthored(Base, ScopusJson):
-    __tablename__ = 'scopus_json_abstract_authored'
-
 class ScopusJsonAbstract(Base, ScopusJson):
     __tablename__ = 'scopus_json_abstract'
-
-class ScopusJsonAbstractAuthoredStaging(Base, ScopusJsonStaging):
-    __tablename__ = 'scopus_json_abstract_authored_staging'
 
 class ScopusJsonAbstractStaging(Base, ScopusJsonStaging):
     __tablename__ = 'scopus_json_abstract_staging'
@@ -123,12 +117,6 @@ class ScopusJsonAbstractCited(Base, ScopusJson):
 
 class ScopusJsonAbstractCitedStaging(Base, ScopusJsonStaging):
     __tablename__ = 'scopus_json_abstract_cited_staging'
-
-class ScopusAuthoredAbstractsToDownload(Base):
-    __tablename__ = 'scopus_authored_abstracts_to_download'
-    scopus_id = Column(Integer, primary_key=True)
-    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
-    updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
 class ScopusAbstractsToDownload(Base):
     __tablename__ = 'scopus_abstracts_to_download'

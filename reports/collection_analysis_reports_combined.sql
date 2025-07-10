@@ -38,7 +38,7 @@ SELECT
   am.internet_id,
   am.first_name,
   am.last_name
-FROM scopus_json_abstract_authored sja,
+FROM scopus_json_abstract sja,
   JSON_TABLE (
     sja.json_document, '$."abstracts-retrieval-response"' COLUMNS (
       doi PATH '$.coredata."prism:doi"',
@@ -75,7 +75,7 @@ WITH cited_abstract_metadata AS (
   SELECT
     sja.scopus_id as authored_abstract_scopus_id,
     sjson.cited_abstract_scopus_id
-  FROM scopus_json_abstract_authored sja,
+  FROM scopus_json_abstract sja,
     JSON_TABLE (
       sja.json_document, '$."abstracts-retrieval-response"' COLUMNS ( 
         NESTED PATH '$.item.bibrecord.tail.bibliography.reference[*]' COLUMNS (
