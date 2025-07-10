@@ -13,47 +13,47 @@ from . import common
 Base = declarative_base(metadata=common.metadata)
 
 class PureJsonCollectionMeta(Base):
-  __tablename__ = 'pure_json_collection_meta'
-  __table_args__ = {'comment': 'Maps Pure API collection names, family system names, and versions to local table names.'}
-  api_name = Column(
-      String(255),
-      primary_key=True,
-      comment='Name of the collection in the Pure API, i.e., in URL endpoints.',
-  )
-  api_version = Column(
-      String(15),
-      primary_key=True,
-      comment='The Pure API version, without the decimal point, i.e., 518 for version 5.18.',
-  )
-  family_system_name = Column(
-      String(255),
-      primary_key=True,
-      comment='Name of the collection in API change records, where it is called familySystemName.',
-  )
-  local_name = Column(
-      String(255),
-      primary_key=True,
-      comment='Name of the collection as it appears in local table names.',
-  )
+    __tablename__ = 'pure_json_collection_meta'
+    __table_args__ = {'comment': 'Maps Pure API collection names, family system names, and versions to local table names.'}
+    api_name = Column(
+        String(255),
+        primary_key=True,
+        comment='Name of the collection in the Pure API, i.e., in URL endpoints.',
+    )
+    api_version = Column(
+        String(15),
+        primary_key=True,
+        comment='The Pure API version, without the decimal point, i.e., 518 for version 5.18.',
+    )
+    family_system_name = Column(
+        String(255),
+        primary_key=True,
+        comment='Name of the collection in API change records, where it is called familySystemName.',
+    )
+    local_name = Column(
+        String(255),
+        primary_key=True,
+        comment='Name of the collection as it appears in local table names.',
+    )
 
 class ScopusJsonCollectionMeta(Base):
-  __tablename__ = 'scopus_json_collection_meta'
-  __table_args__ = {'comment': 'Maps Scopus API collection names and JSON schema record names to local table names.'}
-  api_name = Column(
-      String(255),
-      primary_key=True,
-      comment='Name of the collection in the Scoppus API, i.e., in URL endpoints.',
-  )
-  schema_record_name = Column(
-      String(255),
-      primary_key=True,
-      comment='Name of the collection in API response records.',
-  )
-  local_name = Column(
-      String(255),
-      primary_key=True,
-      comment='Name of the collection as it appears in local table names.',
-  )
+    __tablename__ = 'scopus_json_collection_meta'
+    __table_args__ = {'comment': 'Maps Scopus API collection names and JSON schema record names to local table names.'}
+    api_name = Column(
+        String(255),
+        primary_key=True,
+        comment='Name of the collection in the Scoppus API, i.e., in URL endpoints.',
+    )
+    schema_record_name = Column(
+        String(255),
+        primary_key=True,
+        comment='Name of the collection in API response records.',
+    )
+    local_name = Column(
+        String(255),
+        primary_key=True,
+        comment='Name of the collection as it appears in local table names.',
+    )
 
 # Defunct Pure UUID tables, for deleted records, merged records (previousUuids), etc
 
@@ -109,8 +109,14 @@ class ScopusJsonStaging(ScopusJsonCommon):
 class ScopusJsonAbstractAuthored(Base, ScopusJson):
     __tablename__ = 'scopus_json_abstract_authored'
 
+class ScopusJsonAbstract(Base, ScopusJson):
+    __tablename__ = 'scopus_json_abstract'
+
 class ScopusJsonAbstractAuthoredStaging(Base, ScopusJsonStaging):
     __tablename__ = 'scopus_json_abstract_authored_staging'
+
+class ScopusJsonAbstractStaging(Base, ScopusJsonStaging):
+    __tablename__ = 'scopus_json_abstract_staging'
 
 class ScopusJsonAbstractCited(Base, ScopusJson):
     __tablename__ = 'scopus_json_abstract_cited'
@@ -120,6 +126,12 @@ class ScopusJsonAbstractCitedStaging(Base, ScopusJsonStaging):
 
 class ScopusAuthoredAbstractsToDownload(Base):
     __tablename__ = 'scopus_authored_abstracts_to_download'
+    scopus_id = Column(Integer, primary_key=True)
+    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
+    updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+class ScopusAbstractsToDownload(Base):
+    __tablename__ = 'scopus_abstracts_to_download'
     scopus_id = Column(Integer, primary_key=True)
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
     updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
