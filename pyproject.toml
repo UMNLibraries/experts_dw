@@ -19,7 +19,7 @@ attrs = "^25.3.0"
 alembic = "^1.7.7"
 pytest = "^8.4.1"
 dotenv_switch = {url = "https://github.com/UMNLibraries/dotenv_switch/raw/master/dist/dotenv_switch-0.1.2.tar.gz"}
-#pureapi = {url = "https://github.com/UMNLibraries/pureapi/raw/main/dist/pureapi-4.6.1.tar.gz"}
+pureapi = {url = "https://github.com/UMNLibraries/pureapi/raw/main/dist/pureapi-4.6.2.tar.gz"}
 
 [tool.poetry.build]
 generate-setup-file = true
