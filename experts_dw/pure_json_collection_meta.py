@@ -54,7 +54,7 @@ class InvalidCollectionFamilySystemName(ValueError, ExpertsDwException):
         )
 
 @frozen
-class ChangeCollectionMetadata:
+class ChangeMeta:
     api_version: str = field(
         validator=[validators.instance_of(str)]
     )
@@ -65,7 +65,7 @@ class ChangeCollectionMetadata:
         object.__setattr__(self,'buffer_table_name', f'pure_json_change_{self.api_version}')
         object.__setattr__(self,'history_table_name', f'pure_json_change_{self.api_version}_history')
 
-def get_change_collection_metadata(
+def get_change_meta(
     cursor:cx_Oracle.Cursor,
     *,
     api_version:str,
@@ -77,10 +77,10 @@ def get_change_collection_metadata(
     '''
     if api_version not in api_versions(cursor):
         raise(InvalidApiVersion(api_version))
-    return ChangeCollectionMetadata(api_version)
+    return ChangeMeta(api_version)
 
 @frozen(kw_only=True)
-class SingleCollectionMetadata:
+class CollectionMeta:
     api_version: str = field(
         validator=[validators.instance_of(str)]
     )
@@ -95,12 +95,14 @@ class SingleCollectionMetadata:
     )
     canonical_table_name: str = field(init=False)
     staging_table_name: str = field(init=False)
+    change_meta: ChangeMeta = field(init=False)
 
     def __attrs_post_init__(self) -> None:
         object.__setattr__(self,'canonical_table_name', f'pure_json_{self.local_name}_{self.api_version}')
         object.__setattr__(self,'staging_table_name', f'pure_json_{self.local_name}_{self.api_version}_staging')
+        object.__setattr__(self,'change_meta', ChangeMeta(api_version=self.api_version))
 
-def get_single_collection_metadata_by_local_name(
+def get_collection_meta_by_local_name(
     cursor:cx_Oracle.Cursor,
     *,
     api_version:str,
@@ -124,9 +126,9 @@ def get_single_collection_metadata_by_local_name(
         raise e
 
     meta_lc = {k.lower(): v for k, v in meta.items()}
-    return SingleCollectionMetadata(**meta_lc)
+    return CollectionMeta(**meta_lc)
 
-def get_single_collection_metadata_by_api_name(
+def get_collection_meta_by_api_name(
     cursor:cx_Oracle.Cursor,
     *,
     api_version:str,
@@ -150,9 +152,9 @@ def get_single_collection_metadata_by_api_name(
         raise e
 
     meta_lc = {k.lower(): v for k, v in meta.items()}
-    return SingleCollectionMetadata(**meta_lc)
+    return CollectionMeta(**meta_lc)
 
-def get_single_collection_metadata_by_family_system_name(
+def get_collection_meta_by_family_system_name(
     cursor:cx_Oracle.Cursor,
     *,
     api_version:str,
@@ -176,4 +178,4 @@ def get_single_collection_metadata_by_family_system_name(
         raise e
     
     meta_lc = {k.lower(): v for k, v in meta.items()}
-    return SingleCollectionMetadata(**meta_lc)
+    return CollectionMeta(**meta_lc)
