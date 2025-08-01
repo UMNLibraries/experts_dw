@@ -164,9 +164,6 @@ def delete_documents_matching_scopus_ids_sql(
     meta:CollectionMeta,
     # Should we support this for staging tables, too?
 ):
-    collection_table_name = get_collection_table_name(
-        collection_local_name=collection_local_name,
-    )
     bind_vars = ','.join(f':{i}' for i in range(len(scopus_ids)))
     return f'''
         DELETE FROM {meta.canonical_table_name}
