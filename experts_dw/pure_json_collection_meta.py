@@ -180,6 +180,13 @@ def get_collection_meta_by_family_system_name(
     meta_lc = {k.lower(): v for k, v in meta.items()}
     return CollectionMeta(**meta_lc)
 
+def collection_api_names_for_api_version(cursor:cx_Oracle.Cursor, *, api_version:str):
+    cursor.execute(
+        'SELECT DISTINCT(api_name) FROM pure_json_collection_meta where api_version = :api_version',
+        {'api_version': api_version}
+    )
+    return [row[0] for row in cursor.fetchall()]
+
 def collection_family_system_names_for_api_version(cursor:cx_Oracle.Cursor, *, api_version:str):
     cursor.execute(
         'SELECT DISTINCT(family_system_name) FROM pure_json_collection_meta where api_version = :api_version',
