@@ -551,7 +551,7 @@ def delete_documents_matching_previous_uuids_sql(
         DELETE FROM {meta.canonical_table_name}
         WHERE uuid IN (
           SELECT jt.previous_uuid
-          FROM {neta.canonical_table_name},
+          FROM {meta.canonical_table_name},
             JSON_TABLE(json_document, '$'
               COLUMNS (
                 uuid VARCHAR2(36) PATH '$.uuid',
