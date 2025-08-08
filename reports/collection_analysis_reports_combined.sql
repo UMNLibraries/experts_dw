@@ -63,12 +63,12 @@ WITH cited_abstract_metadata AS (
     sjc.scopus_id AS cited_abstract_scopus_id,
     sjson.*
   FROM
-    scopus_json_abstract_cited sjc,
+    scopus_json_citation sjc,
     JSON_TABLE (
-      sjc.json_document, '$."abstracts-retrieval-response"' COLUMNS (
-        cited_abstract_doi PATH '$.coredata."prism:doi"',
-        cited_abstract_issn PATH '$.item.bibrecord.head.source.issn[0]."$"',
-        cited_abstract_publication_year PATH '$.item.bibrecord.head.source.publicationyear."@first"'
+      sjc.json_document, '$."abstract-citations-response"' COLUMNS (
+        cited_abstract_doi PATH '$."identifier-legend".identifier[0]."prism:doi"',
+        cited_abstract_issn PATH '$.citeInfoMatrix.citeInfoMatrixXML.citationMatrix.citeInfo[0]."prism:issn"',
+        cited_abstract_publication_year PATH '$.citeInfoMatrix.citeInfoMatrixXML.citationMatrix.citeInfo[0]."sort-year"'
       )
     ) sjson
 ), authored_cited_scopus_ids AS (
