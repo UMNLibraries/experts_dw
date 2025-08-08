@@ -124,6 +124,26 @@ class ScopusAbstractsToDownload(Base):
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
     updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
+class ScopusAbstractToDownload(Base):
+    __tablename__ = 'scopus_abstract_to_download'
+    scopus_id = Column(Integer, primary_key=True)
+    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+class ScopusAbstractDefunct(Base):
+    __tablename__ = 'scopus_abstract_defunct'
+    scopus_id = Column(Integer, primary_key=True)
+    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+class ScopusCitationToDownload(Base):
+    __tablename__ = 'scopus_citation_to_download'
+    scopus_id = Column(Integer, primary_key=True)
+    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+class ScopusCitationDefunct(Base):
+    __tablename__ = 'scopus_citation_defunct'
+    scopus_id = Column(Integer, primary_key=True)
+    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
 class ScopusCitedAbstractsToDownload(Base):
     __tablename__ = 'scopus_cited_abstracts_to_download'
     scopus_id = Column(Integer, primary_key=True)
