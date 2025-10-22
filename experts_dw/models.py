@@ -94,7 +94,7 @@ class SodaDocument:
 # Tables that store Scopus raw JSON records
 
 class ScopusSodaMetadata(SodaMetadata):
-    scopus_id = Column(Integer, primary_key=True)
+    scopus_id = Column(String(50), primary_key=True)
 
 class ScopusJsonCommon(ScopusSodaMetadata, SodaDocument):
     updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
