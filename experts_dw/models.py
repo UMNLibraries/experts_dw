@@ -118,15 +118,9 @@ class ScopusJsonAbstractCited(Base, ScopusJson):
 class ScopusJsonAbstractCitedStaging(Base, ScopusJsonStaging):
     __tablename__ = 'scopus_json_abstract_cited_staging'
 
-class ScopusAbstractsToDownload(Base):
-    __tablename__ = 'scopus_abstracts_to_download'
-    scopus_id = Column(Integer, primary_key=True)
-    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
-    updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
-
 class ScopusAbstractToDownload(Base):
     __tablename__ = 'scopus_abstract_to_download'
-    scopus_id = Column(Integer, primary_key=True)
+    scopus_id = Column(String(50), primary_key=True)
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
 class ScopusAbstractDefunct(Base):
@@ -136,7 +130,7 @@ class ScopusAbstractDefunct(Base):
 
 class ScopusCitationToDownload(Base):
     __tablename__ = 'scopus_citation_to_download'
-    scopus_id = Column(Integer, primary_key=True)
+    scopus_id = Column(String(50), primary_key=True)
     inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
 class ScopusCitationDefunct(Base):
@@ -155,12 +149,6 @@ class ScopusJsonCitation(Base, ScopusJson):
 
 class ScopusJsonCitationStaging(Base, ScopusJsonStaging):
     __tablename__ = 'scopus_json_citation_staging'
-
-class ScopusCitationsToDownload(Base):
-    __tablename__ = 'scopus_citations_to_download'
-    scopus_id = Column(Integer, primary_key=True)
-    inserted = Column(DateTime, default=func.current_timestamp(), nullable=False)
-    updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
 # Tables that store Pure raw JSON records
 
