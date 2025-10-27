@@ -183,3 +183,40 @@ def delete_documents_matching_scopus_ids(
         meta=meta,
     )
     cursor.execute(sql, scopus_ids)
+
+def insert_defunct_scopus_ids_sql(
+    cursor:cx_Oracle.Cursor,
+    *,
+    meta:CollectionMeta,
+):
+    return f'''
+        INSERT /*+ ignore_row_on_dupkey_index(scopus_{meta.local_name}_defunct(scopus_id)) */
+        INTO scopus_{meta.local_name}_defunct
+        (
+          scopus_id,
+          inserted
+        ) VALUES (
+          :scopus_id,
+          :inserted
+        )
+    '''
+
+def insert_defunct_scopus_ids(
+    cursor:cx_Oracle.Cursor,
+    *,
+    scopus_ids:Iterable[str],
+    meta:CollectionMeta,
+):
+    cursor.executemany(
+        insert_defunct_scopus_ids_sql(
+            cursor,
+            meta=meta,
+        ),
+        [
+            {
+                'scopus_id': scopus_id,
+                'inserted': datetime.now(),
+            }
+            for scopus_id in scopus_ids
+        ],
+    )
