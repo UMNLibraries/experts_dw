@@ -220,3 +220,40 @@ def insert_defunct_scopus_ids(
             for scopus_id in scopus_ids
         ],
     )
+
+def insert_scopus_ids_to_download_sql(
+    cursor:cx_Oracle.Cursor,
+    *,
+    meta:CollectionMeta,
+):
+    return f'''
+        INSERT /*+ ignore_row_on_dupkey_index(scopus_{meta.local_name}_to_download(scopus_id)) */
+        INTO scopus_{meta.local_name}_to_download
+        (
+          scopus_id,
+          inserted
+        ) VALUES (
+          :scopus_id,
+          :inserted
+        )
+    '''
+
+def insert_scopus_ids_to_download(
+    cursor:cx_Oracle.Cursor,
+    *,
+    scopus_ids:Iterable[str],
+    meta:CollectionMeta,
+):
+    cursor.executemany(
+        insert_scopus_ids_to_download_sql(
+            cursor,
+            meta=meta,
+        ),
+        [
+            {
+                'scopus_id': scopus_id,
+                'inserted': datetime.now(),
+            }
+            for scopus_id in scopus_ids
+        ],
+    )
