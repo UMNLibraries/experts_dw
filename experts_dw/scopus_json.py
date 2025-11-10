@@ -1,7 +1,7 @@
 from datetime import datetime
 import functools
 import json
-from typing import Any, Callable, MutableMapping, Tuple, TypeVar, cast
+from typing import Any, Callable, Iterable, MutableMapping, Tuple, TypeVar, cast
 
 import cx_Oracle
 
