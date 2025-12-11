@@ -34,6 +34,8 @@ def test_get_collection_meta_by_local_name(cursor):
         'schema_record_name': 'abstracts-retrieval-response',
         'canonical_table_name': 'scopus_json_abstract',
         'staging_table_name': 'scopus_json_abstract_staging',
+        'defunct_table_name': 'scopus_abstract_defunct',
+        'to_download_table_name': 'scopus_abstract_to_download',
     } 
     with pytest.raises(InvalidCollectionLocalName):
         meta = get_collection_meta_by_local_name(
@@ -53,6 +55,8 @@ def test_get_collection_meta_by_api_name(cursor):
         'schema_record_name': 'abstract-citations-response',
         'canonical_table_name': 'scopus_json_citation',
         'staging_table_name': 'scopus_json_citation_staging',
+        'defunct_table_name': 'scopus_citation_defunct',
+        'to_download_table_name': 'scopus_citation_to_download',
     }
     with pytest.raises(InvalidCollectionApiName):
         meta = get_collection_meta_by_api_name(
@@ -72,6 +76,8 @@ def test_get_collection_meta_by_schema_record_name(cursor):
         'schema_record_name': 'abstracts-retrieval-response',
         'canonical_table_name': 'scopus_json_abstract',
         'staging_table_name': 'scopus_json_abstract_staging',
+        'defunct_table_name': 'scopus_abstract_defunct',
+        'to_download_table_name': 'scopus_abstract_to_download',
     }
     with pytest.raises(InvalidCollectionSchemaRecordName):
         meta = get_collection_meta_by_schema_record_name(

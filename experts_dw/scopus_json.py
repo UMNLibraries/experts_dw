@@ -87,6 +87,43 @@ def insert_documents(
     )
     cursor.executemany(sql, documents)
 
+def delete_scopus_ids_for_downloaded_records_from_to_download_list_sql(
+    cursor:cx_Oracle.Cursor,
+    *,
+    meta:CollectionMeta,
+):
+    return f'''
+        DELETE
+        FROM {meta.to_download_table_name}
+        WHERE scopus_id IN (
+          SELECT defunct.scopus_id
+          FROM {meta.defunct_table_name} defunct
+          UNION
+          SELECT to_download.scopus_id
+          FROM {meta.to_download_table_name} to_download
+          JOIN {meta.staging_table_name} staging
+          ON to_download.scopus_id = staging.scopus_id
+          WHERE to_download.inserted < staging.inserted
+          UNION
+          SELECT to_download.scopus_id
+          FROM {meta.to_download_table_name} to_download
+          JOIN {meta.canonical_table_name} canonical
+          ON to_download.scopus_id = canonical.scopus_id
+          WHERE to_download.inserted < canonical.inserted
+        )
+    '''
+
+def delete_scopus_ids_for_downloaded_records_from_to_download_list(
+    cursor:cx_Oracle.Cursor,
+    *,
+    meta:CollectionMeta,
+):
+    sql = delete_scopus_ids_for_downloaded_records_from_to_download_list_sql(
+        cursor,
+        meta=meta,
+    )
+    cursor.execute(sql)
+
 def truncate_staging(
     cursor:cx_Oracle.Cursor,
     *,
@@ -146,6 +183,11 @@ def load_documents_from_staging(
             meta=meta,
         )
 
+        delete_scopus_ids_for_downloaded_records_from_to_download_list(
+            cursor,
+            meta=meta,
+        )
+
         truncate_staging(
             cursor,
             meta=meta,
@@ -190,8 +232,8 @@ def insert_defunct_scopus_ids_sql(
     meta:CollectionMeta,
 ):
     return f'''
-        INSERT /*+ ignore_row_on_dupkey_index(scopus_{meta.local_name}_defunct(scopus_id)) */
-        INTO scopus_{meta.local_name}_defunct
+        INSERT /*+ ignore_row_on_dupkey_index({meta.defunct_table_name}(scopus_id)) */
+        INTO {meta.defunct_table_name}
         (
           scopus_id,
           inserted
@@ -227,8 +269,8 @@ def insert_scopus_ids_to_download_sql(
     meta:CollectionMeta,
 ):
     return f'''
-        INSERT /*+ ignore_row_on_dupkey_index(scopus_{meta.local_name}_to_download(scopus_id)) */
-        INTO scopus_{meta.local_name}_to_download
+        INSERT /*+ ignore_row_on_dupkey_index({meta.to_download_table_name}(scopus_id)) */
+        INTO {meta.to_download_table_name}
         (
           scopus_id,
           inserted

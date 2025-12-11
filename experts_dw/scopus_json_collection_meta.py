@@ -49,10 +49,14 @@ class CollectionMeta:
     )
     canonical_table_name: str = field(init=False)
     staging_table_name: str = field(init=False)
+    defunct_table_name: str = field(init=False)
+    to_download_table_name: str = field(init=False)
 
     def __attrs_post_init__(self) -> None:
         object.__setattr__(self,'canonical_table_name', f'scopus_json_{self.local_name}')
         object.__setattr__(self,'staging_table_name', f'scopus_json_{self.local_name}_staging')
+        object.__setattr__(self,'defunct_table_name', f'scopus_{self.local_name}_defunct')
+        object.__setattr__(self,'to_download_table_name', f'scopus_{self.local_name}_to_download')
 
 def get_collection_meta_by_local_name(
     cursor:cx_Oracle.Cursor,
