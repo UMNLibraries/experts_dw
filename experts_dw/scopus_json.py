@@ -373,3 +373,62 @@ def update_abstract_to_download(
         past_months_limit=past_months_limit,
     )
     cursor.execute(sql)
+
+def update_citation_to_download_sql(
+    cursor:cx_Oracle.Cursor,
+    *,
+    # Maybe create something like the following, to make the types more specific?
+    #abstract_meta:AbstractCollectionMeta,
+    abstract_meta:CollectionMeta,
+    citation_meta:CollectionMeta,
+    past_months_limit:int=36, # Past 36 months, 3 years is our default reporting window
+):
+    return f'''
+        MERGE INTO {citation_meta.to_download_table_name} to_download
+        USING (
+          WITH scopus_id_to_exclude AS (
+            SELECT scopus_id FROM {citation_meta.canonical_table_name}
+            UNION
+            SELECT scopus_id FROM {citation_meta.defunct_table_name}
+            UNION
+            SELECT scopus_id FROM {abstract_meta.defunct_table_name}
+          )
+          SELECT DISTINCT abstract_jt.ref_id AS scopus_id
+          FROM {abstract_meta.canonical_table_name} abstract,
+          JSON_TABLE (
+            abstract.json_document, '$."abstracts-retrieval-response".item.bibrecord.tail' COLUMNS (
+              NESTED PATH '$.bibliography.reference[*]' COLUMNS (
+                NESTED PATH '$."ref-info"."refd-itemidlist".itemid[*]' COLUMNS (
+                  ref_id_type PATH '$."@idtype"',
+                  ref_id PATH '$."$"'
+                ),
+                publication_year PATH '$."ref-info"."ref-publicationyear"."@first"'
+              )
+            )
+          ) abstract_jt
+          LEFT JOIN scopus_id_to_exclude exclude
+            ON abstract_jt.ref_id = exclude.scopus_id
+          WHERE exclude.scopus_id IS NULL
+            AND abstract_jt.ref_id_type = 'SGR'
+            AND TO_DATE(abstract_jt.publication_year, 'YYYY') >= ADD_MONTHS(SYSDATE, - {past_months_limit})
+        ) cited
+        ON (cited.scopus_id = to_download.scopus_id)
+        WHEN NOT MATCHED THEN
+          INSERT (to_download.scopus_id, to_download.inserted)
+          VALUES (cited.scopus_id, SYSDATE)
+    '''
+
+def update_citation_to_download(
+    cursor:cx_Oracle.Cursor,
+    *,
+    abstract_meta:CollectionMeta,
+    citation_meta:CollectionMeta,
+    past_months_limit:int=36, # Past 36 months, 3 years is our default reporting window
+):
+    sql = update_citation_to_download_sql(
+        cursor,
+        abstract_meta=abstract_meta,
+        citation_meta=citation_meta,
+        past_months_limit=past_months_limit,
+    )
+    cursor.execute(sql)
