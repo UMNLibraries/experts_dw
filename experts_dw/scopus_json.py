@@ -6,6 +6,7 @@ from typing import Any, Callable, Iterable, MutableMapping, Tuple, TypeVar, cast
 import cx_Oracle
 
 from experts_dw import db, pure_json_collection_meta
+from experts_dw.cx_oracle_helpers import select_list_of_scalars
 from experts_dw.exceptions import ExpertsDwException
 from experts_dw.scopus_json_collection_meta import CollectionMeta
 
@@ -261,6 +262,16 @@ def insert_defunct_scopus_ids(
             }
             for scopus_id in scopus_ids
         ],
+    )
+
+def scopus_ids_to_download(
+    cursor:cx_Oracle.Cursor,
+    *,
+    meta:CollectionMeta,
+):
+    return select_list_of_scalars(
+        cursor,
+        f'SELECT scopus_id FROM {meta.to_download_table_name}'
     )
 
 def insert_scopus_ids_to_download_sql(
