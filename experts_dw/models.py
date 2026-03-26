@@ -1183,21 +1183,21 @@ class PureSyncAward(Base):
     __tablename__ = 'pure_sync_award'
     award_id = Column(String(1024), primary_key=True)
     title = Column(String(1024), nullable=False)
+    short_title = Column(String(256), nullable=True)
     actual_start_date = Column(DateTime, nullable=True)
     actual_end_date = Column(DateTime, nullable=True)
-    award_date = Column(DateTime, nullable=True)
+    award_date = Column(DateTime, nullable=False)
     project_id = Column(ForeignKey('pure_sync_project.project_id'), nullable=False)
     managed_by_organisation_id = Column(String(1024), nullable=False) # The Pure view calls this MANAGED_BY_ORG_ID, but we use the XML element name
 
     # Added by UMN:
 
     managed_by_organisation_deptid = Column(String(10), nullable=False)
-    um_award_number = Column(String(25), nullable=False)
-    sponsor_award_number = Column(String(40), nullable=False) # This doesn't appear to ever be null, so...
+    sponsor_award_number = Column(String(40), nullable=True)
     primary_sponsor_award_number = Column(String(40), nullable=True)
 
     # AWARD_FINANCIAL_FUNDINGS
-    financial_funding_id = Column(String(1024), nullable=False)
+    financial_funding_id = Column(String(1024), nullable=True)
     financial_funding_external_org_name = Column(String(1024), nullable=True)
     financial_funding_primary_id = Column(String(1024), nullable=True)
     financial_funding_primary_external_org_name = Column(String(1024), nullable=True)
@@ -1320,19 +1320,15 @@ class PureSyncAward(Base):
 class PureSyncProject(Base):
     __tablename__ = 'pure_sync_project'
     project_id = Column(String(1024), primary_key=True)
-
-    # Are the nullable values for these actually correct? Check the XSD!
-    title = Column(String(256), nullable=False) # The Pure view calls this SHORT_TITLE varchar(256), but we use the XML element name
-    description = Column(String(1024), nullable=False) # The Pure view calls this TITLE varchar(1024), but we use the XML element name
-
+    title = Column(String(1024), nullable=False)
+    short_title = Column(String(256), nullable=True)
     start_date = Column(DateTime, nullable=True)
     end_date = Column(DateTime, nullable=True)
     managed_by_organisation_id = Column(String(1024), nullable=False) # The Pure view calls this MANAGED_BY_ORG_ID, but we use the XML element name
 
     # Added by UMN:
     managed_by_organisation_deptid = Column(String(10), nullable=False)
-    um_award_number = Column(String(25), nullable=False)
-    sponsor_award_number = Column(String(40), nullable=False) # This doesn't appear to ever be null, so...
+    sponsor_award_number = Column(String(40), nullable=True)
     inserted = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
 
