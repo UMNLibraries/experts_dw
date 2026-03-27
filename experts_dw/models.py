@@ -1147,10 +1147,6 @@ class PureSyncAward(Base):
     inserted = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
 
-    # Do We need relationships like these for awards? These seem to be ORM methods that we may not use.
-    #staff_org_associations = relationship('PureSyncStaffOrgAssociation', backref='person')
-    #user = relationship('PureSyncUserData', backref='person')
-
     # Unused columns from Pure's AWARD_DATA spec.
     # AWARD_TYPE varchar(1024) not null, # We always set this to 'other/award'
     # SHORT_TITLE varchar(256),
@@ -1196,8 +1192,6 @@ class PureSyncAwardInternalHolder(Base):
     # Unused columns from Pure's INTERNAL_AWARDHOLDERS spec.
     # ACADEMIC_OWNERSHIP_PERCENTAGE number,
     # PLANNED_RESEARCHER_COMMITMENT number,
-    # ASSOCIATION_PERIOD_START_DATE date,
-    # ASSOCIATION_PERIOD_END_DATE date
 
 # Based on EXTERNAL_AWARDHOLDERS in:
 # https://static.helpjuice.com/helpjuice_production/uploads/upload/image/15881/direct/1750678734379/award_sync_view_oracle.sql
@@ -1219,68 +1213,6 @@ class PureSyncAwardExternalHolder(Base):
     # EXTERNAL_ORG_TYPE varchar(1024),
     # EXTERNAL_ORG_ID varchar(1024)
 
-# Based on EXTERNAL_PARTICIPANTS in:
-# https://static.helpjuice.com/helpjuice_production/uploads/upload/image/15881/direct/1748433703411/project_sync_view_oracle.sql
-#class PureSyncProjectExternalParticipant(Base):
-#    __tablename__ = 'pure_sync_project_external_participant'
-#    project_id = Column(ForeignKey('pure_sync_project.project_id'), primary_key=True)
-#    first_name = Column(String(1024), nullable=False)
-#    last_name = Column(String(1024), nullable=False)
-#    role = Column(String(1024), nullable=False)
-#
-#    # Added by UMN:
-#    emplid = Column(String(11), primary_key=True)
-#    # The following implies that awards must be created after projects, but before project participants!
-#    award_id = Column(ForeignKey('pure_sync_award.award_id'), nullable=False)
-#    created = Column(DateTime, nullable=True)
-#    modified = Column(DateTime, nullable=True)
-#
-#    # Unused columns from Pure's EXTERNAL_PARTICIPANTS spec.
-#    # COUNTRY varchar(1024),
-#    # EXTERNAL_ORG_NAME varchar(1024),
-#    # EXTERNAL_ORG_TYPE varchar(1024),
-#    # EXTERNAL_ORG_ID varchar(1024)
-
-#class PureSyncProjectExternalParticipantStaging(Base):
-#    __tablename__ = 'pure_sync_project_external_participant_staging'
-#    project_id = Column(ForeignKey('pure_sync_project.project_id'), primary_key=True)
-#    first_name = Column(String(1024), nullable=False)
-#    last_name = Column(String(1024), nullable=False)
-#    role = Column(String(1024), nullable=False)
-#    emplid = Column(String(11), primary_key=True)
-#    award_id = Column(ForeignKey('pure_sync_award.award_id'), nullable=False)
-
-# Based on INTERNAL_PARTICIPANTS in:
-# https://static.helpjuice.com/helpjuice_production/uploads/upload/image/15881/direct/1748433703411/project_sync_view_oracle.sql
-#class PureSyncProjectInternalParticipant(Base):
-#    __tablename__ = 'pure_sync_project_internal_participant'
-#    project_id = Column(ForeignKey('pure_sync_project.project_id'), primary_key=True)
-#    person_id = Column(String(1024), primary_key=True)
-#    organisation_id = Column(String(1024), nullable=False)
-#    role = Column(String(1024), nullable=False)
-#
-#    # Added by UMN:
-#    emplid = Column(String(11), nullable=False, index=True)
-#    # The following implies that awards must be created after projects, but before project participants!
-#    award_id = Column(ForeignKey('pure_sync_award.award_id'), nullable=False)
-#    created = Column(DateTime, nullable=True)
-#    modified = Column(DateTime, nullable=True)
-#
-#    # Unused columns from Pure's PROJECT_DATA spec.
-#    # ACADEMIC_OWNERSHIP_PERCENTAGE number,
-#    # PLANNED_RESEARCHER_COMMITMENT number,
-#    # ASSOCIATION_PERIOD_START_DATE date,
-#    # ASSOCIATION_PERIOD_END_DATE date
-
-#class PureSyncProjectInternalParticipantStaging(Base):
-#    __tablename__ = 'pure_sync_project_internal_participant_staging'
-#    project_id = Column(ForeignKey('pure_sync_project.project_id'), primary_key=True)
-#    person_id = Column(String(1024), primary_key=True)
-#    organisation_id = Column(String(1024), nullable=False)
-#    role = Column(String(1024), nullable=False)
-#    emplid = Column(String(11), nullable=False, index=True)
-#    award_id = Column(ForeignKey('pure_sync_award.award_id'), nullable=False)
-
 # Based on PROJECT_DATA in:
 # https://doc.pure.elsevier.com/download/attachments/28412327/oracle_person_view_create_statements.sql?version=5&modificationDate=1529322570793&api=v2
 class PureSyncProject(Base):
@@ -1298,10 +1230,6 @@ class PureSyncProject(Base):
     inserted = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
 
-    # Do We need relationships like these for projects? These seem to be ORM methods that we may not use.
-    #staff_org_associations = relationship('PureSyncStaffOrgAssociation', backref='person')
-    #user = relationship('PureSyncUserData', backref='person')
-
     # Unused columns from Pure's PROJECT_DATA spec.
     # PROJECT_TYPE varchar(1024) not null, # We always set this to 'research'
     # ACRONYM varchar(64),
@@ -1311,22 +1239,49 @@ class PureSyncProject(Base):
     # VISIBILITY varchar(1024), # We always set this to 'Public'
     # MANAGED_IN_PURE number(1,0)
 
-#class PureSyncProjectStaging(Base):
-#    __tablename__ = 'pure_sync_project_staging'
-#    __table_args__ = {'comment': 'Staging table for pure_sync_project.'}
-#    project_id = Column(String(1024), primary_key=True)
-#    title = Column(String(256)), nullable=False)
-#    description = Column(String(1024), nullable=False)
-#    start_date = Column(DateTime, nullable=True)
-#    end_date = Column(DateTime, nullable=True)
-#    managed_by_organisation_id = Column(String(1024), nullable=False)
-#    managed_by_organisation_deptid = Column(String(10), nullable=False)
-#    um_award_number = Column(String(25), nullable=False)
-#    sponsor_award_number = Column(String(40), nullable=False)
-#
-#    # Do We need relationships like these for projects? These seem to be ORM methods that we may not use.
-#    #staff_org_associations = relationship('PureSyncStaffOrgAssociationScratch', backref='person')
-#    #user = relationship('PureSyncUserDataScratch', backref='person')
+# Based on INTERNAL_PARTICIPANTS in:
+# https://static.helpjuice.com/helpjuice_production/uploads/upload/image/15881/direct/1748433703411/project_sync_view_oracle.sql
+class PureSyncProjectInternalParticipant(Base):
+    __tablename__ = 'pure_sync_project_internal_participant'
+    project_id = Column(ForeignKey('pure_sync_project.project_id'), nullable=True)
+    person_id = Column(String(1024), primary_key=True)
+    emplid = Column(String(11), nullable=False, index=True) # Added by UMN
+    organisation_id = Column(String(1024), nullable=False)
+    role = Column(String(15), primary_key=True)
+    association_start_date = Column(DateTime, nullable=True)
+    association_end_date = Column(DateTime, nullable=True)
+
+    # Added by UMN:
+    # The following implies that awards must be created after projects, but before project participants!
+    award_id = Column(ForeignKey('pure_sync_award.award_id'), primary_key=True)
+    inserted = Column(DateTime, nullable=True)
+    updated = Column(DateTime, nullable=True)
+
+    # Unused columns from Pure's PROJECT_DATA spec.
+    # ACADEMIC_OWNERSHIP_PERCENTAGE number,
+    # PLANNED_RESEARCHER_COMMITMENT number,
+
+# Based on EXTERNAL_PARTICIPANTS in:
+# https://static.helpjuice.com/helpjuice_production/uploads/upload/image/15881/direct/1748433703411/project_sync_view_oracle.sql
+class PureSyncProjectExternalParticipant(Base):
+    __tablename__ = 'pure_sync_project_external_participant'
+    project_id = Column(ForeignKey('pure_sync_project.project_id'), nullable=False)
+    emplid = Column(String(11), primary_key=True) # Added by UMN
+    first_name = Column(String(1024), nullable=False)
+    last_name = Column(String(1024), nullable=False)
+    role = Column(String(15), primary_key=True)
+
+    # Added by UMN:
+    # The following implies that awards must be created after projects, but before project participants!
+    award_id = Column(ForeignKey('pure_sync_award.award_id'), primary_key=True)
+    inserted = Column(DateTime, nullable=True)
+    updated = Column(DateTime, nullable=True)
+
+    # Unused columns from Pure's EXTERNAL_PARTICIPANTS spec.
+    # COUNTRY varchar(1024),
+    # EXTERNAL_ORG_NAME varchar(1024),
+    # EXTERNAL_ORG_TYPE varchar(1024),
+    # EXTERNAL_ORG_ID varchar(1024)
 
 # Based on PERSON_DATA in:
 # https://doc.pure.elsevier.com/download/attachments/28412327/oracle_person_view_create_statements.sql?version=5&modificationDate=1529322570793&api=v2
