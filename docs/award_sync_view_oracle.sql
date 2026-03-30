@@ -1,0 +1,250 @@
+-- Source: https://static.helpjuice.com/helpjuice_production/uploads/upload/image/15881/direct/1750678734379/award_sync_view_oracle.sql
+-- noinspection SqlNoDataSourceInspection
+
+CREATE TABLE AWARD_DATA
+(
+	AWARD_ID varchar(1024) not null,
+	AWARD_TYPE varchar(1024) not null,
+	TITLE varchar(1024) not null,
+	SHORT_TITLE varchar(256),
+	ACRONYM varchar(64),
+	ACTUAL_START_DATE date,
+	ACTUAL_END_DATE date,
+	EXPECTED_START_DATE date,
+	EXPECTED_END_DATE date,
+	AWARD_DATE date,
+	CURTAIL_DATE date,
+	CURTAIL_REASON clob,
+	COLLABORATIVE_AWARD number(1,0) not null,
+	MANAGED_BY_ORG_ID varchar(1024) not null,
+	VISIBILITY varchar(1024),
+	PROJECT_ID varchar(1024)
+)
+;
+CREATE TABLE INTERNAL_AWARDHOLDERS
+(
+	AWARD_ID varchar(1024) not null,
+	PERSON_ID varchar(1024) not null,
+	ORGANISATION_ID varchar(1024) not null,
+	ROLE varchar(1024) not null,
+	ACADEMIC_OWNERSHIP_PERCENTAGE number,
+	PLANNED_RESEARCHER_COMMITMENT number,
+	ASSOCIATION_PERIOD_START_DATE date,
+	ASSOCIATION_PERIOD_END_DATE date
+)
+;
+
+
+CREATE TABLE EXTERNAL_AWARDHOLDERS
+(
+	AWARD_ID varchar(1024) not null,
+	FIRSTNAME varchar(1024) not null,
+	LASTNAME varchar(1024) not null,
+	COUNTRY varchar(1024),
+	ROLE varchar(1024) not null,
+	EXTERNAL_ORG_NAME varchar(1024),
+	EXTERNAL_ORG_TYPE varchar(1024),
+	EXTERNAL_ORG_ID varchar(1024)
+)
+;
+
+CREATE TABLE INT_AWARD_CO_MANAGING_ORG
+(
+	AWARD_ID varchar(1024) not null,
+	ORGANISATION_ID varchar(1024) not null
+)
+;
+
+CREATE TABLE INTERNAL_AWARD_ORGANISATIONS
+(
+	AWARD_ID varchar(1024) not null,
+	ORGANISATION_ID varchar(1024) not null
+)
+;
+CREATE TABLE EXTERNAL_AWARD_ORGANISATIONS
+(
+	AWARD_ID varchar(1024) not null,
+	EXTERNAL_ORG_NAME varchar(1024),
+	EXTERNAL_ORG_TYPE varchar(1024),
+	EXTERNAL_ORG_ID varchar(1024)
+)
+;
+CREATE TABLE EXTERNAL_AWARD_COLLABORATORS
+(
+	AWARD_ID varchar(1024) not null,
+	EXTERNAL_ORG_NAME varchar(1024),
+	EXTERNAL_ORG_TYPE varchar(1024),
+	EXTERNAL_ORG_ID varchar(1024),
+	ORGANISATION_ID varchar(1024),
+	LEAD_COLLABORATOR number(1,0),
+	COLLABORATOR_TYPE varchar(1024)
+)
+;
+CREATE TABLE INT_AWARDHOLDERS_COMMITMENT
+(
+	AWARD_ID varchar(1024) not null,
+	PERSON_ID varchar(1024) not null,
+	YEAR integer not null,
+	MONTH integer not null,
+	PLANNED_COMMITMENT_PERCENTAGE number,
+	ACTUAL_COMMITMENT_PERCENTAGE number
+)
+;
+CREATE TABLE AWARD_FINANCIAL_FUNDINGS
+(
+	AWARD_ID varchar(1024) not null,
+	FUNDING_ID varchar(1024) not null,
+	EXTERNAL_ORG_NAME varchar(1024),
+	EXTERNAL_ORG_TYPE varchar(1024),
+	EXTERNAL_ORG_ID varchar(1024),
+	FUNDING_PROJECT_SCHEME varchar(1024),
+	AWARDED_AMOUNT_AWARDED_CUR NUMBER,
+	AWARDED_CURRENCY varchar(1024),
+	AWARDED_AMOUNT NUMBER,
+	INSTITUTIONAL_CONTRIBUTION NUMBER,
+	INSTITUTIONAL_FEC NUMBER,
+	FEC_PERCENTAGE NUMBER,
+	INSTITUTIONAL_PART NUMBER,
+	VISIBILITY varchar(1024)
+)
+;
+CREATE TABLE AWARD_NON_FINANCIAL_FUNDINGS
+(
+	AWARD_ID varchar(1024) not null,
+	FUNDING_ID varchar(1024) not null,
+	EXTERNAL_ORG_NAME varchar(1024),
+	EXTERNAL_ORG_TYPE varchar(1024),
+	EXTERNAL_ORG_ID varchar(1024),
+	FUNDING_PROJECT_SCHEME varchar(1024),
+	ESTIMATED_VALUE NUMBER,
+	INSTITUTIONAL_ESTIMATED_VALUE NUMBER,
+	DESCRIPTION clob,
+	VISIBILITY varchar(1024)
+)
+;
+CREATE TABLE AWARD_COLLABORATOR_SPLIT
+(
+	AWARD_ID varchar(1024) not null,
+	FUNDING_ID varchar(1024) not null,
+	EXTERNAL_ORG_NAME varchar(1024),
+	EXTERNAL_ORG_TYPE varchar(1024),
+	EXTERNAL_ORG_ID varchar(1024),
+	COLLABORATORS_SPLIT NUMBER
+)
+;
+CREATE TABLE AWARD_FUNDING_CLASSIFICATION
+(
+	AWARD_ID varchar(1024) not null,
+	FUNDING_ID varchar(1024) not null,
+	CLASSIFICATION_VALUE varchar(1024) not null
+)
+;
+CREATE TABLE BUDGET
+(
+	AWARD_ID varchar(1024) not null,
+	FUNDING_ID varchar(1024) not null,
+	BUDGET_ID varchar(1024) not null,
+	ORGANISATION_ID varchar(1024) not null,
+	COST_CENTER varchar(1024) not null
+)
+;
+CREATE TABLE BUDGET_LINE
+(
+	AWARD_ID varchar(1024) not null,
+	FUNDING_ID varchar(1024) not null,
+	BUDGET_ID varchar(1024) not null,
+	BUDGET_LINE varchar(1024) not null,
+	BUDGET_VALUE NUMBER not null,
+	COST_CENTER varchar(1024),
+	SPECIFICATION varchar(1024),
+	FUNDER_CONTRIBUTION NUMBER,
+	FEC_PERCENTAGE NUMBER
+)
+;
+CREATE TABLE BUDGET_LINE_YEARLY_BUDGET
+(
+	AWARD_ID varchar(1024) not null,
+	FUNDING_ID varchar(1024) not null,
+	BUDGET_ID varchar(1024) not null,
+	BUDGET_LINE varchar(1024) not null,
+	BUDGET_VALUE NUMBER not null,
+	YEAR NUMBER
+)
+;
+CREATE TABLE EXPENDITURE
+(
+	AWARD_ID varchar(1024) not null,
+	FUNDING_ID varchar(1024) not null,
+	BUDGET_ID varchar(1024) not null,
+	BUDGET_LINE varchar(1024) not null,
+	YEAR NUMBER not null,
+	MONTH NUMBER not null,
+	EXPENDITURE_VALUE NUMBER not null
+)
+;
+
+CREATE TABLE AWARD_AWARD_RELATION
+(
+	AWARD_ID varchar(1024) not null,
+	TARGET_AWARD_ID varchar(1024) not null
+)
+;
+CREATE TABLE AWARD_APPLICATION_RELATION
+(
+	AWARD_ID varchar(1024) not null,
+	APPLICATION_ID varchar(1024) not null
+)
+;
+CREATE TABLE AWARD_CATION_ACTIVITY_TYPE
+(
+	AWARD_ID varchar(1024) not null,
+	ACTIVITY_TYPE varchar(1024) not null
+)
+;
+CREATE TABLE AWARD_ACTIVITY_TYPE
+(
+	AWARD_ID varchar(1024) not null,
+	ACTIVITY_TYPE varchar(1024) not null
+)
+;
+CREATE TABLE AWARD_DESCRIPTIONS
+(
+	AWARD_ID varchar(1024) not null,
+	DESCRIPTION_TYPE varchar(1024) not null,
+	DESCRIPTION_TEXT clob not null
+)
+;
+CREATE TABLE AWARD_IDS
+(
+	AWARD_ID varchar(1024) not null,
+	ID_SOURCE varchar(1024) not null,
+	ID varchar(1024) not null
+)
+;
+CREATE TABLE AWARD_KEYWORDS
+(
+	AWARD_ID varchar(1024) not null,
+	LOGICAL_NAME varchar(1024) not null,
+	TYPE varchar(1024),
+	FREE_KEYWORD varchar(1024)
+)
+;
+CREATE TABLE AWARD_LINKS
+(
+	AWARD_ID varchar(1024) not null,
+	LINK_ID varchar(1024) not null,
+	LINK_URL varchar(1024) not null,
+	LINK_TYPE varchar(1024),
+	LINK_DESCRIPTION varchar(1024)
+)
+;
+
+CREATE TABLE AWARD_STATUS
+(
+	AWARD_ID varchar(1024),
+	STATUS varchar(1024),
+	STATUS_DATE date,
+	REASON varchar(1024),
+	REASON_DESCRIPTION varchar(1024)
+)
+;
