@@ -1,3 +1,4 @@
+-- :name update_pure_sync_project_external_participant :affected
 MERGE INTO pure_sync_project_external_participant participant
 USING (
   SELECT
@@ -16,11 +17,15 @@ WHEN MATCHED
     participant.first_name = participant_transform.first_name,
     participant.last_name = participant_transform.last_name,
     participant.updated = SYSDATE
-  WHERE (
-    participant.project_id <> participant_transform.project_id OR
-    participant.first_name <> participant_transform.first_name OR
-    participant.last_name <> participant_transform.last_name
-  )  
+  WHERE ORA_HASH(
+    participant.project_id ||
+    participant.first_name ||
+    participant.last_name
+  ) <> ORA_HASH(
+    participant_transform.project_id ||
+    participant_transform.first_name ||
+    participant_transform.last_name
+  )
 WHEN NOT MATCHED THEN
   INSERT (
     participant.project_id,
@@ -41,4 +46,4 @@ WHEN NOT MATCHED THEN
     participant_transform.award_id,
     SYSDATE,
     SYSDATE
-  );
+  )

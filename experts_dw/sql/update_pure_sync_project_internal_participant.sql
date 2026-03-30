@@ -1,3 +1,4 @@
+-- :name update_pure_sync_project_internal_participant :affected
 MERGE INTO pure_sync_project_internal_participant participant
 USING (
   SELECT
@@ -20,12 +21,18 @@ WHEN MATCHED
     participant.association_start_date = participant_transform.association_start_date,
     participant.association_end_date = participant_transform.association_end_date,
     participant.updated = SYSDATE
-  WHERE (
-    participant.project_id <> participant_transform.project_id OR
-    participant.emplid <> participant_transform.emplid OR
-    participant.organisation_id <> participant_transform.organisation_id OR
-    participant.association_start_date <> participant_transform.association_start_date OR
-    participant.association_end_date <> participant_transform.association_end_date
+  WHERE ORA_HASH(
+    participant.project_id ||
+    participant.emplid ||
+    participant.organisation_id ||
+    participant.association_start_date ||
+    participant.association_end_date
+  ) <> ORA_HASH(
+    participant_transform.project_id ||
+    participant_transform.emplid ||
+    participant_transform.organisation_id ||
+    participant_transform.association_start_date ||
+    participant_transform.association_end_date
   )
 WHEN NOT MATCHED THEN
   INSERT (
@@ -51,4 +58,4 @@ WHEN NOT MATCHED THEN
     participant_transform.award_id,
     SYSDATE,
     SYSDATE
-  );
+  )

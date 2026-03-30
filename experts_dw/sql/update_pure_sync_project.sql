@@ -1,3 +1,4 @@
+-- :name update_pure_sync_project :affected
 MERGE INTO pure_sync_project project
 USING (
   SELECT
@@ -22,14 +23,22 @@ WHEN MATCHED
     project.managed_by_organisation_deptid = project_transform.managed_by_organisation_deptid,
     project.sponsor_award_number = project_transform.sponsor_award_number,
     project.updated = SYSDATE
-  WHERE (
-    project.title <> project_transform.title OR 
-    project.short_title <> project_transform.short_title OR 
-    project.start_date <> project_transform.start_date OR 
-    project.end_date <> project_transform.end_date OR 
-    project.managed_by_organisation_id <> project_transform.managed_by_organisation_id OR 
-    project.managed_by_organisation_deptid <> project_transform.managed_by_organisation_deptid OR 
-    project.sponsor_award_number <> project_transform.sponsor_award_number
+  WHERE ORA_HASH(
+    project.title ||
+    project.short_title ||
+    project.start_date ||
+    project.end_date ||
+    project.managed_by_organisation_id ||
+    project.managed_by_organisation_deptid ||
+    project.sponsor_award_number
+  ) <> ORA_HASH(
+    project_transform.title || 
+    project_transform.short_title || 
+    project_transform.start_date || 
+    project_transform.end_date || 
+    project_transform.managed_by_organisation_id || 
+    project_transform.managed_by_organisation_deptid || 
+    project_transform.sponsor_award_number
   )  
 WHEN NOT MATCHED THEN
   INSERT (
@@ -55,4 +64,4 @@ WHEN NOT MATCHED THEN
     project_transform.sponsor_award_number,
     SYSDATE,
     SYSDATE
-  );
+  )

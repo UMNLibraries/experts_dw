@@ -1,3 +1,4 @@
+-- :name update_pure_sync_award_internal_holder :affected
 MERGE INTO pure_sync_award_internal_holder holder
 USING (
   SELECT
@@ -18,12 +19,17 @@ WHEN MATCHED
     holder.association_start_date = holder_transform.association_start_date,
     holder.association_end_date = holder_transform.association_end_date,
     holder.updated = SYSDATE
-  WHERE (
-    holder.emplid <> holder_transform.emplid OR
-    holder.organisation_id <> holder_transform.organisation_id OR
-    holder.association_start_date <> holder_transform.association_start_date OR
-    holder.association_end_date <> holder_transform.association_end_date
-  )  
+  WHERE ORA_HASH(
+    holder.emplid ||
+    holder.organisation_id ||
+    holder.association_start_date ||
+    holder.association_end_date
+  ) <> ORA_HASH(
+    holder_transform.emplid ||
+    holder_transform.organisation_id ||
+    holder_transform.association_start_date ||
+    holder_transform.association_end_date
+  )
 WHEN NOT MATCHED THEN
   INSERT (
     holder.award_id,
@@ -46,4 +52,4 @@ WHEN NOT MATCHED THEN
     holder_transform.association_end_date,
     SYSDATE,
     SYSDATE
-  );
+  )

@@ -1,3 +1,4 @@
+-- :name update_pure_sync_award_external_holder :affected
 MERGE INTO pure_sync_award_external_holder holder
 USING (
   SELECT
@@ -14,10 +15,13 @@ WHEN MATCHED
     holder.first_name = holder_transform.first_name,
     holder.last_name = holder_transform.last_name,
     holder.updated = SYSDATE
-  WHERE (
-    holder.first_name <> holder_transform.first_name OR
-    holder.last_name <> holder_transform.last_name
-  )  
+  WHERE ORA_HASH(
+    holder.first_name ||
+    holder.last_name
+  ) <> ORA_HASH(
+    holder_transform.first_name ||
+    holder_transform.last_name
+  )
 WHEN NOT MATCHED THEN
   INSERT (
     holder.award_id,
@@ -36,4 +40,4 @@ WHEN NOT MATCHED THEN
     holder_transform.role,
     SYSDATE,
     SYSDATE
-  );
+  )

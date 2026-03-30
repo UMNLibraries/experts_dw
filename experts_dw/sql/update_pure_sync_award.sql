@@ -1,3 +1,4 @@
+-- :name update_pure_sync_award :affected
 MERGE INTO pure_sync_award award
 USING (
   SELECT
@@ -36,22 +37,37 @@ WHEN MATCHED
     award.financial_funding_primary_id = award_transform.financial_funding_primary_id,
     award.financial_funding_primary_external_org_name = award_transform.financial_funding_primary_external_org_name,
     award.updated = SYSDATE
-  WHERE (
-    award.title <> award_transform.title OR 
-    award.short_title <> award_transform.short_title OR 
-    award.actual_start_date <> award_transform.actual_start_date OR 
-    award.actual_end_date <> award_transform.actual_end_date OR 
-    award.award_date <> award_transform.award_date OR 
-    award.project_id <> award_transform.project_id OR 
-    award.managed_by_organisation_id <> award_transform.managed_by_organisation_id OR 
-    award.managed_by_organisation_deptid <> award_transform.managed_by_organisation_deptid OR 
-    award.sponsor_award_number <> award_transform.sponsor_award_number OR 
-    award.primary_sponsor_award_number <> award_transform.primary_sponsor_award_number OR 
-    award.financial_funding_id <> award_transform.financial_funding_id OR 
-    award.financial_funding_external_org_name <> award_transform.financial_funding_external_org_name OR 
-    award.financial_funding_primary_id <> award_transform.financial_funding_primary_id OR 
-    award.financial_funding_primary_external_org_name <> award_transform.financial_funding_primary_external_org_name
-  )  
+  WHERE ORA_HASH(
+    award.title ||
+    award.short_title ||
+    award.actual_start_date ||
+    award.actual_end_date ||
+    award.award_date ||
+    award.project_id ||
+    award.managed_by_organisation_id ||
+    award.managed_by_organisation_deptid ||
+    award.sponsor_award_number ||
+    award.primary_sponsor_award_number ||
+    award.financial_funding_id ||
+    award.financial_funding_external_org_name ||
+    award.financial_funding_primary_id ||
+    award.financial_funding_primary_external_org_name
+  ) <> ORA_HASH( 
+    award_transform.title ||
+    award_transform.short_title ||
+    award_transform.actual_start_date ||
+    award_transform.actual_end_date ||
+    award_transform.award_date ||
+    award_transform.project_id ||
+    award_transform.managed_by_organisation_id ||
+    award_transform.managed_by_organisation_deptid ||
+    award_transform.sponsor_award_number ||
+    award_transform.primary_sponsor_award_number ||
+    award_transform.financial_funding_id ||
+    award_transform.financial_funding_external_org_name ||
+    award_transform.financial_funding_primary_id ||
+    award_transform.financial_funding_primary_external_org_name
+)
 WHEN NOT MATCHED THEN
   INSERT (
     award.award_id,
@@ -90,4 +106,4 @@ WHEN NOT MATCHED THEN
     award_transform.financial_funding_primary_external_org_name,
     SYSDATE,
     SYSDATE
-  );
+  )
