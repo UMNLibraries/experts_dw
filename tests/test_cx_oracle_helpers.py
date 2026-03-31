@@ -3,7 +3,12 @@ import dotenv_switch.auto
 import pytest
 
 from experts_dw import db
-from experts_dw.cx_oracle_helpers import select_scalar, select_list_of_dicts, select_list_of_scalars
+from experts_dw.cx_oracle_helpers import \
+    select_scalar, \
+    select_list_of_dicts, \
+    select_keyed_lists_of_dicts, \
+    select_list_of_scalars, \
+    InvalidKeyColumn
 
 @pytest.fixture
 def connection():
@@ -51,6 +56,30 @@ def test_select_list_of_dicts(cursor):
     )
     assert isinstance(empty_metadata, list)
     assert len(empty_metadata) == 0
+
+def test_select_keyed_lists_of_dicts(cursor):
+    holders = select_keyed_lists_of_dicts(
+        cursor,
+        "SELECT * FROM pure_sync_award_external_holder",
+        key_column_name='AWARD_ID',
+    )
+    assert isinstance(holders, dict)
+    assert len(holders) == select_scalar(cursor, 'SELECT COUNT(DISTINCT award_id) FROM pure_sync_award_external_holder')
+
+    empty_holders = select_keyed_lists_of_dicts(
+        cursor,
+        "SELECT * FROM pure_sync_award_external_holder WHERE 1=2",
+        key_column_name='AWARD_ID',
+    )
+    assert isinstance(empty_holders, dict)
+    assert len(empty_holders) == 0
+
+    with pytest.raises(InvalidKeyColumn):
+        holders = select_keyed_lists_of_dicts(
+            cursor,
+            "SELECT * FROM pure_sync_award_external_holder",
+            key_column_name='bogus',
+        )
 
 def test_select_list_of_scalars(cursor):
     versions = select_list_of_scalars(
