@@ -8,6 +8,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_project_external_parti
   last_name,
   role,
   role_rank,
+  association_start_date,
+  association_end_date,
   award_id,
   project_person_row_number
 ) AS (
@@ -37,6 +39,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_project_external_parti
         WHEN project_team.proj_role = 'OTHR' THEN 10
         ELSE 10
       END AS role_rank,
+      project_team.start_dt AS association_start_date,
+      project_team.end_dt AS association_end_date,
       award.award_id
     FROM pure_sync_project project
     JOIN pure_sync_award award

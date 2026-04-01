@@ -6,14 +6,18 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_award_external_holder_
   emplid, -- Added by UMN
   first_name,
   last_name,
-  role
+  role,
+  association_start_date,
+  association_end_date
 ) AS (
   SELECT
     project_team.project_id AS award_id,
     hr_demog.emplid,
     hr_demog.first_name,
     hr_demog.last_name,
-    LOWER(project_team.proj_role) AS role
+    LOWER(project_team.proj_role) AS role,
+    project_team.start_dt AS association_start_date,
+    project_team.end_dt AS association_end_date
   FROM pure_sync_award award
   JOIN fs_ps_project_team_vw@dweprd.oit project_team
     ON award.award_id = project_team.project_id
