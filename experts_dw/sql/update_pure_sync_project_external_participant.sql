@@ -6,25 +6,25 @@ USING (
     emplid,
     first_name,
     last_name,
-    role,
-    award_id
+    role
   FROM pure_sync_project_external_participant_transform_vw
+  WHERE project_person_row_number = 1
 ) participant_transform
-ON (participant.award_id = participant_transform.award_id AND participant.emplid = participant_transform.emplid AND participant.role = participant_transform.role)
+ON (participant.project_id = participant_transform.project_id AND participant.emplid = participant_transform.emplid)
 WHEN MATCHED
   THEN UPDATE SET
-    participant.project_id = participant_transform.project_id,
     participant.first_name = participant_transform.first_name,
     participant.last_name = participant_transform.last_name,
+    participant.role = participant_transform.role,    
     participant.updated = SYSDATE
   WHERE ORA_HASH(
-    participant.project_id ||
     participant.first_name ||
-    participant.last_name
+    participant.last_name ||
+    participant.role
   ) <> ORA_HASH(
-    participant_transform.project_id ||
     participant_transform.first_name ||
-    participant_transform.last_name
+    participant_transform.last_name ||
+    participant_transform.role
   )
 WHEN NOT MATCHED THEN
   INSERT (
@@ -33,7 +33,6 @@ WHEN NOT MATCHED THEN
     participant.first_name,
     participant.last_name,
     participant.role,
-    participant.award_id,
     participant.inserted,
     participant.updated
   )
@@ -43,7 +42,6 @@ WHEN NOT MATCHED THEN
     participant_transform.first_name,
     participant_transform.last_name,
     participant_transform.role,
-    participant_transform.award_id,
     SYSDATE,
     SYSDATE
   )

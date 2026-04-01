@@ -1239,21 +1239,15 @@ class PureSyncProject(Base):
     # VISIBILITY varchar(1024), # We always set this to 'Public'
     # MANAGED_IN_PURE number(1,0)
 
-# Based on INTERNAL_PARTICIPANTS in:
-# https://static.helpjuice.com/helpjuice_production/uploads/upload/image/15881/direct/1748433703411/project_sync_view_oracle.sql
 class PureSyncProjectInternalParticipant(Base):
     __tablename__ = 'pure_sync_project_internal_participant'
-    project_id = Column(ForeignKey('pure_sync_project.project_id'), nullable=True)
+    project_id = Column(ForeignKey('pure_sync_project.project_id'), primary_key=True)
     person_id = Column(String(1024), primary_key=True)
     emplid = Column(String(11), nullable=False, index=True) # Added by UMN
     organisation_id = Column(String(1024), nullable=False)
-    role = Column(String(15), primary_key=True)
-    association_start_date = Column(DateTime, nullable=True)
-    association_end_date = Column(DateTime, nullable=True)
+    role = Column(String(15), nullable=False)
 
     # Added by UMN:
-    # The following implies that awards must be created after projects, but before project participants!
-    award_id = Column(ForeignKey('pure_sync_award.award_id'), primary_key=True)
     inserted = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
 
@@ -1265,15 +1259,13 @@ class PureSyncProjectInternalParticipant(Base):
 # https://static.helpjuice.com/helpjuice_production/uploads/upload/image/15881/direct/1748433703411/project_sync_view_oracle.sql
 class PureSyncProjectExternalParticipant(Base):
     __tablename__ = 'pure_sync_project_external_participant'
-    project_id = Column(ForeignKey('pure_sync_project.project_id'), nullable=False)
+    project_id = Column(ForeignKey('pure_sync_project.project_id'), primary_key=True)
     emplid = Column(String(11), primary_key=True) # Added by UMN
     first_name = Column(String(1024), nullable=False)
     last_name = Column(String(1024), nullable=False)
-    role = Column(String(15), primary_key=True)
+    role = Column(String(15), nullable=False)
 
     # Added by UMN:
-    # The following implies that awards must be created after projects, but before project participants!
-    award_id = Column(ForeignKey('pure_sync_award.award_id'), primary_key=True)
     inserted = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
 
