@@ -7,16 +7,23 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_project_internal_parti
   emplid, -- Added by UMN
   organisation_id,
   role,
-  role_rank,
+  role_rank, -- Added by UMN
+
+  -- Though we don't use these in the final XML output,
+  -- we include them here anyway, for debugging/troubleshooting.
   association_start_date,
   association_end_date,
+
   award_id, -- Added by UMN
-  project_person_row_number
+  project_person_row_number -- Added by UMN
 ) AS (
   SELECT
     p.*,
     ROW_NUMBER() OVER (
+      -- This partitions by both columns, first project_id, then person_id:
       PARTITION BY p.project_id, p.person_id
+      -- Ordering rows by role_rank within each partition ensures that the
+      -- highest-ranking role will always be in the first row for each person:
       ORDER BY p.role_rank ASC
     ) AS project_person_row_number
   FROM (

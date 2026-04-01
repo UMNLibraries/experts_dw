@@ -7,6 +7,8 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_award_external_holder_
   first_name,
   last_name,
   role,
+  -- Though these are not part of the XSD referred to above,
+  -- we include them here anyway, for debugging/troubleshooting.
   association_start_date,
   association_end_date
 ) AS (

@@ -7,16 +7,23 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_project_external_parti
   first_name,
   last_name,
   role,
-  role_rank,
-  association_start_date,
+  role_rank, -- Added by UMN
+
+  -- Though these are not part of the XSD referred to above,
+  -- we include them here anyway, for debugging/troubleshooting.
+  association_start_date, 
   association_end_date,
-  award_id,
-  project_person_row_number
+
+  award_id, -- Added by UMN
+  project_person_row_number -- Added by UMN
 ) AS (
   SELECT
     p.*,
     ROW_NUMBER() OVER (
+      -- This partitions by both columns, first project_id, then emplid:
       PARTITION BY p.project_id, p.emplid
+      -- Ordering rows by role_rank within each partition ensures that the
+      -- highest-ranking role will always be in the first row for each person:
       ORDER BY p.role_rank ASC
     ) AS project_person_row_number
   FROM (
