@@ -9,10 +9,14 @@ USING (
     actual_end_date,
     award_date,
     project_id,
+    umn_award_contract_number, -- new
+    umn_previous_award_contract_number, -- new
     managed_by_organisation_id,
     managed_by_organisation_deptid,
+    emplid, -- new
     sponsor_award_number,
     primary_sponsor_award_number,
+    federal_award_number, -- new
     financial_funding_id,
     financial_funding_external_org_name,
     financial_funding_primary_id,
@@ -28,10 +32,14 @@ WHEN MATCHED
     award.actual_end_date = award_transform.actual_end_date,
     award.award_date = award_transform.award_date,
     award.project_id = award_transform.project_id,
+    award.umn_award_contract_number = award_transform.umn_award_contract_number,
+    award.umn_previous_award_contract_number = award_transform.umn_previous_award_contract_number,
     award.managed_by_organisation_id = award_transform.managed_by_organisation_id,
     award.managed_by_organisation_deptid = award_transform.managed_by_organisation_deptid,
+    award.emplid = award_transform.emplid,
     award.sponsor_award_number = award_transform.sponsor_award_number,
     award.primary_sponsor_award_number = award_transform.primary_sponsor_award_number,
+    award.federal_award_number = award_transform.federal_award_number,
     award.financial_funding_id = award_transform.financial_funding_id,
     award.financial_funding_external_org_name = award_transform.financial_funding_external_org_name,
     award.financial_funding_primary_id = award_transform.financial_funding_primary_id,
@@ -44,10 +52,14 @@ WHEN MATCHED
     award.actual_end_date ||
     award.award_date ||
     award.project_id ||
+    award.umn_award_contract_number ||
+    award.umn_previous_award_contract_number ||
     award.managed_by_organisation_id ||
     award.managed_by_organisation_deptid ||
+    award.emplid ||
     award.sponsor_award_number ||
     award.primary_sponsor_award_number ||
+    award.federal_award_number ||
     award.financial_funding_id ||
     award.financial_funding_external_org_name ||
     award.financial_funding_primary_id ||
@@ -59,10 +71,14 @@ WHEN MATCHED
     award_transform.actual_end_date ||
     award_transform.award_date ||
     award_transform.project_id ||
+    award_transform.umn_award_contract_number ||
+    award_transform.umn_previous_award_contract_number ||
     award_transform.managed_by_organisation_id ||
     award_transform.managed_by_organisation_deptid ||
+    award_transform.emplid ||
     award_transform.sponsor_award_number ||
     award_transform.primary_sponsor_award_number ||
+    award_transform.federal_award_number ||
     award_transform.financial_funding_id ||
     award_transform.financial_funding_external_org_name ||
     award_transform.financial_funding_primary_id ||
@@ -77,10 +93,14 @@ WHEN NOT MATCHED THEN
     award.actual_end_date,
     award.award_date,
     award.project_id,
+    award.umn_award_contract_number,
+    award.umn_previous_award_contract_number,
     award.managed_by_organisation_id,
     award.managed_by_organisation_deptid,
+    award.emplid,
     award.sponsor_award_number,
     award.primary_sponsor_award_number,
+    award.federal_award_number,
     award.financial_funding_id,
     award.financial_funding_external_org_name,
     award.financial_funding_primary_id,
@@ -96,10 +116,14 @@ WHEN NOT MATCHED THEN
     award_transform.actual_end_date,
     award_transform.award_date,
     award_transform.project_id,
+    award_transform.umn_award_contract_number,
+    award_transform.umn_previous_award_contract_number,
     award_transform.managed_by_organisation_id,
     award_transform.managed_by_organisation_deptid,
+    award_transform.emplid,
     award_transform.sponsor_award_number,
     award_transform.primary_sponsor_award_number,
+    award_transform.federal_award_number,
     award_transform.financial_funding_id,
     award_transform.financial_funding_external_org_name,
     award_transform.financial_funding_primary_id,

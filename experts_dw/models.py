@@ -1123,20 +1123,26 @@ class UmnDataError(Base):
 # https://static.helpjuice.com/helpjuice_production/uploads/upload/image/15881/direct/1750678734379/award_sync_view_oracle.sql
 class PureSyncAward(Base):
     __tablename__ = 'pure_sync_award'
-    award_id = Column(String(15), primary_key=True)
+    award_id = Column(String(25), primary_key=True)
     title = Column(String(1024), nullable=False)
     short_title = Column(String(256), nullable=True)
     actual_start_date = Column(DateTime, nullable=True)
     actual_end_date = Column(DateTime, nullable=True)
+    # Set this to be the same as actual_start_date, because UMN award dates seem like trash:
     award_date = Column(DateTime, nullable=False)
+    # Continue to use the UMN contract_num for this:
     project_id = Column(ForeignKey('pure_sync_project.project_id'), nullable=False)
+    umn_award_contract_number = Column(String(25), nullable=False)
+    umn_previous_award_contract_number = Column(String(25), nullable=True)
     managed_by_organisation_id = Column(String(1024), nullable=False) # The Pure view calls this MANAGED_BY_ORG_ID, but we use the XML element name
 
     # Added by UMN:
 
     managed_by_organisation_deptid = Column(String(10), nullable=False)
+    emplid = Column(String(11), nullable=False, index=True)
     sponsor_award_number = Column(String(40), nullable=True)
     primary_sponsor_award_number = Column(String(40), nullable=True)
+    federal_award_number = Column(String(50), nullable=True)
 
     # AWARD_FINANCIAL_FUNDINGS
     financial_funding_id = Column(String(1024), nullable=True)
@@ -1149,7 +1155,6 @@ class PureSyncAward(Base):
 
     # Unused columns from Pure's AWARD_DATA spec.
     # AWARD_TYPE varchar(1024) not null, # We always set this to 'other/award'
-    # SHORT_TITLE varchar(256),
     # ACRONYM varchar(64),
     # EXPECTED_START_DATE date,
     # EXPECTED_END_DATE date,
@@ -1181,9 +1186,7 @@ class PureSyncAwardInternalHolder(Base):
     emplid = Column(String(11), nullable=False, index=True) # Added by UMN
     # The following should probably be a FK, but we have no way to do that in our current schema!
     organisation_id = Column(String(1024), nullable=False)
-    role = Column(String(15), primary_key=True)
-    association_start_date = Column(DateTime, nullable=True)
-    association_end_date = Column(DateTime, nullable=True)
+    role = Column(String(15), nullable=False)
 
     # Added by UMN:
     inserted = Column(DateTime, nullable=True)
@@ -1201,7 +1204,7 @@ class PureSyncAwardExternalHolder(Base):
     emplid = Column(String(11), primary_key=True)
     first_name = Column(String(1024), nullable=False)
     last_name = Column(String(1024), nullable=False)
-    role = Column(String(15), primary_key=True)
+    role = Column(String(15), nullable=False)
 
     # Added by UMN:
     inserted = Column(DateTime, nullable=True)
@@ -1226,7 +1229,6 @@ class PureSyncProject(Base):
 
     # Added by UMN:
     managed_by_organisation_deptid = Column(String(10), nullable=False)
-    sponsor_award_number = Column(String(40), nullable=True)
     inserted = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
 

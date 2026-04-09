@@ -11,20 +11,21 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_project_internal_parti
 
   -- Though we don't use these in the final XML output,
   -- we include them here anyway, for debugging/troubleshooting.
+  
   association_start_date,
   association_end_date,
 
-  award_id, -- Added by UMN
+  umn_project_id, -- Added by UMN
   project_person_row_number -- Added by UMN
 ) AS (
   SELECT
-    p.*,
+    project_person.*,
     ROW_NUMBER() OVER (
       -- This partitions by both columns, first project_id, then person_id:
-      PARTITION BY p.project_id, p.person_id
+      PARTITION BY project_person.project_id, project_person.person_id
       -- Ordering rows by role_rank within each partition ensures that the
       -- highest-ranking role will always be in the first row for each person:
-      ORDER BY p.role_rank ASC
+      ORDER BY project_person.role_rank ASC
     ) AS project_person_row_number
   FROM (
     SELECT
@@ -48,18 +49,19 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_project_internal_parti
       END AS role_rank,
       project_team.start_dt AS association_start_date,
       project_team.end_dt AS association_end_date,
-      award.award_id
+      project_team.project_id AS umn_project_id
     FROM pure_sync_project project
-    JOIN pure_sync_award award
-      ON project.project_id = award.project_id
+    JOIN fs_ps_gm_awd_projt_vw@dweprd.oit award_project
+      -- We use the UMN award contract number for Pure project IDs:
+      ON project.project_id = award_project.contract_num
     JOIN fs_ps_project_team_vw@dweprd.oit project_team
-      ON award.award_id = project_team.project_id
+      ON award_project.project_id = project_team.project_id
     JOIN pure_sync_person_data pure_person
       ON pure_person.emplid = project_team.assign_emplid
     JOIN pure_sync_staff_org_association pure_staff_org
       ON pure_person.person_id = pure_staff_org.person_id
     WHERE pure_staff_org.primary_association = 1
-  ) p
+  ) project_person
 );
 
 GRANT SELECT ON expert.pure_sync_project_internal_participant_transform_vw TO oit_expert_rd_all;

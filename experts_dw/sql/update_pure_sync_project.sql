@@ -8,8 +8,7 @@ USING (
     start_date,
     end_date,
     managed_by_organisation_id,
-    managed_by_organisation_deptid,
-    sponsor_award_number
+    managed_by_organisation_deptid
   FROM pure_sync_project_transform_vw
 ) project_transform
 ON (project.project_id = project_transform.project_id)
@@ -21,7 +20,6 @@ WHEN MATCHED
     project.end_date = project_transform.end_date,
     project.managed_by_organisation_id = project_transform.managed_by_organisation_id,
     project.managed_by_organisation_deptid = project_transform.managed_by_organisation_deptid,
-    project.sponsor_award_number = project_transform.sponsor_award_number,
     project.updated = SYSDATE
   WHERE ORA_HASH(
     project.title ||
@@ -29,16 +27,14 @@ WHEN MATCHED
     project.start_date ||
     project.end_date ||
     project.managed_by_organisation_id ||
-    project.managed_by_organisation_deptid ||
-    project.sponsor_award_number
+    project.managed_by_organisation_deptid
   ) <> ORA_HASH(
     project_transform.title || 
     project_transform.short_title || 
     project_transform.start_date || 
     project_transform.end_date || 
     project_transform.managed_by_organisation_id || 
-    project_transform.managed_by_organisation_deptid || 
-    project_transform.sponsor_award_number
+    project_transform.managed_by_organisation_deptid
   )  
 WHEN NOT MATCHED THEN
   INSERT (
@@ -49,7 +45,6 @@ WHEN NOT MATCHED THEN
     project.end_date,
     project.managed_by_organisation_id,
     project.managed_by_organisation_deptid,
-    project.sponsor_award_number,
     project.inserted,
     project.updated
   )
@@ -61,7 +56,6 @@ WHEN NOT MATCHED THEN
     project_transform.end_date,
     project_transform.managed_by_organisation_id,
     project_transform.managed_by_organisation_deptid,
-    project_transform.sponsor_award_number,
     SYSDATE,
     SYSDATE
   )

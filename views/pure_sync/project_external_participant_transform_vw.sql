@@ -14,17 +14,17 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_project_external_parti
   association_start_date, 
   association_end_date,
 
-  award_id, -- Added by UMN
+  umn_project_id, -- Added by UMN
   project_person_row_number -- Added by UMN
 ) AS (
   SELECT
-    p.*,
+    project_person.*,
     ROW_NUMBER() OVER (
       -- This partitions by both columns, first project_id, then emplid:
-      PARTITION BY p.project_id, p.emplid
+      PARTITION BY project_person.project_id, project_person.emplid
       -- Ordering rows by role_rank within each partition ensures that the
       -- highest-ranking role will always be in the first row for each person:
-      ORDER BY p.role_rank ASC
+      ORDER BY project_person.role_rank ASC
     ) AS project_person_row_number
   FROM (
     SELECT
@@ -48,18 +48,19 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_project_external_parti
       END AS role_rank,
       project_team.start_dt AS association_start_date,
       project_team.end_dt AS association_end_date,
-      award.award_id
+      project_team.project_id As umn_project_id
     FROM pure_sync_project project
-    JOIN pure_sync_award award
-      ON project.project_id = award.project_id
+    JOIN fs_ps_gm_awd_projt_vw@dweprd.oit award_project
+      -- We use the UMN award contract number for Pure project IDs:
+      ON project.project_id = award_project.contract_num
     JOIN fs_ps_project_team_vw@dweprd.oit project_team
-      ON award.award_id = project_team.project_id
+      ON award_project.project_id = project_team.project_id
     JOIN ps_dwhr_demo_addr_vw@dweprd.oit hr_demog
       ON hr_demog.emplid = project_team.assign_emplid
     LEFT JOIN pure_sync_person_data pure_person
       ON project_team.assign_emplid = pure_person.emplid
     WHERE pure_person.emplid IS NULL
-  ) p
+  ) project_person
 );
 
 GRANT SELECT ON expert.pure_sync_project_external_participant_transform_vw TO oit_expert_rd_all;
