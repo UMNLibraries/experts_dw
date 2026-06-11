@@ -312,7 +312,7 @@ def insert_change_history_matching_previous_uuids_sql(
     meta:CollectionMeta,
 ):
     return f'''
-        MERGE INTO {meta.change_meta.history_table_name} pjh
+        MERGE INTO {meta.change_meta.history_table_name} change_history
         USING (
           SELECT
             uuid,
@@ -322,25 +322,24 @@ def insert_change_history_matching_previous_uuids_sql(
             inserted
           FROM {meta.change_meta.buffer_table_name}
           WHERE uuid IN (
-            SELECT jt.previous_uuid
-            FROM {meta.canonical_table_name},
-              JSON_TABLE(json_document, '$'
-                COLUMNS (
-                  uuid VARCHAR2(36) PATH '$.uuid',
-                  NESTED PATH '$.info.previousUuids[*]'
-                    COLUMNS (
-                      previous_uuid VARCHAR2(36) PATH '$'
-                    )
+            SELECT collection_json.previous_uuid
+            FROM {meta.canonical_table_name} collection_table
+            CROSS APPLY JSON_TABLE(
+              collection_table.json_document, '$' COLUMNS (
+                uuid VARCHAR2(36) PATH '$.uuid',
+                NESTED PATH '$.info.previousUuids[*]' COLUMNS (
+                  previous_uuid VARCHAR2(36) PATH '$'
                 )
               )
-              AS jt
-              WHERE JSON_EXISTS(json_document, '$.info.previousUuids') AND jt.previous_uuid IS NOT NULL
+            )
+            AS collection_json
+            WHERE JSON_EXISTS(collection_table.json_document, '$.info.previousUuids') AND collection_json.previous_uuid IS NOT NULL
           )
-        ) pj
-        ON (pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version)
+        ) change
+        ON (change.uuid = change_history.uuid AND change.pure_version = change_history.pure_version)
         WHEN NOT MATCHED THEN
-          INSERT (pjh.uuid, pjh.pure_version, pjh.family_system_name, pjh.change_type, pjh.inserted)
-          VALUES (pj.uuid, pj.pure_version, pj.family_system_name, pj.change_type, pj.inserted)
+          INSERT (change_history.uuid, change_history.pure_version, change_history.family_system_name, change_history.change_type, change_history.inserted)
+          VALUES (change.uuid, change.pure_version, change.family_system_name, change.change_type, change.inserted)
     '''
 
 def insert_change_history_matching_previous_uuids(
@@ -360,19 +359,18 @@ def delete_changes_matching_previous_uuids_sql(
     return f'''
         DELETE FROM {meta.change_meta.buffer_table_name}
         WHERE uuid IN (
-          SELECT jt.previous_uuid
-          FROM {meta.canonical_table_name},
-            JSON_TABLE(json_document, '$'
-              COLUMNS (
-                uuid VARCHAR2(36) PATH '$.uuid',
-                NESTED PATH '$.info.previousUuids[*]'
-                  COLUMNS (
-                    previous_uuid VARCHAR2(36) PATH '$'
-                  )
+          SELECT collection_json.previous_uuid
+          FROM {meta.canonical_table_name} collection_table
+          CROSS APPLY JSON_TABLE(
+            collection_table.json_document, '$' COLUMNS (
+              uuid VARCHAR2(36) PATH '$.uuid',
+              NESTED PATH '$.info.previousUuids[*]' COLUMNS (
+                previous_uuid VARCHAR2(36) PATH '$'
               )
             )
-            AS jt
-            WHERE JSON_EXISTS(json_document, '$.info.previousUuids') AND jt.previous_uuid IS NOT NULL
+          )
+          AS collection_json
+          WHERE JSON_EXISTS(collection_table.json_document, '$.info.previousUuids') AND collection_json.previous_uuid IS NOT NULL
         )
     '''
 
@@ -550,19 +548,18 @@ def delete_documents_matching_previous_uuids_sql(
     return f'''
         DELETE FROM {meta.canonical_table_name}
         WHERE uuid IN (
-          SELECT jt.previous_uuid
-          FROM {meta.canonical_table_name},
-            JSON_TABLE(json_document, '$'
-              COLUMNS (
-                uuid VARCHAR2(36) PATH '$.uuid',
-                NESTED PATH '$.info.previousUuids[*]'
-                  COLUMNS (
-                    previous_uuid VARCHAR2(36) PATH '$'
-                  )
+          SELECT collection_json.previous_uuid
+          FROM {meta.canonical_table_name} collection_table
+          CROSS APPLY JSON_TABLE(
+            collection_table.json_document, '$' COLUMNS (
+              uuid VARCHAR2(36) PATH '$.uuid',
+              NESTED PATH '$.info.previousUuids[*]' COLUMNS (
+                previous_uuid VARCHAR2(36) PATH '$'
               )
             )
-            AS jt
-            WHERE JSON_EXISTS(json_document, '$.info.previousUuids') AND jt.previous_uuid IS NOT NULL
+          )
+          AS collection_json
+          WHERE JSON_EXISTS(collection_table.json_document, '$.info.previousUuids') AND collection_json.previous_uuid IS NOT NULL
         )
     '''
 
@@ -738,32 +735,31 @@ def research_output_scopus_ids_since_sql(
 ):
     return f'''
         SELECT
-          pjro.scopus_id
-        FROM
-          {meta.canonical_table_name} ro,
-          JSON_TABLE(ro.json_document, '$'
-            COLUMNS (
-              scopus_id        PATH '$.externalId',
-              uuid             PATH '$.uuid',
-              external_source  PATH '$.externalIdSource',
-              ro_title         PATH '$.title.value',
-              ro_type          PATH '$.type.uri',
-              NESTED PATH '$.publicationStatuses[*]'
-                COLUMNS (
-                  ro_year PATH '$.publicationDate.year',
-                  ro_current PATH '$.current',
-                  ro_status PATH '$.publicationStatus.uri'
-                )
-            )) pjro
-        WHERE JSON_EXISTS(ro.json_document, '$.uuid')
-          AND pjro.external_source = 'Scopus'
-          AND pjro.ro_type LIKE '/dk/atira/pure/researchoutput/researchoutputtypes/contributiontojournal/%'
-          AND pjro.ro_current = 'true'
-          AND pjro.ro_status = '/dk/atira/pure/researchoutput/status/published'
-          AND TO_DATE(pjro.ro_year, 'YYYY') > :published_datetime
+          ro_json.scopus_id
+        FROM {meta.canonical_table_name} ro_table
+        CROSS APPLY JSON_TABLE(
+          ro_table.json_document, '$' COLUMNS (
+            scopus_id       PATH '$.externalId',
+            uuid            PATH '$.uuid',
+            external_source PATH '$.externalIdSource',
+            title           PATH '$.title.value',
+            type            PATH '$.type.uri',
+            NESTED PATH '$.publicationStatuses[*]' COLUMNS (
+              year PATH '$.publicationDate.year',
+              current PATH '$.current',
+              status PATH '$.publicationStatus.uri'
+            )
+          )
+        ) ro_json
+        WHERE JSON_EXISTS(ro_table.json_document, '$.uuid')
+          AND ro_json.external_source = 'Scopus'
+          AND ro_json.type LIKE '/dk/atira/pure/researchoutput/researchoutputtypes/contributiontojournal/%'
+          AND ro_json.current = 'true'
+          AND ro_json.status = '/dk/atira/pure/researchoutput/status/published'
+          AND TO_DATE(ro_json.year, 'YYYY') > :published_datetime
           AND (
-            ro.pure_created >= :created_modified_datetime OR
-            ro.pure_modified >= :created_modified_datetime
+            ro_table.pure_created >= :created_modified_datetime OR
+            ro_table.pure_modified >= :created_modified_datetime
           )
     '''
 
