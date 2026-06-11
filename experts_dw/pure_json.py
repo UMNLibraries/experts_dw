@@ -229,7 +229,7 @@ def insert_change_deletes_history_sql(
     meta:CollectionMeta,
 ):
     return f'''
-        MERGE INTO {meta.change_meta.history_table_name} pjh
+        MERGE INTO {meta.change_meta.history_table_name} change_history
         USING (
           SELECT
             uuid,
@@ -240,12 +240,12 @@ def insert_change_deletes_history_sql(
           FROM {meta.change_meta.buffer_table_name}
           WHERE
             change_type = 'DELETE'
-            AND pj.family_system_name = '{meta.family_system_name}'
-        )
-        ON (pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version)
+            AND family_system_name = '{meta.family_system_name}'
+        ) change
+        ON (change.uuid = change_history.uuid AND change.pure_version = change_history.pure_version)
         WHEN NOT MATCHED THEN
-          INSERT (pjh.uuid, pjh.pure_version, pjh.family_system_name, pjh.change_type, pjh.inserted)
-          VALUES (pj.uuid, pj.pure_version, pj.family_system_name, pj.change_type, pj.inserted)
+          INSERT (change_history.uuid, change_history.pure_version, change_history.family_system_name, change_history.change_type, change_history.inserted)
+          VALUES (change.uuid, change.pure_version, change.family_system_name, change.change_type, change.inserted)
     '''
 
 def insert_change_deletes_history(
@@ -431,7 +431,7 @@ def insert_change_history_matching_staging_sql(
     meta:CollectionMeta,
 ):
     return f'''
-        MERGE INTO {meta.change_meta.history_table_name} pjh
+        MERGE INTO {meta.change_meta.history_table_name} change_history
         USING (
           SELECT
             uuid,
@@ -443,11 +443,11 @@ def insert_change_history_matching_staging_sql(
           WHERE uuid IN (
             SELECT uuid FROM {meta.staging_table_name}
           )
-        ) pj
-        ON (pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version)
+        ) change
+        ON (change.uuid = change_history.uuid AND change.pure_version = change_history.pure_version)
         WHEN NOT MATCHED THEN
-          INSERT (pjh.uuid, pjh.pure_version, pjh.family_system_name, pjh.change_type, pjh.inserted)
-          VALUES (pj.uuid, pj.pure_version, pj.family_system_name, pj.change_type, pj.inserted)
+          INSERT (change_history.uuid, change_history.pure_version, change_history.family_system_name, change_history.change_type, change_history.inserted)
+          VALUES (change.uuid, change.pure_version, change.family_system_name, change.change_type, change.inserted)
     '''
 
 def insert_change_history_matching_staging(
@@ -510,25 +510,38 @@ def merge_documents_from_staging_sql(
     meta:CollectionMeta,
 ):
     return f'''
-        MERGE INTO {meta.canonical_table_name} pj
+        MERGE INTO {meta.canonical_table_name} canonical
         USING (
-          SELECT uuid, inserted, json_document, updated, pure_created, pure_modified FROM ( 
-            SELECT uuid, inserted, json_document, updated, pure_created, pure_modified,
+          SELECT
+            uuid,
+            inserted,
+            json_document,
+            updated,
+            pure_created,
+            pure_modified
+          FROM (
+            SELECT
+              uuid,
+              inserted,
+              json_document,
+              updated,
+              pure_created,
+              pure_modified,
               RANK() OVER (PARTITION BY uuid ORDER BY pure_modified DESC) latest
-              FROM {meta.staging_table_name}
+            FROM {meta.staging_table_name}
           ) where latest = 1
-        ) pjs
-        ON (pjs.uuid = pj.uuid)
+        ) staging
+        ON (staging.uuid = canonical.uuid)
         WHEN MATCHED
           THEN UPDATE SET
-            pj.pure_modified = pjs.pure_modified,
-            pj.updated = pjs.updated,
-            pj.json_document = pjs.json_document
+            canonical.pure_modified = staging.pure_modified,
+            canonical.updated = staging.updated,
+            canonical.json_document = staging.json_document
           WHERE
-            pjs.pure_modified > pj.pure_modified
+            staging.pure_modified > canonical.pure_modified
         WHEN NOT MATCHED
-          THEN INSERT (pj.uuid, pj.inserted, pj.json_document, pj.updated, pj.pure_created, pj.pure_modified)
-          VALUES (pjs.uuid, pjs.inserted, pjs.json_document, pjs.updated, pjs.pure_created, pjs.pure_modified)
+          THEN INSERT (canonical.uuid, canonical.inserted, canonical.json_document, canonical.updated, canonical.pure_created, canonical.pure_modified)
+          VALUES (staging.uuid, staging.inserted, staging.json_document, staging.updated, staging.pure_created, staging.pure_modified)
     '''
 
 def merge_documents_from_staging(
@@ -640,7 +653,7 @@ def insert_change_history_matching_uuids_sql(
 ):
     bind_vars = ','.join(f':{i}' for i in range(len(uuids)))
     return f'''
-        MERGE INTO {meta.history_table_name} pjh
+        MERGE INTO {meta.history_table_name} change_history
         USING (
           SELECT
             uuid,
@@ -650,11 +663,11 @@ def insert_change_history_matching_uuids_sql(
             inserted
           FROM {meta.buffer_table_name}
           WHERE uuid in ({bind_vars})
-        ) pj
-        ON (pj.uuid = pjh.uuid AND pj.pure_version = pjh.pure_version)
+        ) change
+        ON (change.uuid = change_history.uuid AND change.pure_version = change_history.pure_version)
         WHEN NOT MATCHED THEN
-          INSERT (pjh.uuid, pjh.pure_version, pjh.family_system_name, pjh.change_type, pjh.inserted)
-          VALUES (pj.uuid, pj.pure_version, pj.family_system_name, pj.change_type, pj.inserted)
+          INSERT (change_history.uuid, change_history.pure_version, change_history.family_system_name, change_history.change_type, change_history.inserted)
+          VALUES (change.uuid, change.pure_version, change.family_system_name, change.change_type, change.inserted)
     '''
 
 def insert_change_history_matching_uuids(
