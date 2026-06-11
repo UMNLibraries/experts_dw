@@ -330,36 +330,36 @@ def update_abstract_to_download_sql(
             SELECT scopus_id FROM {citation_meta.defunct_table_name}
           )
           SELECT
-            rojt.scopus_id
+            ro_json.scopus_id
           FROM
             -- pure json research output:
-            {pure_ro_meta.canonical_table_name} ro,
-            JSON_TABLE(ro.json_document, '$'
-              COLUMNS (
+            {pure_ro_meta.canonical_table_name} ro_table
+            CROSS APPLY JSON_TABLE(
+              ro_table.json_document, '$' COLUMNS (
                 scopus_id       PATH '$.externalId',
                 external_source PATH '$.externalIdSource',
-                ro_type         PATH '$.type.uri',
-                NESTED PATH '$.publicationStatuses[*]'
-                  COLUMNS (
-                    ro_year    PATH '$.publicationDate.year',
-                    ro_current PATH '$.current',
-                    ro_status  PATH '$.publicationStatus.uri'
-                  )
-              )) rojt
+                type            PATH '$.type.uri',
+                NESTED PATH '$.publicationStatuses[*]' COLUMNS (
+                  year    PATH '$.publicationDate.year',
+                  current PATH '$.current',
+                  status  PATH '$.publicationStatus.uri'
+                )
+              )
+            ) ro_json
           LEFT JOIN scopus_id_to_exclude exclude
-            ON rojt.scopus_id = exclude.scopus_id
+            ON ro_json.scopus_id = exclude.scopus_id
           WHERE exclude.scopus_id IS NULL
-            AND rojt.external_source = 'Scopus'
-            AND rojt.ro_type LIKE '/dk/atira/pure/researchoutput/researchoutputtypes/contributiontojournal/%'
-            AND rojt.ro_current = 'true'
-            AND rojt.ro_status = '/dk/atira/pure/researchoutput/status/published'
-            AND TO_DATE(rojt.ro_year, 'YYYY') >= ADD_MONTHS(SYSDATE, - {past_months_limit})
+            AND ro_json.external_source = 'Scopus'
+            AND ro_json.type LIKE '/dk/atira/pure/researchoutput/researchoutputtypes/contributiontojournal/%'
+            AND ro_json.current = 'true'
+            AND ro_json.status = '/dk/atira/pure/researchoutput/status/published'
+            AND TO_DATE(ro_json.year, 'YYYY') >= ADD_MONTHS(SYSDATE, - {past_months_limit})
             AND (
               -- This includes all the new and modified articles...
-              ro.pure_modified >= (SELECT MAX(scopus_modified) FROM {abstract_meta.canonical_table_name})
+              ro_table.pure_modified >= (SELECT MAX(scopus_modified) FROM {abstract_meta.canonical_table_name})
               OR
               -- ...while this includes any older articles missing from scopus_json_abstract:
-              rojt.scopus_id NOT IN (SELECT scopus_id FROM {abstract_meta.canonical_table_name})
+              ro_json.scopus_id NOT IN (SELECT scopus_id FROM {abstract_meta.canonical_table_name})
             )
         ) pure_ro
         ON (pure_ro.scopus_id = to_download.scopus_id)
@@ -404,10 +404,10 @@ def update_citation_to_download_sql(
             UNION
             SELECT scopus_id FROM {abstract_meta.defunct_table_name}
           )
-          SELECT DISTINCT abstract_jt.ref_id AS scopus_id
-          FROM {abstract_meta.canonical_table_name} abstract,
-          JSON_TABLE (
-            abstract.json_document, '$."abstracts-retrieval-response".item.bibrecord.tail' COLUMNS (
+          SELECT DISTINCT abstract_json.ref_id AS scopus_id
+          FROM {abstract_meta.canonical_table_name} abstract_table
+          CROSS APPLY JSON_TABLE(
+            abstract_table.json_document, '$."abstracts-retrieval-response".item.bibrecord.tail' COLUMNS (
               NESTED PATH '$.bibliography.reference[*]' COLUMNS (
                 NESTED PATH '$."ref-info"."refd-itemidlist".itemid[*]' COLUMNS (
                   ref_id_type PATH '$."@idtype"',
@@ -416,12 +416,12 @@ def update_citation_to_download_sql(
                 publication_year PATH '$."ref-info"."ref-publicationyear"."@first"'
               )
             )
-          ) abstract_jt
+          ) abstract_json
           LEFT JOIN scopus_id_to_exclude exclude
-            ON abstract_jt.ref_id = exclude.scopus_id
+            ON abstract_json.ref_id = exclude.scopus_id
           WHERE exclude.scopus_id IS NULL
-            AND abstract_jt.ref_id_type = 'SGR'
-            AND TO_DATE(abstract_jt.publication_year, 'YYYY') >= ADD_MONTHS(SYSDATE, - {past_months_limit})
+            AND abstract_json.ref_id_type = 'SGR'
+            AND TO_DATE(abstract_json.publication_year, 'YYYY') >= ADD_MONTHS(SYSDATE, - {past_months_limit})
         ) cited
         ON (cited.scopus_id = to_download.scopus_id)
         WHEN NOT MATCHED THEN
