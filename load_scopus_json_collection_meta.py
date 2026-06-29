@@ -25,6 +25,11 @@ with db.cx_oracle_connection() as session:
             'schema_record_name': 'abstracts-retrieval-response',
             'local_name': 'abstract',
         },
+        {
+            'api_name': 'abstract/citations',
+            'schema_record_name': 'abstracts-citations-response',
+            'local_name': 'citation',
+        },
     ]
     cur.executemany(insert_sql, collections_to_insert)
     session.commit()
