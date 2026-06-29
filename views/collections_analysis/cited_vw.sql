@@ -53,6 +53,6 @@ SELECT
 FROM cited
 JOIN authored_cited_scopus_ids acsi
   ON cited.abstract_scopus_id = acsi.cited_abstract_scopus_id
-JOIN collections_analysis_authored authored
+JOIN collections_analysis_authored_mvw authored
   ON authored.abstract_scopus_id = acsi.authored_abstract_scopus_id
 ;
