@@ -443,3 +443,20 @@ def update_citation_to_download(
         past_months_limit=past_months_limit,
     )
     cursor.execute(sql)
+
+def refresh_and_compile_materialized_view(
+    cursor:cx_Oracle.Cursor,
+    view_name:str,
+):
+    cursor.execute(f"BEGIN DBMS_MVIEW.REFRESH('{view_name}', 'C'); END;")
+    cursor.execute(f"ALTER MATERIALIZED VIEW {view_name} COMPILE")
+
+def refresh_and_compile_collections_analysis_authored(
+    cursor:cx_Oracle.Cursor
+):
+    refresh_and_compile_materialized_view(cursor, 'collections_analysis_authored_mvw')
+
+def refresh_and_compile_collections_analysis_cited(
+    cursor:cx_Oracle.Cursor
+):
+    refresh_and_compile_materialized_view(cursor, 'collections_analysis_cited_mvw')
