@@ -338,11 +338,11 @@ def update_abstract_to_download_sql(
               ro_table.json_document, '$' COLUMNS (
                 scopus_id       PATH '$.externalId',
                 external_source PATH '$.externalIdSource',
-                type            PATH '$.type.uri',
+                type_           PATH '$.type.uri',
                 NESTED PATH '$.publicationStatuses[*]' COLUMNS (
-                  year    PATH '$.publicationDate.year',
-                  current PATH '$.current',
-                  status  PATH '$.publicationStatus.uri'
+                  year_    PATH '$.publicationDate.year',
+                  current_ PATH '$.current',
+                  status   PATH '$.publicationStatus.uri'
                 )
               )
             ) ro_json
@@ -350,10 +350,10 @@ def update_abstract_to_download_sql(
             ON ro_json.scopus_id = exclude.scopus_id
           WHERE exclude.scopus_id IS NULL
             AND ro_json.external_source = 'Scopus'
-            AND ro_json.type LIKE '/dk/atira/pure/researchoutput/researchoutputtypes/contributiontojournal/%'
-            AND ro_json.current = 'true'
+            AND ro_json.type_ LIKE '/dk/atira/pure/researchoutput/researchoutputtypes/contributiontojournal/%'
+            AND ro_json.current_ = 'true'
             AND ro_json.status = '/dk/atira/pure/researchoutput/status/published'
-            AND TO_DATE(ro_json.year, 'YYYY') >= ADD_MONTHS(SYSDATE, - {past_months_limit})
+            AND TO_DATE(ro_json.year_, 'YYYY') >= ADD_MONTHS(SYSDATE, - {past_months_limit})
             AND (
               -- This includes all the new and modified articles...
               ro_table.pure_modified >= (SELECT MAX(scopus_modified) FROM {abstract_meta.canonical_table_name})
