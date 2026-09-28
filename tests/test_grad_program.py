@@ -139,10 +139,16 @@ period_end AS (
   WHERE row_number = 1
 ),
 pure_academic_program_org AS (
-  SELECT pure_id
-  FROM pure_org
-  WHERE pure_internal = 'Y'
-  AND type = 'academic plan'
+  SELECT
+    org_json.pure_id
+  FROM pure_json_organisation_524 org_table
+  CROSS APPLY JSON_TABLE(
+    org_table.json_document, '$' COLUMNS (
+      pure_id PATH '$.externalId',
+      pure_type PATH '$.type.term.text[0].value'
+    )
+  ) org_json
+  WHERE pure_type = 'Academic Plan'
 )
 SELECT
   'autoid:' || stix.emplid || '-' || stix.um_acad_plan_prima || '-' || stix.degree || '-' || TO_CHAR(period_start.start_date, 'YYYY-MM-DD') AS student_org_association_id,
