@@ -28,6 +28,6 @@ def test_cx_oracle_connection():
         # Execute sql to test that we have a connection and get results
         cur = connection.cursor()
         result = cur.execute(
-            "SELECT COUNT(*) FROM UMN_DEPT_PURE_ORG"
+            "SELECT COUNT(*) FROM umn_dept_pure_org_mvw"
         )
         assert result
