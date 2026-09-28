@@ -68,23 +68,23 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_award_transform_vw (
     -- award:financialFundings >
     CASE
       WHEN REGEXP_LIKE(award.cust_id, '[[:alnum:]]')
-	THEN award.cust_id
+        THEN award.cust_id
       ELSE NULL
     END AS financial_funding_id, -- award:financialFudning id="{{ award.cust_id }}" >
     CASE
       WHEN REGEXP_LIKE(award.cust_id, '[[:alnum:]]')
-	THEN customer.name1
+        THEN customer.name1
       ELSE NULL -- No point in setting an org name if the id is NULL or otherwise worthless.
     END AS financial_funding_external_org_name, -- award:externalOrgName {{ customer.name1 }}
     -- 'sponsor', -- award:externalOrgType sponsor
     CASE
       WHEN REGEXP_LIKE(award.primary_spnsr_id, '[[:alnum:]]') AND award.primary_spnsr_id <> award.cust_id
-	THEN award.primary_spnsr_id
+        THEN award.primary_spnsr_id
       ELSE NULL
     END AS financial_funding_primary_id,
     CASE
       WHEN REGEXP_LIKE(award.primary_spnsr_id, '[[:alnum:]]') AND award.primary_spnsr_id <> award.cust_id
-      THEN -- award:financialFunding id="{{ award.primary_spnsr_id }}" >
+        THEN -- award:financialFunding id="{{ award.primary_spnsr_id }}" >
           customer2.name1 -- award:externalOrgName {{ customer2.name1 }}
           -- 'primary_sponsor' -- award:externalOrgType primary_sponsor
       ELSE NULL  -- No point in setting an org name if the id is NULL or otherwise worthless.
@@ -94,7 +94,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_award_transform_vw (
   JOIN pure_sync_project project
     -- Ensure that the award.project_id FK on project.project_id will not break:
     ON award.contract_num = project.project_id
-  JOIN umn_dept_pure_org udpo
+  JOIN umn_dept_pure_org_mvw udpo
     ON udpo.deptid = award.deptid
   JOIN fs_ps_customer@dweprd.oit customer
     ON customer.cust_id = award.cust_id

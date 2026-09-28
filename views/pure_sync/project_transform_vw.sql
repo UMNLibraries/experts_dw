@@ -48,7 +48,7 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW expert.pure_sync_project_transform_vw (
     END AS sponsor_award_number -- common:id type="sponsor_award_number" {{ award.ref_awd_number }}
   */
   FROM fs_ps_gm_award@dweprd.oit award
-  JOIN umn_dept_pure_org udpo
+  JOIN umn_dept_pure_org_mvw udpo
     ON udpo.deptid = award.deptid
   WHERE award.award_status NOT IN ('TER','TRA','WTH')
 );

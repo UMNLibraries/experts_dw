@@ -1,4 +1,5 @@
 from sqlalchemy import Table, Column, Boolean, DateTime, Integer, String, Text, create_engine, func, ForeignKey, CheckConstraint
+from sqlalchemy.dialects.oracle import VARCHAR2
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import backref, relationship
@@ -1041,6 +1042,65 @@ class UmnDeptPureOrg(Base):
 
   def __repr__(self):
     return 'umn_dept_id: {}, umn_dept_name: {}, pure_org_uuid: {}, pure_org_id: {}'.format(self.umn_dept_id, self.umn_dept_name, self.pure_org_uuid, self.pure_org_id)
+
+
+class UmnDeptPureOrgMvw(Base):
+  __tablename__ = 'umn_dept_pure_org_mvw'
+  __table_args__ = {'comment': 'Associates UMN departments with Pure organizations. Note that many UMN departments may map to one Pure organization.'}
+  pure_org_id = Column(
+      VARCHAR2(4000),
+      nullable=True,
+      comment='Unique ID for the organization in our [Elsevier Pure database](https://experts.umn.edu).',
+  )
+  pure_org_uuid = Column(String(36), nullable=False)
+  pure_org_name = Column(
+      VARCHAR2(4000),
+      nullable=True,
+      comment='Name of the organization in our [Elsevier Pure database](https://experts.umn.edu).',
+  )
+  pure_org_type = Column(
+      VARCHAR2(4000),
+      nullable=True,
+      comment='Type of the organization in our [Elsevier Pure database](https://experts.umn.edu).',
+  )
+  deptid = Column(VARCHAR2(4000), nullable=True, primary_key=True) # Not really a primary key!
+  deptid_descr = Column(
+      String(30),
+      nullable=True,
+      comment='Name of the UMN department in PeopleSoft. De-normalization column.',
+  )
+
+'''
+HR jobcode changes to track:
+
+* inserted
+* jobcode_descr: track changes over time
+* number of persons with current-active/future jobs: display dynamically in a view?
+* when number of persons with current-active/future jobs goes to zero
+* pure eligibility: maybe display dynamically in a view, but may also want to track changes over time
+  * also record whether or not we have made a decision about pure eligibility
+    * Add a table of pure-ineligible jobcodes, with a notes column
+    * If a jobcode does not appear in any pure-(in)?eligible jobcode tables, we know that we have not
+      made a decision about it
+    * Reort on errors in which a jobcode is appears in both pure-eligible and pure-ineligible tables
+  * how to record removal of pure eligibility?
+    * possible solution: record history of pure eligibility changes, probably in separate tables
+    * include columns for job_eligibility, affiliate_eligibility, and poi_eligibility
+* updated: date associated with changes tracked over time
+* notes: record reason for the change, or any other relevant info, if known
+
+Experts jobcode changes to track:
+
+* inserted
+* pure_job_description
+* default_staff_type
+* default_employment_type
+* default_visibility
+* default_profiled
+* updated: date associated with changes tracked over time
+* notes: record reason for the change
+'''
+
 
 class PureEligibleEmployeeJobcode(Base):
   __tablename__ = 'pure_eligible_employee_jobcode'
