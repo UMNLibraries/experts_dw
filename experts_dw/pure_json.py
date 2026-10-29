@@ -56,7 +56,7 @@ def insert_sql(
           :pure_modified,
           :inserted,
           :updated,
-          :json_document
+          UTL_RAW.CAST_TO_RAW(:json_document)
         )
     '''
 
@@ -184,7 +184,7 @@ def insert_change_sql(
           :change_type,
           :family_system_name,
           :inserted,
-          :json_document
+          UTL_RAW.CAST_TO_RAW(:json_document)
         )
     '''
 

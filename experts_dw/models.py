@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column, Boolean, DateTime, Integer, String, Text, create_engine, func, ForeignKey, CheckConstraint
-from sqlalchemy.dialects.oracle import VARCHAR2
+from sqlalchemy.dialects.oracle import BLOB, VARCHAR2
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import backref, relationship
@@ -92,6 +92,12 @@ class SodaDocument:
     def __table_args__(cls):
         return (CheckConstraint('json_document IS JSON', name='json_document'),)
 
+class SodaBlobDocument:
+    json_document = Column(BLOB, nullable=False)
+    @declared_attr
+    def __table_args__(cls):
+        return (CheckConstraint('json_document IS JSON FORMAT OSON', name='json_document'),)
+
 # Tables that store Scopus raw JSON records
 
 class ScopusSodaMetadata(SodaMetadata):
@@ -144,7 +150,7 @@ class ScopusJsonCitationStaging(Base, ScopusJsonStaging):
 class PureSodaMetadata(SodaMetadata):
     uuid = Column(String(36), primary_key=True)
 
-class PureJsonCommon(PureSodaMetadata, SodaDocument):
+class PureJsonCommon(PureSodaMetadata, SodaBlobDocument):
     updated = Column(DateTime, default=func.current_timestamp(), nullable=False)
     pure_created = Column(DateTime(), nullable=False)
 
@@ -192,108 +198,12 @@ class PureJsonExternalOrganisation524(Base, PureJson):
 class PureJsonExternalOrganisation524Staging(Base, PureJsonStaging):
     __tablename__ = 'pure_json_external_organisation_524_staging'
 
-# 523
-
-class PureJsonResearchOutput523(Base, PureJson):
-    __tablename__ = 'pure_json_research_output_523'
-
-class PureJsonResearchOutput523Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_research_output_523_staging'
-
-class PureJsonPerson523(Base, PureJson):
-    __tablename__ = 'pure_json_person_523'
-
-class PureJsonPerson523Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_person_523_staging'
-
-class PureJsonExternalPerson523(Base, PureJson):
-    __tablename__ = 'pure_json_external_person_523'
-
-class PureJsonExternalPerson523Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_external_person_523_staging'
-
-class PureJsonOrganisation523(Base, PureJson):
-    __tablename__ = 'pure_json_organisation_523'
-
-class PureJsonOrganisation523Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_organisation_523_staging'
-
-class PureJsonExternalOrganisation523(Base, PureJson):
-    __tablename__ = 'pure_json_external_organisation_523'
-
-class PureJsonExternalOrganisation523Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_external_organisation_523_staging'
-
-# 517
-
-class PureJsonResearchOutput517(Base, PureJson):
-    __tablename__ = 'pure_json_research_output_517'
-
-class PureJsonResearchOutput517Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_research_output_517_staging'
-
-class PureJsonPerson517(Base, PureJson):
-    __tablename__ = 'pure_json_person_517'
-
-class PureJsonPerson517Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_person_517_staging'
-
-class PureJsonExternalPerson517(Base, PureJson):
-    __tablename__ = 'pure_json_external_person_517'
-
-class PureJsonExternalPerson517Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_external_person_517_staging'
-
-class PureJsonOrganisation517(Base, PureJson):
-    __tablename__ = 'pure_json_organisation_517'
-
-class PureJsonOrganisation517Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_organisation_517_staging'
-
-class PureJsonExternalOrganisation517(Base, PureJson):
-    __tablename__ = 'pure_json_external_organisation_517'
-
-class PureJsonExternalOrganisation517Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_external_organisation_517_staging'
-
-# 518
-
-class PureJsonResearchOutput518(Base, PureJson):
-    __tablename__ = 'pure_json_research_output_518'
-
-class PureJsonResearchOutput518Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_research_output_518_staging'
-
-class PureJsonPerson518(Base, PureJson):
-    __tablename__ = 'pure_json_person_518'
-
-class PureJsonPerson518Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_person_518_staging'
-
-class PureJsonExternalPerson518(Base, PureJson):
-    __tablename__ = 'pure_json_external_person_518'
-
-class PureJsonExternalPerson518Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_external_person_518_staging'
-
-class PureJsonOrganisation518(Base, PureJson):
-    __tablename__ = 'pure_json_organisation_518'
-
-class PureJsonOrganisation518Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_organisation_518_staging'
-
-class PureJsonExternalOrganisation518(Base, PureJson):
-    __tablename__ = 'pure_json_external_organisation_518'
-
-class PureJsonExternalOrganisation518Staging(Base, PureJsonStaging):
-    __tablename__ = 'pure_json_external_organisation_518_staging'
-
-class PureJsonChangeCommon(SodaMetadata):
+class PureJsonChangeCommon(PureSodaMetadata):
     family_system_name = Column(String(150), nullable=False)
     change_type = Column(String(10), nullable=False)
     pure_version = Column(Integer, nullable=False, primary_key=True)
 
-class PureJsonChange(PureJsonChangeCommon, SodaDocument):
+class PureJsonChange(PureJsonChangeCommon, SodaBlobDocument):
     pass
 
 class PureJsonChangeHistory(PureJsonChangeCommon):
@@ -306,30 +216,6 @@ class PureJsonChange524(Base, PureJsonChange):
 
 class PureJsonChange524History(Base, PureJsonChangeHistory):
     __tablename__ = 'pure_json_change_524_history'
-
-# 523
-
-class PureJsonChange523(Base, PureJsonChange):
-    __tablename__ = 'pure_json_change_523'
-
-class PureJsonChange523History(Base, PureJsonChangeHistory):
-    __tablename__ = 'pure_json_change_523_history'
-
-# 517
-
-class PureJsonChange517(Base, PureJsonChange):
-    __tablename__ = 'pure_json_change_517'
-
-class PureJsonChange517History(Base, PureJsonChangeHistory):
-    __tablename__ = 'pure_json_change_517_history'
-
-# 518
-
-class PureJsonChange518(Base, PureJsonChange):
-    __tablename__ = 'pure_json_change_518'
-
-class PureJsonChange518History(Base, PureJsonChangeHistory):
-    __tablename__ = 'pure_json_change_518_history'
 
 # Would like to use a longer name, like "research_output", but
 # Oracle's stupid 30-character limit for names makes that difficult.
